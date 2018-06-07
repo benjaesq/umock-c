@@ -8,6 +8,9 @@
 #include "umock_log.h"
 #include "umock_c_internal.h"
 
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+#endif
 void UMOCK_LOG(const char* format, ...)
 {
     va_list params;
