@@ -17,6 +17,7 @@ typedef struct UMOCKCALL_TAG
     UMOCKCALL_DATA_ARE_EQUAL_FUNC umockcall_data_are_equal;
     unsigned int fail_call : 1;
     unsigned int ignore_all_calls : 1;
+    unsigned int call_can_fail : 1;
 } UMOCKCALL;
 
 UMOCKCALL_HANDLE umockcall_create(const char* function_name, void* umockcall_data, UMOCKCALL_DATA_COPY_FUNC umockcall_data_copy, UMOCKCALL_DATA_FREE_FUNC umockcall_data_free, UMOCKCALL_DATA_STRINGIFY_FUNC umockcall_data_stringify, UMOCKCALL_DATA_ARE_EQUAL_FUNC umockcall_data_are_equal)
@@ -253,6 +254,7 @@ UMOCKCALL_HANDLE umockcall_clone(UMOCKCALL_HANDLE umockcall)
                     result->umockcall_data_free = umockcall->umockcall_data_free;
                     result->umockcall_data_stringify = umockcall->umockcall_data_stringify;
                     result->ignore_all_calls = umockcall->ignore_all_calls;
+                    result->call_can_fail = umockcall->call_can_fail;
                     result->fail_call = umockcall->fail_call;
                 }
             }
@@ -372,3 +374,59 @@ int umockcall_get_ignore_all_calls(UMOCKCALL_HANDLE umockcall)
 
     return result;
 }
+
+int umockcall_set_call_can_fail(UMOCKCALL_HANDLE umockcall, int call_can_fail)
+{
+    int result;
+
+    if (umockcall == NULL)
+    {
+        /* Codes_SRS_UMOCKCALL_31_051: [ If umockcall is NULL, umockcall_set_call_can_fail shall return -1. ]*/
+        UMOCK_LOG("umockcall_set_fail_call: NULL umockcall.");
+        result = -1;
+    }
+    else
+    {
+        switch (call_can_fail)
+        {
+        default:
+            /* Codes_SRS_UMOCKCALL_31_052: [ If a value different than 0 and 1 is passed as umockcall_set_call_can_fail, umockcall_set_call_can_fail shall return -1. ]*/
+            UMOCK_LOG("umockcall_c_set_can_fail: Invalid ignore_all_calls value: %d.", call_can_fail);
+            result = -1;
+            break;
+        case 0:
+            /* Codes_SRS_UMOCKCALL_31_053: [ umockcall_set_call_can_fail shall store the call_can_fail value, associating it with the umockcall call instance. ]*/
+            umockcall->call_can_fail = 0;
+            result = 0;
+            break;
+        case 1:
+            /* Codes_SRS_UMOCKCALL_31_053: [ umockcall_set_call_can_fail shall store the call_can_fail value, associating it with the umockcall call instance. ]*/
+            umockcall->call_can_fail = 1;
+            result = 0;
+            break;
+        }
+    }
+
+    return result;
+}
+
+int umockcall_get_call_can_fail(UMOCKCALL_HANDLE umockcall)
+{
+    int result;
+
+    if (umockcall == NULL)
+    {
+        /* Codes_SRS_UMOCKCALL_31_054: [ If umockcall is NULL, umockcall_get_call_can_fail shall return -1. ]*/
+        UMOCK_LOG("NULL umockcall argument.");
+        result = -1;
+    }
+    else
+    {
+        /* Codes_SRS_UMOCKCALL_31_055: [ umockcall_get_call_can_fail shall retrieve the call_can_fail value, associated with the umockcall call instance. ]*/
+        result = umockcall->call_can_fail ? 1 : 0;
+    }
+
+    return result;
+}
+
+

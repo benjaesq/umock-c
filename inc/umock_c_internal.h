@@ -743,6 +743,39 @@ typedef int(*TRACK_DESTROY_FUNC_TYPE)(PAIRED_HANDLES* paired_handles, const void
         return mock_call_modifier; \
     }
 
+/* Codes_SRS_UMOCK_C_LIB_31_209: [ `call_cannot_fail_func__{name}` call modifier shall record that when performing failure case run, this call should be skipped. ]*/
+/* Codes_SRS_UMOCK_C_LIB_31_210: [ If recording that the call cannot fail is unsuccessful, umock shall raise with the error code UMOCK_C_ERROR.  ]*/
+#define IMPLEMENT_SET_CALL_CANNOT_FAIL(return_type, name, ...) \
+        static C2(mock_call_modifier_,name) C2(call_cannot_fail_func_,name)(void) \
+        { \
+            DECLARE_MOCK_CALL_MODIFIER(name) \
+            UMOCKCALL_HANDLE last_expected_call = umock_c_get_last_expected_call(); \
+            if (last_expected_call == NULL) \
+            { \
+                UMOCK_LOG("Cannot get last expected call."); \
+                umock_c_indicate_error(UMOCK_C_ERROR); \
+            } \
+            else \
+            { \
+                C2(mock_call_, name)* mock_call_data = (C2(mock_call_, name)*)umockcall_get_call_data(last_expected_call); \
+                if (mock_call_data == NULL) \
+                { \
+                    UMOCK_LOG("call_cannot_fail called without having an expected call."); \
+                    umock_c_indicate_error(UMOCK_C_ERROR); \
+                } \
+                else \
+                { \
+                    if (umockcall_set_call_can_fail(last_expected_call, 0) != 0) \
+                    { \
+                        UMOCK_LOG("Cannot set call can fail value on the last expected call."); \
+                        umock_c_indicate_error(UMOCK_C_ERROR); \
+                    } \
+                } \
+            } \
+            return mock_call_modifier; \
+        } \
+
+
 #define IMPLEMENT_MOCK_FUNCTION(function_prefix, args_ignored, return_type, name, ...) \
 	C2(mock_call_modifier_,name) UMOCK_STATIC C2(function_prefix,name)(IF(COUNT_ARG(__VA_ARGS__),,void) FOR_EACH_2_COUNTED(ARG_IN_SIGNATURE, __VA_ARGS__)) \
 	{ \
@@ -769,6 +802,7 @@ typedef int(*TRACK_DESTROY_FUNC_TYPE)(PAIRED_HANDLES* paired_handles, const void
         else \
         { \
             (void)umock_c_add_expected_call(mock_call); \
+            (void)umockcall_set_call_can_fail(mock_call, IF(IS_NOT_VOID(return_type), 1, 0)); \
         } \
 		return mock_call_modifier; \
 	} \
@@ -895,6 +929,7 @@ typedef struct MOCK_CALL_METADATA_TAG
     struct C2(_mock_call_modifier_,name); \
     IF(IS_NOT_VOID(return_type),typedef struct C2(_mock_call_modifier_,name) (*C2(set_return_func_type_,name))(return_type return_value); \
     typedef struct C2(_mock_call_modifier_,name) (*C2(set_fail_return_func_type_,name))(return_type return_value); \
+    typedef struct C2(_mock_call_modifier_,name) (*C2(call_cannot_fail_func_type_,name))(void); \
     typedef struct C2(_mock_call_modifier_,name) (*C2(capture_return_func_type_,name))(return_type* captured_return_value);,) \
     typedef struct C2(_mock_call_modifier_,name) (*C2(ignore_all_calls_func_type_,name))(void); \
     IF(COUNT_ARG(__VA_ARGS__),typedef struct C2(_mock_call_modifier_,name) (*C2(ignore_all_arguments_func_type_,name))(void); \
@@ -910,6 +945,7 @@ typedef struct MOCK_CALL_METADATA_TAG
         C2(ignore_all_calls_func_type_,name) IgnoreAllCalls; \
         IF(IS_NOT_VOID(return_type),C2(set_return_func_type_,name) SetReturn; \
         C2(set_fail_return_func_type_,name) SetFailReturn; \
+        C2(call_cannot_fail_func_type_,name) CallCannotFail; \
         C2(capture_return_func_type_,name) CaptureReturn;,) \
         IF(COUNT_ARG(__VA_ARGS__),C2(ignore_all_arguments_func_type_,name) IgnoreAllArguments; \
         C2(validate_all_arguments_func_type_,name) ValidateAllArguments; \
@@ -923,6 +959,7 @@ typedef struct MOCK_CALL_METADATA_TAG
     static C2(mock_call_modifier_,name) C2(ignore_all_calls_func_,name)(void); \
     IF(IS_NOT_VOID(return_type),static C2(mock_call_modifier_,name) C2(set_return_func_,name)(return_type return_value); \
     static C2(mock_call_modifier_,name) C2(set_fail_return_func_,name)(return_type return_value); \
+    static C2(mock_call_modifier_,name) C2(call_cannot_fail_func_,name)(void); \
     static C2(mock_call_modifier_,name) C2(capture_return_func_,name)(return_type* captured_return_value);,) \
     IF(COUNT_ARG(__VA_ARGS__),static C2(mock_call_modifier_,name) C2(ignore_all_arguments_func_,name)(void); \
     static C2(mock_call_modifier_,name) C2(validate_all_arguments_func_,name)(void); \
@@ -950,6 +987,7 @@ typedef struct MOCK_CALL_METADATA_TAG
     { \
         IF(IS_NOT_VOID(return_type),mock_call_modifier->SetReturn = C2(set_return_func_,name); \
         mock_call_modifier->SetFailReturn = C2(set_fail_return_func_,name); \
+        mock_call_modifier->CallCannotFail = C2(call_cannot_fail_func_,name); \
         mock_call_modifier->CaptureReturn = C2(capture_return_func_,name);,) \
         IF(COUNT_ARG(__VA_ARGS__),mock_call_modifier->IgnoreAllArguments = C2(ignore_all_arguments_func_,name); \
         mock_call_modifier->ValidateAllArguments = C2(validate_all_arguments_func_,name); \
@@ -1105,6 +1143,7 @@ typedef struct MOCK_CALL_METADATA_TAG
     static return_type C2(mock_call_fail_result_,name); \
     IMPLEMENT_SET_RETURN_FUNCTION(return_type, name, __VA_ARGS__) \
     IMPLEMENT_SET_FAIL_RETURN_FUNCTION(return_type, name, __VA_ARGS__) \
+    IMPLEMENT_SET_CALL_CANNOT_FAIL(return_type, name, __VA_ARGS__) \
     IMPLEMENT_CAPTURE_RETURN_FUNCTION(return_type, name, __VA_ARGS__),) \
     IF(COUNT_ARG(__VA_ARGS__),IMPLEMENT_IGNORE_ALL_ARGUMENTS_FUNCTION(return_type, name, __VA_ARGS__) \
     IMPLEMENT_VALIDATE_ALL_ARGUMENTS_FUNCTION(return_type, name, __VA_ARGS__) \

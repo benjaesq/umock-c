@@ -13,22 +13,24 @@ umockcall is a module that encapsulates a umock call.
     typedef char*(*UMOCKCALL_DATA_STRINGIFY_FUNC)(void* umockcall_data);
     typedef int(*UMOCKCALL_DATA_ARE_EQUAL_FUNC)(void* left, void* right);
 
-    extern UMOCKCALL_HANDLE umockcall_create(const char* function_name, void* umockcall_data, UMOCKCALL_DATA_COPY_FUNC umockcall_data_copy, UMOCKCALL_DATA_FREE_FUNC umockcall_data_free, UMOCKCALL_DATA_STRINGIFY_FUNC umockcall_data_stringify, UMOCKCALL_DATA_ARE_EQUAL_FUNC umockcall_data_are_equal);
-    extern void umockcall_destroy(UMOCKCALL_HANDLE umockcall);
-    extern int umockcall_are_equal(UMOCKCALL_HANDLE left, UMOCKCALL_HANDLE right);
-    extern char* umockcall_stringify(UMOCKCALL_HANDLE umockcall);
-    extern void* umockcall_get_call_data(UMOCKCALL_HANDLE umockcall);
-    extern UMOCKCALL_HANDLE umockcall_clone(UMOCKCALL_HANDLE umockcall);
-    extern int umockcall_set_fail_call(UMOCKCALL_HANDLE umockcall, int fail_call);
-    extern int umockcall_get_fail_call(UMOCKCALL_HANDLE umockcall);
-    extern int umockcall_set_ignore_all_calls(UMOCKCALL_HANDLE umockcall, int ignore_all_calls);
-    extern int umockcall_get_ignore_all_calls(UMOCKCALL_HANDLE umockcall);
+    UMOCKCALL_HANDLE umockcall_create(const char* function_name, void* umockcall_data, UMOCKCALL_DATA_COPY_FUNC umockcall_data_copy, UMOCKCALL_DATA_FREE_FUNC umockcall_data_free, UMOCKCALL_DATA_STRINGIFY_FUNC umockcall_data_stringify, UMOCKCALL_DATA_ARE_EQUAL_FUNC umockcall_data_are_equal);
+    void umockcall_destroy(UMOCKCALL_HANDLE umockcall);
+    int umockcall_are_equal(UMOCKCALL_HANDLE left, UMOCKCALL_HANDLE right);
+    char* umockcall_stringify(UMOCKCALL_HANDLE umockcall);
+    void* umockcall_get_call_data(UMOCKCALL_HANDLE umockcall);
+    UMOCKCALL_HANDLE umockcall_clone(UMOCKCALL_HANDLE umockcall);
+    int umockcall_set_fail_call(UMOCKCALL_HANDLE umockcall, int fail_call);
+    int umockcall_get_fail_call(UMOCKCALL_HANDLE umockcall);
+    int umockcall_set_ignore_all_calls(UMOCKCALL_HANDLE umockcall, int ignore_all_calls);
+    int umockcall_get_ignore_all_calls(UMOCKCALL_HANDLE umockcall);
+    int umockcall_set_call_can_fail(UMOCKCALL_HANDLE umockcall, int call_can_fail);
+    int umockcall_get_call_can_fail(UMOCKCALL_HANDLE umockcall);
 ```
 
 ## umockcall_create
 
 ```c
-extern UMOCKCALL_HANDLE umockcall_create(const char* function_name, void* umockcall_data, UMOCKCALL_DATA_COPY_FUNC umockcall_data_copy, UMOCKCALL_DATA_FREE_FUNC umockcall_data_free, UMOCKCALL_DATA_STRINGIFY_FUNC umockcall_data_stringify, UMOCKCALL_DATA_ARE_EQUAL_FUNC umockcall_data_are_equal);
+UMOCKCALL_HANDLE umockcall_create(const char* function_name, void* umockcall_data, UMOCKCALL_DATA_COPY_FUNC umockcall_data_copy, UMOCKCALL_DATA_FREE_FUNC umockcall_data_free, UMOCKCALL_DATA_STRINGIFY_FUNC umockcall_data_stringify, UMOCKCALL_DATA_ARE_EQUAL_FUNC umockcall_data_are_equal);
 ```
 
 **SRS_UMOCKCALL_01_001: [** umockcall_create shall create a new instance of a umock call and on success it shall return a non-NULL handle to it. **]**
@@ -40,7 +42,7 @@ extern UMOCKCALL_HANDLE umockcall_create(const char* function_name, void* umockc
 ## umockcall_destroy
 
 ```c
-extern void umockcall_destroy(UMOCKCALL_HANDLE umockcall);
+void umockcall_destroy(UMOCKCALL_HANDLE umockcall);
 ```
 
 **SRS_UMOCKCALL_01_004: [** umockcall_destroy shall free a previously allocated umock call instance. **]**
@@ -50,7 +52,7 @@ extern void umockcall_destroy(UMOCKCALL_HANDLE umockcall);
 ## umockcall_are_equal
 
 ```c
-extern int umockcall_are_equal(UMOCKCALL_HANDLE left, UMOCKCALL_HANDLE right);
+int umockcall_are_equal(UMOCKCALL_HANDLE left, UMOCKCALL_HANDLE right);
 ```
 
 **SRS_UMOCKCALL_01_006: [** umockcall_are_equal shall compare the two mock calls and return whether they are equal or not. **]**
@@ -74,7 +76,7 @@ extern int umockcall_are_equal(UMOCKCALL_HANDLE left, UMOCKCALL_HANDLE right);
 ## umockcall_to_string
 
 ```c
-extern char* umockcall_stringify(UMOCKCALL_HANDLE umockcall);
+char* umockcall_stringify(UMOCKCALL_HANDLE umockcall);
 ```
 
 **SRS_UMOCKCALL_01_016: [** umockcall_stringify shall return a string representation of the mock call in the form \[function_name(arguments)\]. **]**
@@ -94,7 +96,7 @@ extern char* umockcall_stringify(UMOCKCALL_HANDLE umockcall);
 ## umockcall_get_call_data
 
 ```c
-extern void* umockcall_get_call_data(UMOCKCALL_HANDLE umockcall);
+void* umockcall_get_call_data(UMOCKCALL_HANDLE umockcall);
 ```
 
 **SRS_UMOCKCALL_01_022: [** umockcall_get_call_data shall return the associated umock call data that was passed to umockcall_create. **]**
@@ -104,7 +106,7 @@ extern void* umockcall_get_call_data(UMOCKCALL_HANDLE umockcall);
 ## umockcall_clone
 
 ```c
-extern UMOCKCALL_HANDLE umockcall_clone(UMOCKCALL_HANDLE umockcall);
+UMOCKCALL_HANDLE umockcall_clone(UMOCKCALL_HANDLE umockcall);
 ```
 
 **SRS_UMOCKCALL_01_031: [** umockcall_clone shall clone a umock call and on success it shall return a handle to the newly cloned call. **]**
@@ -126,7 +128,7 @@ extern UMOCKCALL_HANDLE umockcall_clone(UMOCKCALL_HANDLE umockcall);
 ## umockcall_set_fail_call
 
 ```c
-extern int umockcall_set_fail_call(UMOCKCALL_HANDLE umockcall, int fail_call);
+int umockcall_set_fail_call(UMOCKCALL_HANDLE umockcall, int fail_call);
 ```
 
 **SRS_UMOCKCALL_01_038: [** umockcall_set_fail_call shall store the fail_call value, associating it with the umockcall call instance. **]**
@@ -138,7 +140,7 @@ extern int umockcall_set_fail_call(UMOCKCALL_HANDLE umockcall, int fail_call);
 **SRS_UMOCKCALL_01_040: [** If a value different than 0 and 1 is passed as fail_call, umockcall_set_fail_call shall return a non-zero value. **]**
 
 ```c
-extern int umockcall_get_fail_call(UMOCKCALL_HANDLE umockcall);
+int umockcall_get_fail_call(UMOCKCALL_HANDLE umockcall);
 ```
 
 **SRS_UMOCKCALL_01_041: [** umockcall_get_fail_call shall retrieve the fail_call value, associated with the umockcall call instance. **]**
@@ -148,7 +150,7 @@ extern int umockcall_get_fail_call(UMOCKCALL_HANDLE umockcall);
 ## umockcall_set_fail_call
 
 ```c
-extern int umockcall_set_ignore_all_calls(UMOCKCALL_HANDLE umockcall, int ignore_all_calls);
+int umockcall_set_ignore_all_calls(UMOCKCALL_HANDLE umockcall, int ignore_all_calls);
 ```
 
 **SRS_UMOCKCALL_01_045: [** umockcall_set_ignore_all_calls shall store the ignore_all_calls value, associating it with the umockcall call instance. **]**
@@ -160,9 +162,39 @@ extern int umockcall_set_ignore_all_calls(UMOCKCALL_HANDLE umockcall, int ignore
 **SRS_UMOCKCALL_01_048: [** If a value different than 0 and 1 is passed as ignore_all_calls, umockcall_set_ignore_all_calls shall return a non-zero value. **]**
 
 ```c
-extern int umockcall_get_ignore_all_calls(UMOCKCALL_HANDLE umockcall);
+int umockcall_get_ignore_all_calls(UMOCKCALL_HANDLE umockcall);
 ```
 
 **SRS_UMOCKCALL_01_049: [** umockcall_get_ignore_all_calls shall retrieve the ignore_all_calls value, associated with the umockcall call instance. **]**
 
 **SRS_UMOCKCALL_01_050: [** If umockcall is NULL, umockcall_get_ignore_all_calls shall return -1. **]**
+
+## umockcall_set_call_can_fail
+
+```c
+int umockcall_set_call_can_fail(UMOCKCALL_HANDLE umockcall, int call_can_fail);
+```
+
+**SRS_UMOCKCALL_31_051: [** If umockcall is NULL, umockcall_set_call_can_fail shall return -1. **]**
+
+**SRS_UMOCKCALL_31_052: [** If a value different than 0 and 1 is passed as umockcall_set_call_can_fail, umockcall_set_call_can_fail shall return -1. **]**
+
+**SRS_UMOCKCALL_31_053: [** umockcall_set_call_can_fail shall store the call_can_fail value, associating it with the umockcall call instance. **]**
+
+
+
+## umockcall_get_call_can_fail
+
+```c
+int umockcall_get_call_can_fail(UMOCKCALL_HANDLE umockcall);
+```
+
+
+**SRS_UMOCKCALL_31_054: [** If umockcall is NULL, umockcall_get_call_can_fail shall return -1. **]**
+
+**SRS_UMOCKCALL_31_055: [** umockcall_get_call_can_fail shall retrieve the call_can_fail value, associated with the umockcall call instance. **]**
+
+
+
+
+
