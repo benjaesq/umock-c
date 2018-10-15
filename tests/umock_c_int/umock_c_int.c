@@ -1116,9 +1116,10 @@ TEST_FUNCTION(CopyOutArgumentBuffer_copies_bytes_to_the_out_argument_for_a_stric
 {
     // arrange
     int injected_int = 0x42;
+    int actual_int = 0;
     STRICT_EXPECTED_CALL(test_dependency_1_out_arg(IGNORED_PTR_ARG))
         .CopyOutArgumentBuffer(1, &injected_int, sizeof(injected_int));
-    int actual_int = 0;
+
 
     // act
     (void)test_dependency_1_out_arg(&actual_int);
@@ -1133,9 +1134,10 @@ TEST_FUNCTION(CopyOutArgumentBuffer_copies_bytes_to_the_out_argument_for_an_expe
 {
     // arrange
     int injected_int = 0x42;
+    int actual_int = 0;
     EXPECTED_CALL(test_dependency_1_out_arg(IGNORED_PTR_ARG))
         .CopyOutArgumentBuffer(1, &injected_int, sizeof(injected_int));
-    int actual_int = 0;
+
 
     // act
     (void)test_dependency_1_out_arg(&actual_int);
@@ -1150,10 +1152,11 @@ TEST_FUNCTION(CopyOutArgumentBuffer_only_copies_bytes_to_the_out_argument_that_w
 {
     // arrange
     int injected_int = 0x42;
-    EXPECTED_CALL(test_dependency_2_out_args(IGNORED_PTR_ARG, IGNORED_PTR_ARG))
-        .CopyOutArgumentBuffer(1, &injected_int, sizeof(injected_int));
     int actual_int_1 = 0;
     int actual_int_2 = 0;
+    EXPECTED_CALL(test_dependency_2_out_args(IGNORED_PTR_ARG, IGNORED_PTR_ARG))
+        .CopyOutArgumentBuffer(1, &injected_int, sizeof(injected_int));
+
 
     // act
     (void)test_dependency_2_out_args(&actual_int_1, &actual_int_2);
@@ -1169,10 +1172,10 @@ TEST_FUNCTION(CopyOutArgumentBuffer_only_copies_bytes_to_the_second_out_argument
 {
     // arrange
     int injected_int = 0x42;
-    EXPECTED_CALL(test_dependency_2_out_args(IGNORED_PTR_ARG, IGNORED_PTR_ARG))
-        .CopyOutArgumentBuffer(2, &injected_int, sizeof(injected_int));
     int actual_int_1 = 0;
     int actual_int_2 = 0;
+    EXPECTED_CALL(test_dependency_2_out_args(IGNORED_PTR_ARG, IGNORED_PTR_ARG))
+        .CopyOutArgumentBuffer(2, &injected_int, sizeof(injected_int));
 
     // act
     (void)test_dependency_2_out_args(&actual_int_1, &actual_int_2);
@@ -1187,9 +1190,10 @@ TEST_FUNCTION(CopyOutArgumentBuffer_copies_the_memory_for_later_use)
 {
     // arrange
     int injected_int = 0x42;
+    int actual_int = 0;
     EXPECTED_CALL(test_dependency_1_out_arg(IGNORED_PTR_ARG))
         .CopyOutArgumentBuffer(1, &injected_int, sizeof(injected_int));
-    int actual_int = 0;
+
     injected_int = 0;
 
     // act
@@ -1205,10 +1209,10 @@ TEST_FUNCTION(CopyOutArgumentBuffer_frees_allocated_buffers_for_previous_CopyOut
 {
     // arrange
     int injected_int = 0x42;
+    int actual_int = 0;
     EXPECTED_CALL(test_dependency_1_out_arg(IGNORED_PTR_ARG))
         .CopyOutArgumentBuffer(1, &injected_int, sizeof(injected_int))
         .CopyOutArgumentBuffer(1, &injected_int, sizeof(injected_int));
-    int actual_int = 0;
 
     // act
     (void)test_dependency_1_out_arg(&actual_int);
@@ -1283,11 +1287,12 @@ TEST_FUNCTION(CopyOutArgumentBuffer_when_an_error_occurs_preserves_the_previous_
     // arrange
     int injected_int = 0x42;
     int injected_int_2 = 0x43;
+    int actual_int_1 = 0;
+    int actual_int_2 = 0;
     EXPECTED_CALL(test_dependency_2_out_args(IGNORED_PTR_ARG, IGNORED_PTR_ARG))
         .CopyOutArgumentBuffer(2, &injected_int, sizeof(injected_int))
         .CopyOutArgumentBuffer(0, &injected_int_2, sizeof(injected_int_2));
-    int actual_int_1 = 0;
-    int actual_int_2 = 0;
+
 
     // act
     (void)test_dependency_2_out_args(&actual_int_1, &actual_int_2);
@@ -1305,9 +1310,10 @@ TEST_FUNCTION(CopyOutArgumentBuffer_arg_name_copies_bytes_to_the_out_argument_fo
 {
     // arrange
     int injected_int = 0x42;
+    int actual_int = 0;
     STRICT_EXPECTED_CALL(test_dependency_1_out_arg(IGNORED_PTR_ARG))
         .CopyOutArgumentBuffer_a(&injected_int, sizeof(injected_int));
-    int actual_int = 0;
+
 
     // act
     (void)test_dependency_1_out_arg(&actual_int);
@@ -1322,9 +1328,9 @@ TEST_FUNCTION(CopyOutArgumentBuffer_arg_name_copies_bytes_to_the_out_argument_fo
 {
     // arrange
     int injected_int = 0x42;
+    int actual_int = 0;
     EXPECTED_CALL(test_dependency_1_out_arg(IGNORED_PTR_ARG))
         .CopyOutArgumentBuffer_a(&injected_int, sizeof(injected_int));
-    int actual_int = 0;
 
     // act
     (void)test_dependency_1_out_arg(&actual_int);
@@ -1339,10 +1345,10 @@ TEST_FUNCTION(CopyOutArgumentBuffer_arg_name_only_copies_bytes_to_the_out_argume
 {
     // arrange
     int injected_int = 0x42;
-    EXPECTED_CALL(test_dependency_2_out_args(IGNORED_PTR_ARG, IGNORED_PTR_ARG))
-        .CopyOutArgumentBuffer_a(&injected_int, sizeof(injected_int));
     int actual_int_1 = 0;
     int actual_int_2 = 0;
+    EXPECTED_CALL(test_dependency_2_out_args(IGNORED_PTR_ARG, IGNORED_PTR_ARG))
+        .CopyOutArgumentBuffer_a(&injected_int, sizeof(injected_int));
 
     // act
     (void)test_dependency_2_out_args(&actual_int_1, &actual_int_2);
@@ -1358,10 +1364,10 @@ TEST_FUNCTION(CopyOutArgumentBuffer_arg_name_only_copies_bytes_to_the_second_out
 {
     // arrange
     int injected_int = 0x42;
-    EXPECTED_CALL(test_dependency_2_out_args(IGNORED_PTR_ARG, IGNORED_PTR_ARG))
-        .CopyOutArgumentBuffer_b(&injected_int, sizeof(injected_int));
     int actual_int_1 = 0;
     int actual_int_2 = 0;
+    EXPECTED_CALL(test_dependency_2_out_args(IGNORED_PTR_ARG, IGNORED_PTR_ARG))
+        .CopyOutArgumentBuffer_b(&injected_int, sizeof(injected_int));
 
     // act
     (void)test_dependency_2_out_args(&actual_int_1, &actual_int_2);
@@ -1379,6 +1385,7 @@ TEST_FUNCTION(CopyOutArgumentBuffer_arg_name_copies_the_memory_for_later_use)
     EXPECTED_CALL(test_dependency_1_out_arg(IGNORED_PTR_ARG))
         .CopyOutArgumentBuffer_a(&injected_int, sizeof(injected_int));
     int actual_int = 0;
+
     injected_int = 0;
 
     // act
@@ -1394,10 +1401,10 @@ TEST_FUNCTION(CopyOutArgumentBuffer_arg_name_frees_allocated_buffers_for_previou
 {
     // arrange
     int injected_int = 0x42;
+    int actual_int = 0;
     EXPECTED_CALL(test_dependency_1_out_arg(IGNORED_PTR_ARG))
         .CopyOutArgumentBuffer_a(&injected_int, sizeof(injected_int))
         .CopyOutArgumentBuffer_a(&injected_int, sizeof(injected_int));
-    int actual_int = 0;
 
     // act
     (void)test_dependency_1_out_arg(&actual_int);
@@ -1442,11 +1449,12 @@ TEST_FUNCTION(CopyOutArgumentBuffer_arg_name_when_an_error_occurs_preserves_the_
     // arrange
     int injected_int = 0x42;
     int injected_int_2 = 0x43;
+    int actual_int_1 = 0;
+    int actual_int_2 = 0;
     EXPECTED_CALL(test_dependency_2_out_args(IGNORED_PTR_ARG, IGNORED_PTR_ARG))
         .CopyOutArgumentBuffer_b(&injected_int, sizeof(injected_int))
         .CopyOutArgumentBuffer(0, &injected_int_2, sizeof(injected_int_2));
-    int actual_int_1 = 0;
-    int actual_int_2 = 0;
+
 
     // act
     (void)test_dependency_2_out_args(&actual_int_1, &actual_int_2);
@@ -1461,10 +1469,11 @@ TEST_FUNCTION(CopyOutArgumentBuffer_arg_name_overrides_the_buffer_for_CopyOutArg
     // arrange
     int injected_int = 0x42;
     int injected_int_2 = 0x43;
+    int actual_int = 0;
     EXPECTED_CALL(test_dependency_1_out_arg(IGNORED_PTR_ARG))
         .CopyOutArgumentBuffer(1, &injected_int, sizeof(injected_int))
         .CopyOutArgumentBuffer_a(&injected_int_2, sizeof(injected_int_2));
-    int actual_int = 0;
+
 
     // act
     (void)test_dependency_1_out_arg(&actual_int);
@@ -1478,10 +1487,11 @@ TEST_FUNCTION(CopyOutArgumentBuffer_overrides_the_buffer_for_CopyOutArgumentBuff
     // arrange
     int injected_int = 0x42;
     int injected_int_2 = 0x43;
+    int actual_int = 0;
     EXPECTED_CALL(test_dependency_1_out_arg(IGNORED_PTR_ARG))
         .CopyOutArgumentBuffer_a(&injected_int_2, sizeof(injected_int_2))
         .CopyOutArgumentBuffer(1, &injected_int, sizeof(injected_int));
-    int actual_int = 0;
+
 
     // act
     (void)test_dependency_1_out_arg(&actual_int);
@@ -1721,12 +1731,14 @@ TEST_FUNCTION(REGISTER_GLOBAL_MOCK_HOOK_registers_a_hook_for_the_mock)
 TEST_FUNCTION(REGISTER_GLOBAL_MOCK_HOOK_registers_a_hook_for_the_mock_that_returns_2_different_values)
 {
     // arrange
+    int call1_result;
+    int call2_result;
     REGISTER_GLOBAL_MOCK_HOOK(test_dependency_no_args, my_hook_test_dependency_no_args);
     my_hook_result = 0x42;
 
     // act
-    int call1_result = test_dependency_no_args();
-    int call2_result = test_dependency_no_args();
+    call1_result = test_dependency_no_args();
+    call2_result = test_dependency_no_args();
 
     // assert
     ASSERT_ARE_EQUAL(int, 0x42, call1_result);
@@ -2137,11 +2149,12 @@ TEST_FUNCTION(an_expected_call_for_a_mock_function_with_code_ignores_args)
 TEST_FUNCTION(the_value_for_a_function_that_returns_a_char_ptr_is_freed)
 {
     // arrange
+    const char* result;
     EXPECTED_CALL(test_mock_function_returning_string())
         .SetReturn("a");
 
     // act
-    const char* result = test_mock_function_returning_string();
+    result = test_mock_function_returning_string();
 
     // assert
     ASSERT_ARE_EQUAL(char_ptr, "a", result);
@@ -2174,10 +2187,11 @@ TEST_FUNCTION(the_value_for_a_function_that_returns_a_char_ptr_with_a_default_is
 TEST_FUNCTION(the_value_for_a_function_that_returns_a_char_ptr_set_by_macro_is_freed)
 {
     // arrange
+    const char* result;
     REGISTER_GLOBAL_MOCK_RETURN(test_mock_function_returning_string_with_macro, "a");
 
     // act
-    const char* result = test_mock_function_returning_string_with_macro();
+    result = test_mock_function_returning_string_with_macro();
 
     // assert
     ASSERT_ARE_EQUAL(char_ptr, "a", result);
@@ -2189,12 +2203,13 @@ TEST_FUNCTION(the_value_for_a_function_that_returns_a_char_ptr_set_by_macro_is_f
 TEST_FUNCTION(registering_an_alias_type_works)
 {
     // arrange
+    funkytype result;
     REGISTER_UMOCK_ALIAS_TYPE(funkytype, int);
     STRICT_EXPECTED_CALL(test_mock_function_with_funkytype(42))
         .SetReturn(42);
 
     // act
-    funkytype result = test_mock_function_with_funkytype(42);
+    result = test_mock_function_with_funkytype(42);
 
     // assert
     ASSERT_ARE_EQUAL(int, 42, (int)result);
@@ -2206,12 +2221,13 @@ TEST_FUNCTION(registering_an_alias_type_works)
 TEST_FUNCTION(when_an_unregistered_pointer_type_is_used_it_defaults_to_void_ptr)
 {
     // arrange
+    unsigned char*** result;
     REGISTER_UMOCK_ALIAS_TYPE(funkytype, int);
     STRICT_EXPECTED_CALL(test_mock_function_with_unregistered_ptr_type((unsigned char***)0x42))
         .SetReturn((unsigned char***)0x42);
 
     // act
-    unsigned char*** result = test_mock_function_with_unregistered_ptr_type((unsigned char***)0x42);
+    result = test_mock_function_with_unregistered_ptr_type((unsigned char***)0x42);
 
     // assert
     ASSERT_ARE_EQUAL(void_ptr, (void*)0x42, result);
@@ -2471,10 +2487,11 @@ TEST_FUNCTION(validate_argument_value_shall_implicitly_validate_the_argument)
 TEST_FUNCTION(paired_calls_are_checked_and_no_leak_happens)
 {
     // arrange
+    SOME_HANDLE h;
     REGISTER_UMOCKC_PAIRED_CREATE_DESTROY_CALLS(some_create, some_destroy);
 
     // act
-    SOME_HANDLE h = some_create(42);
+    h = some_create(42);
     some_destroy(h);
 
     // assert
@@ -2525,10 +2542,11 @@ TEST_FUNCTION(when_registering_paired_calls_for_a_destroy_with_different_arg_typ
 TEST_FUNCTION(paired_calls_are_checked_with_a_struct_as_instance_type)
 {
     // arrange
+    SOME_STRUCT s;
     REGISTER_UMOCKC_PAIRED_CREATE_DESTROY_CALLS(some_create_with_struct, some_destroy_with_struct);
 
     // act
-    SOME_STRUCT s = some_create_with_struct(42);
+    s = some_create_with_struct(42);
     some_destroy_with_struct(s);
 
     // assert
