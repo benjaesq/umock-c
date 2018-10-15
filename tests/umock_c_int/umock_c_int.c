@@ -1043,11 +1043,12 @@ TEST_FUNCTION(ValidateArgument_by_index_with_index_greater_than_arg_count_trigge
 TEST_FUNCTION(SetReturn_sets_the_return_value_for_a_strict_expected_call)
 {
     // arrange
+    int result;
     STRICT_EXPECTED_CALL(test_dependency_no_args())
         .SetReturn(42);
 
     // act
-    int result = test_dependency_no_args();
+    result = test_dependency_no_args();
 
     // assert
     ASSERT_ARE_EQUAL(int, 42, result);
@@ -1059,11 +1060,12 @@ TEST_FUNCTION(SetReturn_sets_the_return_value_for_a_strict_expected_call)
 TEST_FUNCTION(SetReturn_sets_the_return_value_for_an_expected_call)
 {
     // arrange
+    int result;
     EXPECTED_CALL(test_dependency_no_args())
         .SetReturn(42);
 
     // act
-    int result = test_dependency_no_args();
+    result = test_dependency_no_args();
 
     // assert
     ASSERT_ARE_EQUAL(int, 42, result);
@@ -1075,11 +1077,12 @@ TEST_FUNCTION(SetReturn_sets_the_return_value_for_an_expected_call)
 TEST_FUNCTION(SetReturn_sets_the_return_value_only_for_a_matched_call)
 {
     // arrange
+    int result;
     STRICT_EXPECTED_CALL(test_dependency_1_arg(42))
         .SetReturn(42);
 
     // act
-    int result = test_dependency_1_arg(41);
+    result = test_dependency_1_arg(41);
 
     // assert
     ASSERT_ARE_EQUAL(int, 0, result);
@@ -1089,14 +1092,16 @@ TEST_FUNCTION(SetReturn_sets_the_return_value_only_for_a_matched_call)
 TEST_FUNCTION(SetReturn_sets_independent_return_values_for_each_call)
 {
     // arrange
+    int result1;
+    int result2;
     STRICT_EXPECTED_CALL(test_dependency_1_arg(42))
         .SetReturn(142);
     STRICT_EXPECTED_CALL(test_dependency_1_arg(43))
         .SetReturn(143);
 
     // act
-    int result1 = test_dependency_1_arg(42);
-    int result2 = test_dependency_1_arg(43);
+    result1 = test_dependency_1_arg(42);
+    result2 = test_dependency_1_arg(43);
 
     // assert
     ASSERT_ARE_EQUAL(int, 142, result1);
@@ -1700,11 +1705,12 @@ TEST_FUNCTION(When_ValidateArgumentBuffer_is_called_twice_the_last_buffer_is_use
 TEST_FUNCTION(REGISTER_GLOBAL_MOCK_HOOK_registers_a_hook_for_the_mock)
 {
     // arrange
+    int result;
     REGISTER_GLOBAL_MOCK_HOOK(test_dependency_no_args, my_hook_test_dependency_no_args);
     my_hook_result = 0x42;
 
     // act
-    int result = test_dependency_no_args();
+    result = test_dependency_no_args();
 
     // assert
     ASSERT_ARE_EQUAL(int, 0x42, result);
@@ -1731,12 +1737,13 @@ TEST_FUNCTION(REGISTER_GLOBAL_MOCK_HOOK_registers_a_hook_for_the_mock_that_retur
 TEST_FUNCTION(REGISTER_GLOBAL_MOCK_HOOK_twice_makes_the_last_hook_stick)
 {
     // arrange
+    int result;
     REGISTER_GLOBAL_MOCK_HOOK(test_dependency_no_args, my_hook_test_dependency_no_args);
     REGISTER_GLOBAL_MOCK_HOOK(test_dependency_no_args, my_hook_test_dependency_no_args_2);
     my_hook_result = 0x42;
 
     // act
-    int result = test_dependency_no_args();
+    result = test_dependency_no_args();
 
     // assert
     ASSERT_ARE_EQUAL(int, 0x21, result);
@@ -1746,11 +1753,12 @@ TEST_FUNCTION(REGISTER_GLOBAL_MOCK_HOOK_twice_makes_the_last_hook_stick)
 TEST_FUNCTION(REGISTER_GLOBAL_MOCK_HOOK_with_NULL_unregisters_a_previously_registered_hook)
 {
     // arrange
+    int result;
     REGISTER_GLOBAL_MOCK_HOOK(test_dependency_no_args, my_hook_test_dependency_no_args);
     REGISTER_GLOBAL_MOCK_HOOK(test_dependency_no_args, NULL);
 
     // act
-    int result = test_dependency_no_args();
+    result = test_dependency_no_args();
 
     // assert
     ASSERT_ARE_EQUAL(int, 0, result);
@@ -1789,10 +1797,11 @@ TEST_FUNCTION(REGISTER_GLOBAL_MOCK_HOOK_with_a_function_that_returns_void_works)
 TEST_FUNCTION(REGISTER_GLOBAL_MOCK_RETURN_makes_a_subsequent_call_to_the_mock_return_the_value)
 {
     // arrange
+    int result;
     REGISTER_GLOBAL_MOCK_RETURN(test_dependency_global_mock_return_test, 0x45);
 
     // act
-    int result = test_dependency_global_mock_return_test();
+    result = test_dependency_global_mock_return_test();
 
     // assert
     ASSERT_ARE_EQUAL(int, 0x45, result);
@@ -1802,11 +1811,12 @@ TEST_FUNCTION(REGISTER_GLOBAL_MOCK_RETURN_makes_a_subsequent_call_to_the_mock_re
 TEST_FUNCTION(REGISTER_GLOBAL_MOCK_RETURN_twice_only_makes_the_second_call_stick)
 {
     // arrange
+    int result;
     REGISTER_GLOBAL_MOCK_RETURN(test_dependency_global_mock_return_test, 0x45);
     REGISTER_GLOBAL_MOCK_RETURN(test_dependency_global_mock_return_test, 0x46);
 
     // act
-    int result = test_dependency_global_mock_return_test();
+    result = test_dependency_global_mock_return_test();
 
     // assert
     ASSERT_ARE_EQUAL(int, 0x46, result);
@@ -1818,11 +1828,12 @@ TEST_FUNCTION(REGISTER_GLOBAL_MOCK_RETURN_twice_only_makes_the_second_call_stick
 TEST_FUNCTION(REGISTER_GLOBAL_MOCK_FAIL_RETURN_is_possible_and_does_not_affect_the_return_value)
 {
     // arrange
+    int result;
     REGISTER_GLOBAL_MOCK_RETURN(test_dependency_global_mock_return_test, 0x42);
     REGISTER_GLOBAL_MOCK_FAIL_RETURN(test_dependency_global_mock_return_test, 0x45);
 
     // act
-    int result = test_dependency_global_mock_return_test();
+    result = test_dependency_global_mock_return_test();
 
     // assert
     ASSERT_ARE_EQUAL(int, 0x42, result);
@@ -1832,12 +1843,13 @@ TEST_FUNCTION(REGISTER_GLOBAL_MOCK_FAIL_RETURN_is_possible_and_does_not_affect_t
 TEST_FUNCTION(Multiple_REGISTER_GLOBAL_MOCK_FAIL_RETURN_calls_are_possible)
 {
     // arrange
+    int result;
     REGISTER_GLOBAL_MOCK_RETURN(test_dependency_global_mock_return_test, 0x42);
     REGISTER_GLOBAL_MOCK_FAIL_RETURN(test_dependency_global_mock_return_test, 0x45);
     REGISTER_GLOBAL_MOCK_FAIL_RETURN(test_dependency_global_mock_return_test, 0x46);
 
     // act
-    int result = test_dependency_global_mock_return_test();
+    result = test_dependency_global_mock_return_test();
 
     // assert
     ASSERT_ARE_EQUAL(int, 0x42, result);
@@ -1847,11 +1859,12 @@ TEST_FUNCTION(Multiple_REGISTER_GLOBAL_MOCK_FAIL_RETURN_calls_are_possible)
 TEST_FUNCTION(When_copy_fails_in_REGISTER_GLOBAL_MOCK_FAIL_RETURN_then_on_error_is_triggered)
 {
     // arrange
+    int result;
     REGISTER_GLOBAL_MOCK_RETURN(test_dependency_global_mock_return_test, 0x42);
     REGISTER_GLOBAL_MOCK_FAIL_RETURN(test_dependency_global_mock_return_test, 0x45);
 
     // act
-    int result = test_dependency_global_mock_return_test();
+    result = test_dependency_global_mock_return_test();
 
     // assert
     ASSERT_ARE_EQUAL(int, 0x42, result);
@@ -1863,10 +1876,11 @@ TEST_FUNCTION(When_copy_fails_in_REGISTER_GLOBAL_MOCK_FAIL_RETURN_then_on_error_
 TEST_FUNCTION(REGISTER_GLOBAL_MOCK_RETURNS_registers_the_return_value)
 {
     // arrange
+    int result;
     REGISTER_GLOBAL_MOCK_RETURNS(test_dependency_global_mock_return_test, 0xAA, 0x43);
 
     // act
-    int result = test_dependency_global_mock_return_test();
+    result = test_dependency_global_mock_return_test();
 
     // assert
     ASSERT_ARE_EQUAL(int, 0xAA, result);
@@ -1876,11 +1890,12 @@ TEST_FUNCTION(REGISTER_GLOBAL_MOCK_RETURNS_registers_the_return_value)
 TEST_FUNCTION(REGISTER_GLOBAL_MOCK_RETURNS_twice_makes_only_the_last_call_stick)
 {
     // arrange
+    int result;
     REGISTER_GLOBAL_MOCK_RETURNS(test_dependency_global_mock_return_test, 0xAA, 0x43);
     REGISTER_GLOBAL_MOCK_RETURNS(test_dependency_global_mock_return_test, 0xAB, 0x44);
 
     // act
-    int result = test_dependency_global_mock_return_test();
+    result = test_dependency_global_mock_return_test();
 
     // assert
     ASSERT_ARE_EQUAL(int, 0xAB, result);
@@ -1980,11 +1995,12 @@ TEST_FUNCTION(when_a_type_is_not_supported_an_error_is_triggered)
 TEST_FUNCTION(when_the_return_value_is_given_by_SetReturn_then_it_is_returned)
 {
     // arrange
+    int result;
     STRICT_EXPECTED_CALL(test_dependency_1_arg(42))
         .SetReturn(42);
 
     // act
-    int result = test_dependency_1_arg(42);
+    result = test_dependency_1_arg(42);
 
     // assert
     ASSERT_ARE_EQUAL(int, 42, result);
@@ -1995,14 +2011,16 @@ TEST_FUNCTION(when_the_return_value_is_given_by_SetReturn_then_it_is_returned)
 /* Tests_SRS_UMOCK_C_LIB_01_138: [ - If a global mock hook has been specified then it shall be called and its result returned. ]*/
 TEST_FUNCTION(when_the_return_value_is_given_by_SetReturn_for_a_function_with_a_global_return_hook_the_SetReturn_value_is_returned)
 {
+    // arrange
+    int result;
+
     REGISTER_GLOBAL_MOCK_HOOK(test_dependency_with_global_mock_hook, my_hook_test_dependency_with_global_mock_hook);
 
-    // arrange
     STRICT_EXPECTED_CALL(test_dependency_with_global_mock_hook())
         .SetReturn(42);
 
     // act
-    int result = test_dependency_with_global_mock_hook();
+    result = test_dependency_with_global_mock_hook();
 
     // assert
     ASSERT_ARE_EQUAL(int, 42, result);
@@ -2013,13 +2031,13 @@ TEST_FUNCTION(when_the_return_value_is_given_by_SetReturn_for_a_function_with_a_
 /* Tests_SRS_UMOCK_C_LIB_01_138: [ - If a global mock hook has been specified then it shall be called and its result returned. ]*/
 TEST_FUNCTION(when_the_return_value_is_not_given_by_SetReturn_for_a_function_with_a_global_return_hook_the_mock_hook_return_value_is_returned)
 {
-    REGISTER_GLOBAL_MOCK_HOOK(test_dependency_with_global_mock_hook, my_hook_test_dependency_with_global_mock_hook);
-
     // arrange
+    int result;
+    REGISTER_GLOBAL_MOCK_HOOK(test_dependency_with_global_mock_hook, my_hook_test_dependency_with_global_mock_hook);
     STRICT_EXPECTED_CALL(test_dependency_with_global_mock_hook());
 
     // act
-    int result = test_dependency_with_global_mock_hook();
+    result = test_dependency_with_global_mock_hook();
 
     // assert
     ASSERT_ARE_EQUAL(int, 43, result);
@@ -2028,15 +2046,15 @@ TEST_FUNCTION(when_the_return_value_is_not_given_by_SetReturn_for_a_function_wit
 /* Tests_SRS_UMOCK_C_LIB_01_139: [ - If a global return value has been specified then it shall be returned. ]*/
 TEST_FUNCTION(when_the_return_value_is_given_by_SetReturn_for_a_function_with_a_global_return_hook_and_global_return_the_SetReturn_value_is_returned)
 {
+    // arrange
+    int result;
     REGISTER_GLOBAL_MOCK_HOOK(test_dependency_with_global_mock_hook, my_hook_test_dependency_with_global_mock_hook);
     REGISTER_GLOBAL_MOCK_RETURN(test_dependency_with_global_mock_hook, 44);
-
-    // arrange
     STRICT_EXPECTED_CALL(test_dependency_with_global_mock_hook())
         .SetReturn(42);
 
     // act
-    int result = test_dependency_with_global_mock_hook();
+    result = test_dependency_with_global_mock_hook();
 
     // assert
     ASSERT_ARE_EQUAL(int, 42, result);
@@ -2045,14 +2063,15 @@ TEST_FUNCTION(when_the_return_value_is_given_by_SetReturn_for_a_function_with_a_
 /* Tests_SRS_UMOCK_C_LIB_01_139: [ - If a global return value has been specified then it shall be returned. ]*/
 TEST_FUNCTION(when_the_return_value_is_not_given_by_SetReturn_for_a_function_with_a_global_return_hook_and_global_return_the_global_mock_hook_value_is_returned)
 {
+    // arrange
+    int result;
     REGISTER_GLOBAL_MOCK_HOOK(test_dependency_with_global_mock_hook, my_hook_test_dependency_with_global_mock_hook);
     REGISTER_GLOBAL_MOCK_RETURN(test_dependency_with_global_mock_hook, 44);
 
-    // arrange
     STRICT_EXPECTED_CALL(test_dependency_with_global_mock_hook());
 
     // act
-    int result = test_dependency_with_global_mock_hook();
+    result = test_dependency_with_global_mock_hook();
 
     // assert
     ASSERT_ARE_EQUAL(int, 43, result);
@@ -2061,13 +2080,13 @@ TEST_FUNCTION(when_the_return_value_is_not_given_by_SetReturn_for_a_function_wit
 /* Tests_SRS_UMOCK_C_LIB_01_139: [ - If a global return value has been specified then it shall be returned. ]*/
 TEST_FUNCTION(when_the_return_value_is_specified_only_by_global_return_that_global_return_value_is_returned)
 {
-    REGISTER_GLOBAL_MOCK_RETURN(test_dependency_with_global_return, 44);
-
     // arrange
+    int result;
+    REGISTER_GLOBAL_MOCK_RETURN(test_dependency_with_global_return, 44);
     STRICT_EXPECTED_CALL(test_dependency_with_global_return());
 
     // act
-    int result = test_dependency_with_global_return();
+    result = test_dependency_with_global_return();
 
     // assert
     ASSERT_ARE_EQUAL(int, 44, result);
@@ -2077,10 +2096,11 @@ TEST_FUNCTION(when_the_return_value_is_specified_only_by_global_return_that_glob
 TEST_FUNCTION(when_no_return_value_is_specified_for_a_function_returning_int_0_is_returned)
 {
     // arrange
+    int result;
     STRICT_EXPECTED_CALL(test_dependency_returning_int());
 
     // act
-    int result = test_dependency_returning_int();
+    result = test_dependency_returning_int();
 
     // assert
     ASSERT_ARE_EQUAL(int, 0, result);
@@ -2843,11 +2863,12 @@ TEST_FUNCTION(IgnoreAllCalls_ignores_only_calls_with_matching_args_2)
 TEST_FUNCTION(CallCannotFail_sets_cannot_fail_for_strict_expected_call)
 {
     // arrange
+    int result;
     STRICT_EXPECTED_CALL(test_dependency_no_args())
         .CallCannotFail();
 
     // act
-    int result = test_dependency_no_args();
+    result = test_dependency_no_args();
 
     // assert
     ASSERT_ARE_EQUAL(int, 0, result);
@@ -2859,11 +2880,13 @@ TEST_FUNCTION(CallCannotFail_sets_cannot_fail_for_strict_expected_call)
 TEST_FUNCTION(CallCannotFail_sets_cannot_fail_for_expected_call)
 {
     // arrange
+    int result;
+
     EXPECTED_CALL(test_dependency_no_args())
         .CallCannotFail();
 
     // act
-    int result = test_dependency_no_args();
+    result = test_dependency_no_args();
 
     // assert
     ASSERT_ARE_EQUAL(int, 0, result);
