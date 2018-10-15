@@ -1382,9 +1382,9 @@ TEST_FUNCTION(CopyOutArgumentBuffer_arg_name_copies_the_memory_for_later_use)
 {
     // arrange
     int injected_int = 0x42;
+    int actual_int = 0;
     EXPECTED_CALL(test_dependency_1_out_arg(IGNORED_PTR_ARG))
         .CopyOutArgumentBuffer_a(&injected_int, sizeof(injected_int));
-    int actual_int = 0;
 
     injected_int = 0;
 
@@ -2742,6 +2742,8 @@ TEST_FUNCTION(auto_ignore_when_first_arg_is_a_nested_macro_succeeds_for_2nd_arg)
     ASSERT_ARE_EQUAL(char_ptr, "", umock_c_get_actual_calls());
 }
 
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1600
 /* Tests_SRS_UMOCK_C_LIB_01_205: [ If `IGNORED_PTR_ARG` or `IGNORED_NUM_ARG` is used as an argument value with `STRICT_EXPECTED_CALL`, the argument shall be automatically ignored. ]*/
 /* Tests_SRS_UMOCK_C_LIB_01_206: [ `IGNORED_PTR_ARG` shall be defined as NULL so that it can be used for pointer type arguments. ]*/
 TEST_FUNCTION(auto_ignore_when_first_arg_is_a_struct_succeeds_for_2nd_arg)
@@ -2772,6 +2774,7 @@ TEST_FUNCTION(auto_ignore_when_first_arg_is_a_struct_succeeds_for_2nd_arg)
     ASSERT_ARE_EQUAL(char_ptr, "", umock_c_get_expected_calls());
     ASSERT_ARE_EQUAL(char_ptr, "", umock_c_get_actual_calls());
 }
+#endif
 
 /* Tests_SRS_UMOCK_C_LIB_01_101: [The IgnoreAllCalls call modifier shall record that all calls matching the expected call shall be ignored. ]*/
 /* Tests_SRS_UMOCK_C_LIB_01_208: [ If no matching call occurs no missing call shall be reported. ]*/
