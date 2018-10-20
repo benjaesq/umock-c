@@ -253,14 +253,11 @@ void umockalloc_free(void* ptr)
 }
 
 static TEST_MUTEX_HANDLE test_mutex;
-static TEST_MUTEX_HANDLE g_dllByDll;
 
 BEGIN_TEST_SUITE(umock_c_negative_tests_unittests)
 
 TEST_SUITE_INITIALIZE(suite_init)
 {
-    TEST_INITIALIZE_MEMORY_DEBUG(g_dllByDll);
-
     test_mutex = TEST_MUTEX_CREATE();
     ASSERT_IS_NOT_NULL(test_mutex);
 }
@@ -268,7 +265,6 @@ TEST_SUITE_INITIALIZE(suite_init)
 TEST_SUITE_CLEANUP(suite_cleanup)
 {
     TEST_MUTEX_DESTROY(test_mutex);
-    TEST_DEINITIALIZE_MEMORY_DEBUG(g_dllByDll);
 }
 
 TEST_FUNCTION_INITIALIZE(test_function_init)
