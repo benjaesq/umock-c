@@ -188,10 +188,6 @@ if(${use_installed_dependencies})
             ${package_location}
     )
 else()
-    install(FILES ${source_h_files}
+    install(FILES ${umock_c_h_files}
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/umock_c)
-    install(TARGETS ${install_staticlibs}
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-
 endif()
