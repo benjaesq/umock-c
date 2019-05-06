@@ -157,7 +157,7 @@ if(${use_installed_dependencies})
         RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}/../bin
         INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     )
-    install(FILES ${umock_c_h_files} "./inc/umock_c/umock_c_prod.h" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+    install(FILES ${umock_c_h_files} "./inc/umock_c/umock_c_prod.h" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/umock_c)
 
     include(CMakePackageConfigHelpers)
 
