@@ -1,9 +1,24 @@
 #Copyright (c) Microsoft. All rights reserved.
 #Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-set(original_run_e2e_tests ${run_e2e_tests})
-set(original_run_int_tests ${run_int_tests})
-set(original_run_unittests ${run_unittests})
+if (DEFINED run_e2e_tests)
+    set(original_run_e2e_tests ${run_e2e_tests})
+else()
+    set(original_run_e2e_tests OFF)
+endif()
+
+if (DEFINED run_int_tests)
+    set(original_run_int_tests ${run_int_tests})
+else()
+    set(original_run_int_tests OFF)
+endif()
+
+if (DEFINED run_unittests)
+    set(original_run_unittests ${run_unittests})
+else()
+    set(original_run_unittests OFF)
+endif()
+
 
 set(run_e2e_tests OFF)
 set(run_int_tests OFF)
