@@ -4,15 +4,6 @@
 #ifndef UMOCK_C_INTERNAL_H
 #define UMOCK_C_INTERNAL_H
 
-#ifdef __cplusplus
-#include <cstdlib>
-extern "C" {
-#else
-#include <stdlib.h>
-#endif
-
-#include <stdio.h>
-
 #include "azure_macro_utils/macro_utils.h"
 #include "umock_c/umocktypes.h"
 #include "umock_c/umockcall.h"
@@ -23,6 +14,15 @@ extern "C" {
 #include "umock_c/umockcallpairs.h"
 #include "umock_c/umockstring.h"
 #include "umock_c/umockautoignoreargs.h"
+
+#ifdef __cplusplus
+#include <cstdlib>
+extern "C" {
+#else
+#include <stdlib.h>
+#endif
+
+#include <stdio.h>
 
 extern void umock_c_indicate_error(UMOCK_C_ERROR_CODE error_code);
 extern UMOCKCALL_HANDLE umock_c_get_last_expected_call(void);
