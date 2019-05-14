@@ -4,14 +4,15 @@
 #ifndef UMOCK_C_H
 #define UMOCK_C_H
 
+#include "azure_macro_utils/macro_utils.h"
+#include "umock_c/umockcallrecorder.h"
+
 #ifdef __cplusplus
 #include <cstdlib>
 extern "C" {
 #else
 #include <stdlib.h>
 #endif
-#include "azure_macro_utils/macro_utils.h"
-#include "umock_c/umockcallrecorder.h"
 
 /* Define UMOCK_STATIC to static to make mocks private to compilation unit */
 #ifndef UMOCK_STATIC

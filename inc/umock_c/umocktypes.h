@@ -4,14 +4,14 @@
 #ifndef UMOCKTYPES_H
 #define UMOCKTYPES_H
 
+#include "umockalloc.h"
+
 #ifdef __cplusplus
 #include <cstddef>
 extern "C" {
 #else
 #include <stddef.h>
 #endif
-
-#include "umockalloc.h"
 
     typedef char*(*UMOCKTYPE_STRINGIFY_FUNC)(const void* value);
     typedef int(*UMOCKTYPE_COPY_FUNC)(void* destination, const void* source);
