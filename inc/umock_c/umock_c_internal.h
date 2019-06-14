@@ -4,6 +4,14 @@
 #ifndef UMOCK_C_INTERNAL_H
 #define UMOCK_C_INTERNAL_H
 
+#ifdef __cplusplus
+#include <cstdlib>
+#include <cstdio>
+#else
+#include <stdlib.h>
+#include <stdio.h>
+#endif
+
 #include "azure_macro_utils/macro_utils.h"
 #include "umock_c/umocktypes.h"
 #include "umock_c/umockcall.h"
@@ -15,14 +23,19 @@
 #include "umock_c/umockstring.h"
 #include "umock_c/umockautoignoreargs.h"
 
-#ifdef __cplusplus
-#include <cstdlib>
-extern "C" {
+#ifdef _MSC_VER
+#define UMOCK_C_WEAK
+#elif __GNUC__
+// GCC needs weak for the reals
+#define UMOCK_C_WEAK __attribute__ ((weak))
 #else
-#include <stdlib.h>
+// at the mercy of that compiler
+#define UMOCK_C_WEAK
 #endif
 
-#include <stdio.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 extern void umock_c_indicate_error(UMOCK_C_ERROR_CODE error_code);
 extern UMOCKCALL_HANDLE umock_c_get_last_expected_call(void);
@@ -972,6 +985,7 @@ typedef struct MOCK_CALL_METADATA_TAG
 /* Codes_SRS_UMOCK_C_LIB_01_188: [ The create call shall have a non-void return type. ]*/
 #define MOCKABLE_FUNCTION_UMOCK_INTERNAL_WITH_MOCK_NO_CODE(do_returns, return_type, name, ...) \
     typedef return_type (*MU_C2(mock_hook_func_type_, name))(MU_IF(MU_COUNT_ARG(__VA_ARGS__),,void) MU_FOR_EACH_2_COUNTED(ARG_IN_SIGNATURE, __VA_ARGS__)); \
+    return_type MU_C2(real_, name)(MU_IF(MU_COUNT_ARG(__VA_ARGS__),,void) MU_FOR_EACH_2_COUNTED(ARG_IN_SIGNATURE, __VA_ARGS__)) UMOCK_C_WEAK; \
     static MU_C2(mock_hook_func_type_,name) MU_C2(mock_hook_,name) = NULL; \
     static TRACK_CREATE_FUNC_TYPE MU_C2(track_create_destroy_pair_malloc_,name) = NULL; \
     static TRACK_DESTROY_FUNC_TYPE MU_C2(track_create_destroy_pair_free_,name) = NULL; \
@@ -1000,7 +1014,7 @@ typedef struct MOCK_CALL_METADATA_TAG
             } \
         ) \
     ,) \
-typedef struct MU_C2(_mock_call_modifier_,name) (*MU_C2(set_return_func_type_,name))(return_type return_value); \
+    typedef struct MU_C2(_mock_call_modifier_,name) (*MU_C2(set_return_func_type_,name))(return_type return_value); \
     typedef struct MU_C2(_mock_call_modifier_,name) (*MU_C2(set_fail_return_func_type_,name))(return_type return_value); \
     typedef struct MU_C2(_mock_call_modifier_,name) (*MU_C2(call_cannot_fail_func_type_,name))(void); \
     typedef struct MU_C2(_mock_call_modifier_,name) (*MU_C2(capture_return_func_type_,name))(return_type* captured_return_value);,) \
@@ -1448,6 +1462,10 @@ typedef struct MU_C2(_mock_call_modifier_,name) (*MU_C2(set_return_func_type_,na
         MU_C2(used_paired_handles_, create_call) = &MU_C2(paired_handles_, create_call); \
         MU_C2(used_paired_handles_, destroy_call) = &MU_C2(paired_handles_, create_call); \
     }
+
+/* Codes_SRS_UMOCK_C_LIB_01_219: [ `REGISTER_GLOBAL_INTERFACE_HOOKS` shall register as mock hooks the real functions for all the functions in a mockable interface. ]*/
+#define REGISTER_GLOBAL_INTERFACE_HOOKS(interface_name) \
+    MU_C2(register_reals_, interface_name)()
 
 #ifdef __cplusplus
     }

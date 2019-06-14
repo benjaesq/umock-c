@@ -28,6 +28,7 @@ endif()
 #int tests
 if(${run_int_tests})
     add_subdirectory(umock_c_int)
+    add_subdirectory(umock_c_reals_int)
     add_subdirectory(umock_c_mock_filters_int)
     add_subdirectory(umock_c_negt_int)
     add_subdirectory(umock_c_gen_func_decl_int)

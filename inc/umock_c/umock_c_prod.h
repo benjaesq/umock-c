@@ -7,6 +7,8 @@
 #undef MOCKABLE_FUNCTION_WITH_RETURNS
 #undef MOCKABLE_FUNCTION_WITH_CODE
 #undef MOCKABLE_FUNCTION_WITH_CODE_END
+#undef IMPLEMENT_MOCKABLE_FUNCTION
+#undef MOCKABLE_INTERFACE
 
 /* This header is meant to be included by production code headers, so that the MOCKABLE_FUNCTION gets enabled. */
 /* 
@@ -30,9 +32,10 @@
 #define ENABLE_MOCK_FILTERING_SWITCH 0
 #endif
 
-#include "azure_macro_utils/macro_utils.h"
-
 #define UMOCK_C_PROD_ARG_IN_SIGNATURE(count, arg_type, arg_name) arg_type arg_name MU_IFCOMMA(count)
+
+#define MOCKABLE_FUNCTION_SIGNATURE(modifiers, result, function, ...) \
+    result modifiers function(MU_IF(MU_COUNT_ARG(__VA_ARGS__),,void) MU_FOR_EACH_2_COUNTED(UMOCK_C_PROD_ARG_IN_SIGNATURE, __VA_ARGS__))
 
 #define MOCKABLE_FUNCTION_DISABLED(do_returns, modifiers, result, function, ...) \
     result modifiers function(MU_IF(MU_COUNT_ARG(__VA_ARGS__), , void) MU_FOR_EACH_2_COUNTED(UMOCK_C_PROD_ARG_IN_SIGNATURE, __VA_ARGS__)); \
@@ -53,6 +56,28 @@
 
 #define MOCKABLE_FUNCTION_WITH_CODE_END() \
     MOCK_FUNCTION_END()
+
+/* Codes_SRS_UMOCK_C_LIB_01_217: [ In the presence of the `ENABLE_MOCKS` define, `IMPLEMENT_MOCKABLE_FUNCTION` shall expand to the signature of the function, but the name shall be changed to be prefix with `real_`. ]*/
+#define IMPLEMENT_MOCKABLE_FUNCTION(modifiers, result, function, ...) \
+    MOCKABLE_FUNCTION_SIGNATURE(modifiers, result, MU_C2(real_, function), __VA_ARGS__)
+
+#define EXPAND_ENTRY(A) \
+    MOCKABLE_##A
+
+#define REGISTER_GLOBAL_MOCK_REAL_FUNCTION(modifiers, result, function, ...) \
+    REGISTER_GLOBAL_MOCK_HOOK(function, MU_C2(real_, function));
+
+#define REGISTER_GLOBAL_MOCK_REAL(A) \
+    REGISTER_GLOBAL_MOCK_REAL_##A
+
+/* Codes_SRS_UMOCK_C_LIB_01_215: [ Each item in `...` shall be an entry for one mockable function. ]*/
+/* Codes_SRS_UMOCK_C_LIB_01_216: [ Each item in `...` shall be defined using a macro called `FUNCTION`, which shall be an alias for `MOCKABLE_FUNCTION`. ]*/
+#define MOCKABLE_INTERFACE(interface_name, ...) \
+    MU_FOR_EACH_1(EXPAND_ENTRY, __VA_ARGS__) \
+    static void MU_C2(register_reals_, interface_name)(void) \
+    { \
+        MU_FOR_EACH_1(REGISTER_GLOBAL_MOCK_REAL, __VA_ARGS__); \
+    } \
 
 #include "umock_c/umock_c.h"
 
@@ -81,6 +106,17 @@
 // They will be removed once the real support is in umock_c
 #define MOCKABLE_FUNCTION_WITH_CODE(modifiers, result, function, ...) \
     MOCKABLE_FUNCTION_SIGNATURE(modifiers, result, function, __VA_ARGS__)
+
+/* Codes_SRS_UMOCK_C_LIB_01_218: [ If `ENABLE_MOCKS` is not defined, `IMPLEMENT_MOCKABLE_FUNCTION` shall expand to the signature of the function. ]*/
+#define IMPLEMENT_MOCKABLE_FUNCTION(modifiers, result, function, ...) \
+    MOCKABLE_FUNCTION_SIGNATURE(modifiers, result, function, __VA_ARGS__)
+
+#define EXPAND_PROD_ENTRY(A) MU_C2(MOCKABLE_, A)
+
+/* Codes_SRS_UMOCK_C_LIB_01_215: [ Each item in `...` shall be an entry for one mockable function. ]*/
+/* Codes_SRS_UMOCK_C_LIB_01_216: [ Each item in `...` shall be defined using a macro called `FUNCTION`, which shall be an alias for `MOCKABLE_FUNCTION`. ]*/
+#define MOCKABLE_INTERFACE(interface_name, ...) \
+    MU_FOR_EACH_1(EXPAND_PROD_ENTRY, __VA_ARGS__)
 
 #define MOCKABLE_FUNCTION_WITH_CODE_END() \
 
