@@ -13,6 +13,9 @@
 #include "testrunnerswitcher.h"
 #include "umock_c/umock_c.h"
 
+// This include checks that a header with a MOCKABLE_INTERFACE in it can be expanded when no ENABLE_MOCKS is used
+#include "test_unit_no_reals.h"
+
 #include "test_dependency_no_enable_mocks.h"
 #include "test_dependency_real_code_no_enable_mocks.c"
 

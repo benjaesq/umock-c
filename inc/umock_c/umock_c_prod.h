@@ -111,7 +111,7 @@
 #define IMPLEMENT_MOCKABLE_FUNCTION(modifiers, result, function, ...) \
     MOCKABLE_FUNCTION_SIGNATURE(modifiers, result, function, __VA_ARGS__)
 
-#define EXPAND_PROD_ENTRY(A) MU_C2(MOCKABLE_, A)
+#define EXPAND_PROD_ENTRY(A) MOCKABLE_##A
 
 /* Codes_SRS_UMOCK_C_LIB_01_215: [ Each item in `...` shall be an entry for one mockable function. ]*/
 /* Codes_SRS_UMOCK_C_LIB_01_216: [ Each item in `...` shall be defined using a macro called `FUNCTION`, which shall be an alias for `MOCKABLE_FUNCTION`. ]*/
