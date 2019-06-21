@@ -198,23 +198,6 @@ jobs:
   - script: sudo rm -rf $(Agent.BuildDirectory)/*
     displayName: 'cleanup'
     condition: always()    
-- job: wolfssl
-  variables:
-    _PREVIEW_VSTS_DOCKER_IMAGE: "aziotbld/vsts-c-wolfssl"
-  pool: Hosted Ubuntu 1604
-  displayName: 'wolfssl'
-  steps:
-  - script: |
-     if [ -f "build/linux_wolfssl.sh" ]
-     then
-      LD_LIBRARY_PATH=/usr/local/lib
-      LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/my_library/
-      sudo build/linux_wolfssl.sh
-     fi
-    displayName: 'build'
-  - script: sudo rm -rf $(Agent.BuildDirectory)/*
-    displayName: 'cleanup'
-    condition: always()
 - job: windowsx64
   pool:
     name: 'aziotbld-win03'
