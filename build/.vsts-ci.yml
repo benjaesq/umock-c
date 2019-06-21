@@ -105,18 +105,6 @@ jobs:
   - script: cd .. && rd /Q /S $(Agent.BuildDirectory)\s
     displayName: 'cleanup'
     condition: always()    
-- job: windowsdynamic
-  pool:
-    name: 'aziotbld-win03'
-  steps:
-  - script: |
-     if exist build\windows_c_build_as_dynamic.cmd (
-      call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\Tools\VsDevCmd.bat"
-      call build\windows_c_build_as_dynamic.cmd)
-    displayName: 'build'
-  - script: cd .. && rd /Q /S $(Agent.BuildDirectory)\s
-    displayName: 'cleanup'
-    condition: always()      
 - job: OSX
   pool:
     name: OSX
