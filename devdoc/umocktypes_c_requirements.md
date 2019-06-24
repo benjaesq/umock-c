@@ -8,13 +8,13 @@ umocktypes_c is a module that exposes out of the box functionality for most C su
 # Exposed API
 
 ```c
-extern int umocktypes_c_register_types(void);
+int umocktypes_c_register_types(void);
 
 #define UMOCKTYPES_HANDLERS(type, function_postfix) \
-    extern char* MU_C2(umocktypes_stringify_,function_postfix)(const type* value); \
-    extern int MU_C2(umocktypes_are_equal_, function_postfix)(const type* left, const type* right); \
-    extern int MU_C2(umocktypes_copy_, function_postfix)(type* destination, const type* source); \
-    extern void MU_C2(umocktypes_free_, function_postfix)(type* value);
+    char* MU_C2(umocktypes_stringify_,function_postfix)(const type* value); \
+    int MU_C2(umocktypes_are_equal_, function_postfix)(const type* left, const type* right); \
+    int MU_C2(umocktypes_copy_, function_postfix)(type* destination, const type* source); \
+    void MU_C2(umocktypes_free_, function_postfix)(type* value);
 
 UMOCKTYPES_HANDLERS(char, char)
 UMOCKTYPES_HANDLERS(unsigned char, unsignedchar)
@@ -38,7 +38,7 @@ UMOCKTYPES_HANDLERS(const void*, void_ptr)
 ## umocktypes_c_register_types
 
 ```c
-extern int umocktypes_c_register_types(void);
+int umocktypes_c_register_types(void);
 ```
 
 **SRS_UMOCKTYPES_C_01_001: [** umocktypes_c_register_types shall register support for all the types in the module. **]**
@@ -50,7 +50,7 @@ extern int umocktypes_c_register_types(void);
 ## umocktypes_stringify_char
 
 ```c
-extern char* umocktypes_stringify_char(const char* value);
+char* umocktypes_stringify_char(const char* value);
 ```
 
 **SRS_UMOCKTYPES_C_01_002: [** umocktypes_stringify_char shall return the string representation of value. **]**
@@ -64,7 +64,7 @@ extern char* umocktypes_stringify_char(const char* value);
 ## umocktypes_are_equal_char
 
 ```c
-extern int umocktypes_are_equal_char(const char* left, const char* right);
+int umocktypes_are_equal_char(const char* left, const char* right);
 ```
 
 **SRS_UMOCKTYPES_C_01_006: [** umocktypes_are_equal_char shall compare the 2 chars pointed to by left and right. **]**
@@ -78,7 +78,7 @@ extern int umocktypes_are_equal_char(const char* left, const char* right);
 ## umocktypes_copy_char
 
 ```c
-extern int umocktypes_copy_char(char* destination, const char* source);
+int umocktypes_copy_char(char* destination, const char* source);
 ```
 
 **SRS_UMOCKTYPES_C_01_010: [** umocktypes_copy_char shall copy the char value from source to destination. **]**
@@ -90,7 +90,7 @@ extern int umocktypes_copy_char(char* destination, const char* source);
 ## umocktypes_free_char
 
 ```c
-extern void umocktypes_free_char(char* value);
+void umocktypes_free_char(char* value);
 ```
 
 **SRS_UMOCKTYPES_C_01_013: [** umocktypes_free_char shall do nothing. **]**
@@ -98,7 +98,7 @@ extern void umocktypes_free_char(char* value);
 ## umocktypes_stringify_unsignedchar
 
 ```c
-extern char* umocktypes_stringify_unsignedchar(const unsigned char* value);
+char* umocktypes_stringify_unsignedchar(const unsigned char* value);
 ```
 
 **SRS_UMOCKTYPES_C_01_014: [** umocktypes_stringify_unsignedchar shall return the string representation of value. **]**
@@ -112,7 +112,7 @@ extern char* umocktypes_stringify_unsignedchar(const unsigned char* value);
 ## umocktypes_are_equal_unsignedchar
 
 ```c
-extern int umocktypes_are_equal_unsignedchar(const unsigned char* left, const unsigned char* right);
+int umocktypes_are_equal_unsignedchar(const unsigned char* left, const unsigned char* right);
 ```
 
 **SRS_UMOCKTYPES_C_01_018: [** umocktypes_are_equal_unsignedchar shall compare the 2 unsigned chars pointed to by left and right. **]**
@@ -126,7 +126,7 @@ extern int umocktypes_are_equal_unsignedchar(const unsigned char* left, const un
 ## umocktypes_copy_unsignedchar
 
 ```c
-extern int umocktypes_copy_unsignedchar(unsigned char* destination, const unsigned char* source);
+int umocktypes_copy_unsignedchar(unsigned char* destination, const unsigned char* source);
 ```
 
 **SRS_UMOCKTYPES_C_01_022: [** umocktypes_copy_unsignedchar shall copy the unsigned char value from source to destination. **]**
@@ -138,7 +138,7 @@ extern int umocktypes_copy_unsignedchar(unsigned char* destination, const unsign
 ## umocktypes_free_unsignedchar
 
 ```c
-extern void umocktypes_free_unsignedchar(unsigned char* value);
+void umocktypes_free_unsignedchar(unsigned char* value);
 ```
 
 **SRS_UMOCKTYPES_C_01_025: [** umocktypes_free_unsignedchar shall do nothing. **]**
@@ -146,7 +146,7 @@ extern void umocktypes_free_unsignedchar(unsigned char* value);
 ## umocktypes_stringify_short
 
 ```c
-extern char* umocktypes_stringify_short(const short* value);
+char* umocktypes_stringify_short(const short* value);
 ```
 
 **SRS_UMOCKTYPES_C_01_026: [** umocktypes_stringify_short shall return the string representation of value. **]**
@@ -160,7 +160,7 @@ extern char* umocktypes_stringify_short(const short* value);
 ## umocktypes_are_equal_short
 
 ```c
-extern int umocktypes_are_equal_short(const short* left, const short* right);
+int umocktypes_are_equal_short(const short* left, const short* right);
 ```
 
 **SRS_UMOCKTYPES_C_01_030: [** umocktypes_are_equal_short shall compare the 2 shorts pointed to by left and right. **]**
@@ -174,7 +174,7 @@ extern int umocktypes_are_equal_short(const short* left, const short* right);
 ## umocktypes_copy_short
 
 ```c
-extern int umocktypes_copy_short(short* destination, const short* source);
+int umocktypes_copy_short(short* destination, const short* source);
 ```
 
 **SRS_UMOCKTYPES_C_01_034: [** umocktypes_copy_short shall copy the short value from source to destination. **]**
@@ -186,7 +186,7 @@ extern int umocktypes_copy_short(short* destination, const short* source);
 ## umocktypes_free_short
 
 ```c
-extern void umocktypes_free_short(short* value);
+void umocktypes_free_short(short* value);
 ```
 
 **SRS_UMOCKTYPES_C_01_037: [** umocktypes_free_short shall do nothing. **]**
@@ -194,7 +194,7 @@ extern void umocktypes_free_short(short* value);
 ## umocktypes_stringify_unsignedshort
 
 ```c
-extern char* umocktypes_stringify_unsignedshort(const unsigned short* value);
+char* umocktypes_stringify_unsignedshort(const unsigned short* value);
 ```
 
 **SRS_UMOCKTYPES_C_01_038: [** umocktypes_stringify_unsignedshort shall return the string representation of value. **]**
@@ -208,7 +208,7 @@ extern char* umocktypes_stringify_unsignedshort(const unsigned short* value);
 ## umocktypes_are_equal_unsignedshort
 
 ```c
-extern int umocktypes_are_equal_unsignedshort(const unsigned short* left, const unsigned short* right);
+int umocktypes_are_equal_unsignedshort(const unsigned short* left, const unsigned short* right);
 ```
 
 **SRS_UMOCKTYPES_C_01_042: [** umocktypes_are_equal_unsignedshort shall compare the 2 unsigned shorts pointed to by left and right. **]**
@@ -222,7 +222,7 @@ extern int umocktypes_are_equal_unsignedshort(const unsigned short* left, const 
 ## umocktypes_copy_unsignedshort
 
 ```c
-extern int umocktypes_copy_unsignedshort(unsigned short* destination, const unsigned short* source);
+int umocktypes_copy_unsignedshort(unsigned short* destination, const unsigned short* source);
 ```
 
 **SRS_UMOCKTYPES_C_01_046: [** umocktypes_copy_unsignedshort shall copy the unsigned short value from source to destination. **]**
@@ -234,7 +234,7 @@ extern int umocktypes_copy_unsignedshort(unsigned short* destination, const unsi
 ## umocktypes_free_unsignedshort
 
 ```c
-extern void umocktypes_free_unsignedshort(unsigned short* value);
+void umocktypes_free_unsignedshort(unsigned short* value);
 ```
 
 **SRS_UMOCKTYPES_C_01_049: [** umocktypes_free_unsignedshort shall do nothing. **]**
@@ -242,7 +242,7 @@ extern void umocktypes_free_unsignedshort(unsigned short* value);
 ## umocktypes_stringify_int
 
 ```c
-extern char* umocktypes_stringify_int(const int* value);
+char* umocktypes_stringify_int(const int* value);
 ```
 
 **SRS_UMOCKTYPES_C_01_050: [** umocktypes_stringify_int shall return the string representation of value. **]**
@@ -256,7 +256,7 @@ extern char* umocktypes_stringify_int(const int* value);
 ## umocktypes_are_equal_int
 
 ```c
-extern int umocktypes_are_equal_int(const int* left, const int* right);
+int umocktypes_are_equal_int(const int* left, const int* right);
 ```
 
 **SRS_UMOCKTYPES_C_01_054: [** umocktypes_are_equal_int shall compare the 2 ints pointed to by left and right. **]**
@@ -270,7 +270,7 @@ extern int umocktypes_are_equal_int(const int* left, const int* right);
 ## umocktypes_copy_int
 
 ```c
-extern int umocktypes_copy_int(int* destination, const int* source);
+int umocktypes_copy_int(int* destination, const int* source);
 ```
 
 **SRS_UMOCKTYPES_C_01_058: [** umocktypes_copy_int shall copy the int value from source to destination. **]**
@@ -282,7 +282,7 @@ extern int umocktypes_copy_int(int* destination, const int* source);
 ## umocktypes_free_int
 
 ```c
-extern void umocktypes_free_int(int* value);
+void umocktypes_free_int(int* value);
 ```
 
 **SRS_UMOCKTYPES_C_01_061: [** umocktypes_free_int shall do nothing. **]**
@@ -290,7 +290,7 @@ extern void umocktypes_free_int(int* value);
 ## umocktypes_stringify_unsignedint
 
 ```c
-extern char* umocktypes_stringify_unsignedint(const unsigned int* value);
+char* umocktypes_stringify_unsignedint(const unsigned int* value);
 ```
 
 **SRS_UMOCKTYPES_C_01_062: [** umocktypes_stringify_unsignedint shall return the string representation of value. **]**
@@ -304,7 +304,7 @@ extern char* umocktypes_stringify_unsignedint(const unsigned int* value);
 ## umocktypes_are_equal_unsignedint
 
 ```c
-extern int umocktypes_are_equal_unsignedint(const unsigned int* left, const unsigned int* right);
+int umocktypes_are_equal_unsignedint(const unsigned int* left, const unsigned int* right);
 ```
 
 **SRS_UMOCKTYPES_C_01_066: [** umocktypes_are_equal_unsignedint shall compare the 2 unsigned ints pointed to by left and right. **]**
@@ -318,7 +318,7 @@ extern int umocktypes_are_equal_unsignedint(const unsigned int* left, const unsi
 ## umocktypes_copy_unsignedint
 
 ```c
-extern int umocktypes_copy_unsignedint(unsigned int* destination, const unsigned int* source);
+int umocktypes_copy_unsignedint(unsigned int* destination, const unsigned int* source);
 ```
 
 **SRS_UMOCKTYPES_C_01_070: [** umocktypes_copy_unsignedint shall copy the unsigned int value from source to destination. **]**
@@ -330,7 +330,7 @@ extern int umocktypes_copy_unsignedint(unsigned int* destination, const unsigned
 ## umocktypes_free_unsignedint
 
 ```c
-extern void umocktypes_free_unsignedint(unsigned int* value);
+void umocktypes_free_unsignedint(unsigned int* value);
 ```
 
 **SRS_UMOCKTYPES_C_01_073: [** umocktypes_free_unsignedint shall do nothing. **]**
@@ -338,7 +338,7 @@ extern void umocktypes_free_unsignedint(unsigned int* value);
 ## umocktypes_stringify_long
 
 ```c
-extern char* umocktypes_stringify_long(const long* value);
+char* umocktypes_stringify_long(const long* value);
 ```
 
 **SRS_UMOCKTYPES_C_01_074: [** umocktypes_stringify_long shall return the string representation of value. **]**
@@ -352,7 +352,7 @@ extern char* umocktypes_stringify_long(const long* value);
 ## umocktypes_are_equal_long
 
 ```c
-extern int umocktypes_are_equal_long(const long* left, const long* right);
+int umocktypes_are_equal_long(const long* left, const long* right);
 ```
 
 **SRS_UMOCKTYPES_C_01_078: [** umocktypes_are_equal_long shall compare the 2 longs pointed to by left and right. **]**
@@ -366,7 +366,7 @@ extern int umocktypes_are_equal_long(const long* left, const long* right);
 ## umocktypes_copy_long
 
 ```c
-extern int umocktypes_copy_long(long* destination, const long* source);
+int umocktypes_copy_long(long* destination, const long* source);
 ```
 
 **SRS_UMOCKTYPES_C_01_082: [** umocktypes_copy_long shall copy the long value from source to destination. **]**
@@ -378,7 +378,7 @@ extern int umocktypes_copy_long(long* destination, const long* source);
 ## umocktypes_free_long
 
 ```c
-extern void umocktypes_free_long(long* value);
+void umocktypes_free_long(long* value);
 ```
 
 **SRS_UMOCKTYPES_C_01_085: [** umocktypes_free_long shall do nothing. **]**
@@ -386,7 +386,7 @@ extern void umocktypes_free_long(long* value);
 ## umocktypes_stringify_unsignedlong
 
 ```c
-extern char* umocktypes_stringify_unsignedlong(const unsigned long* value);
+char* umocktypes_stringify_unsignedlong(const unsigned long* value);
 ```
 
 **SRS_UMOCKTYPES_C_01_086: [** umocktypes_stringify_unsignedlong shall return the string representation of value. **]**
@@ -400,7 +400,7 @@ extern char* umocktypes_stringify_unsignedlong(const unsigned long* value);
 ## umocktypes_are_equal_unsignedlong
 
 ```c
-extern int umocktypes_are_equal_unsignedlong(const unsigned long* left, const unsigned long* right);
+int umocktypes_are_equal_unsignedlong(const unsigned long* left, const unsigned long* right);
 ```
 
 **SRS_UMOCKTYPES_C_01_090: [** umocktypes_are_equal_unsignedlong shall compare the 2 unsigned longs pointed to by left and right. **]**
@@ -414,7 +414,7 @@ extern int umocktypes_are_equal_unsignedlong(const unsigned long* left, const un
 ## umocktypes_copy_unsignedlong
 
 ```c
-extern int umocktypes_copy_unsignedlong(unsigned long* destination, const unsigned long* source);
+int umocktypes_copy_unsignedlong(unsigned long* destination, const unsigned long* source);
 ```
 
 **SRS_UMOCKTYPES_C_01_094: [** umocktypes_copy_unsignedlong shall copy the unsigned long value from source to destination. **]**
@@ -426,7 +426,7 @@ extern int umocktypes_copy_unsignedlong(unsigned long* destination, const unsign
 ## umocktypes_free_unsignedlong
 
 ```c
-extern void umocktypes_free_unsignedlong(unsigned long* value);
+void umocktypes_free_unsignedlong(unsigned long* value);
 ```
 
 **SRS_UMOCKTYPES_C_01_097: [** umocktypes_free_unsignedlong shall do nothing. **]**
@@ -434,7 +434,7 @@ extern void umocktypes_free_unsignedlong(unsigned long* value);
 ## umocktypes_stringify_longlong
 
 ```c
-extern char* umocktypes_stringify_longlong(const long long* value);
+char* umocktypes_stringify_longlong(const long long* value);
 ```
 
 **SRS_UMOCKTYPES_C_01_098: [** umocktypes_stringify_longlong shall return the string representation of value. **]**
@@ -448,7 +448,7 @@ extern char* umocktypes_stringify_longlong(const long long* value);
 ## umocktypes_are_equal_longlong
 
 ```c
-extern int umocktypes_are_equal_longlong(const long long* left, const long long* right);
+int umocktypes_are_equal_longlong(const long long* left, const long long* right);
 ```
 
 **SRS_UMOCKTYPES_C_01_102: [** umocktypes_are_equal_longlong shall compare the 2 long longs pointed to by left and right. **]**
@@ -462,7 +462,7 @@ extern int umocktypes_are_equal_longlong(const long long* left, const long long*
 ## umocktypes_copy_longlong
 
 ```c
-extern int umocktypes_copy_longlong(long long* destination, const long long* source);
+int umocktypes_copy_longlong(long long* destination, const long long* source);
 ```
 
 **SRS_UMOCKTYPES_C_01_106: [** umocktypes_copy_longlong shall copy the long long value from source to destination. **]**
@@ -474,7 +474,7 @@ extern int umocktypes_copy_longlong(long long* destination, const long long* sou
 ## umocktypes_free_longlong
 
 ```c
-extern void umocktypes_free_longlong(long long* value);
+void umocktypes_free_longlong(long long* value);
 ```
 
 **SRS_UMOCKTYPES_C_01_109: [** umocktypes_free_longlong shall do nothing. **]**
@@ -482,7 +482,7 @@ extern void umocktypes_free_longlong(long long* value);
 ## umocktypes_stringify_unsignedlonglong
 
 ```c
-extern char* umocktypes_stringify_unsignedlonglong(const unsigned long long* value);
+char* umocktypes_stringify_unsignedlonglong(const unsigned long long* value);
 ```
 
 **SRS_UMOCKTYPES_C_01_110: [** umocktypes_stringify_unsignedlonglong shall return the string representation of value. **]**
@@ -496,7 +496,7 @@ extern char* umocktypes_stringify_unsignedlonglong(const unsigned long long* val
 ## umocktypes_are_equal_unsignedlonglong
 
 ```c
-extern int umocktypes_are_equal_unsignedlonglong(const unsigned long long* left, const unsigned long long* right);
+int umocktypes_are_equal_unsignedlonglong(const unsigned long long* left, const unsigned long long* right);
 ```
 
 **SRS_UMOCKTYPES_C_01_114: [** umocktypes_are_equal_unsignedlonglong shall compare the 2 unsigned long longs pointed to by left and right. **]**
@@ -510,7 +510,7 @@ extern int umocktypes_are_equal_unsignedlonglong(const unsigned long long* left,
 ## umocktypes_copy_unsignedlonglong
 
 ```c
-extern int umocktypes_copy_unsignedlonglong(unsigned long long* destination, const unsigned long long* source);
+int umocktypes_copy_unsignedlonglong(unsigned long long* destination, const unsigned long long* source);
 ```
 
 **SRS_UMOCKTYPES_C_01_118: [** umocktypes_copy_unsignedlonglong shall copy the unsigned long long value from source to destination. **]**
@@ -522,7 +522,7 @@ extern int umocktypes_copy_unsignedlonglong(unsigned long long* destination, con
 ## umocktypes_free_unsignedlonglong
 
 ```c
-extern void umocktypes_free_unsignedlonglong(unsigned long long* value);
+void umocktypes_free_unsignedlonglong(unsigned long long* value);
 ```
 
 **SRS_UMOCKTYPES_C_01_121: [** umocktypes_free_unsignedlonglong shall do nothing. **]**
@@ -530,7 +530,7 @@ extern void umocktypes_free_unsignedlonglong(unsigned long long* value);
 ## umocktypes_stringify_float
 
 ```c
-extern char* umocktypes_stringify_float(const float* value);
+char* umocktypes_stringify_float(const float* value);
 ```
 
 **SRS_UMOCKTYPES_C_01_122: [** umocktypes_stringify_float shall return the string representation of value. **]**
@@ -544,7 +544,7 @@ extern char* umocktypes_stringify_float(const float* value);
 ## umocktypes_are_equal_float
 
 ```c
-extern int umocktypes_are_equal_float(const float* left, const float* right);
+int umocktypes_are_equal_float(const float* left, const float* right);
 ```
 
 **SRS_UMOCKTYPES_C_01_126: [** umocktypes_are_equal_float shall compare the 2 floats pointed to by left and right. **]**
@@ -558,7 +558,7 @@ extern int umocktypes_are_equal_float(const float* left, const float* right);
 ## umocktypes_copy_float
 
 ```c
-extern int umocktypes_copy_float(float* destination, const float* source);
+int umocktypes_copy_float(float* destination, const float* source);
 ```
 
 **SRS_UMOCKTYPES_C_01_130: [** umocktypes_copy_float shall copy the float value from source to destination. **]**
@@ -570,7 +570,7 @@ extern int umocktypes_copy_float(float* destination, const float* source);
 ## umocktypes_free_float
 
 ```c
-extern void umocktypes_free_float(float* value);
+void umocktypes_free_float(float* value);
 ```
 
 **SRS_UMOCKTYPES_C_01_133: [** umocktypes_free_float shall do nothing. **]**
@@ -578,7 +578,7 @@ extern void umocktypes_free_float(float* value);
 ## umocktypes_stringify_double
 
 ```c
-extern char* umocktypes_stringify_double(const double* value);
+char* umocktypes_stringify_double(const double* value);
 ```
 
 **SRS_UMOCKTYPES_C_01_134: [** umocktypes_stringify_double shall return the string representation of value. **]**
@@ -592,7 +592,7 @@ extern char* umocktypes_stringify_double(const double* value);
 ## umocktypes_are_equal_double
 
 ```c
-extern int umocktypes_are_equal_double(const double* left, const double* right);
+int umocktypes_are_equal_double(const double* left, const double* right);
 ```
 
 **SRS_UMOCKTYPES_C_01_138: [** umocktypes_are_equal_double shall compare the 2 doubles pointed to by left and right. **]**
@@ -606,7 +606,7 @@ extern int umocktypes_are_equal_double(const double* left, const double* right);
 ## umocktypes_copy_double
 
 ```c
-extern int umocktypes_copy_double(double* destination, const double* source);
+int umocktypes_copy_double(double* destination, const double* source);
 ```
 
 **SRS_UMOCKTYPES_C_01_142: [** umocktypes_copy_double shall copy the double value from source to destination. **]**
@@ -618,7 +618,7 @@ extern int umocktypes_copy_double(double* destination, const double* source);
 ## umocktypes_free_double
 
 ```c
-extern void umocktypes_free_double(double* value);
+void umocktypes_free_double(double* value);
 ```
 
 **SRS_UMOCKTYPES_C_01_145: [** umocktypes_free_double shall do nothing. **]**
@@ -626,7 +626,7 @@ extern void umocktypes_free_double(double* value);
 ## umocktypes_stringify_longdouble
 
 ```c
-extern char* umocktypes_stringify_longdouble(const long double* value);
+char* umocktypes_stringify_longdouble(const long double* value);
 ```
 
 **SRS_UMOCKTYPES_C_01_146: [** umocktypes_stringify_longdouble shall return the string representation of value. **]**
@@ -640,7 +640,7 @@ extern char* umocktypes_stringify_longdouble(const long double* value);
 ## umocktypes_are_equal_longdouble
 
 ```c
-extern int umocktypes_are_equal_longdouble(const long double* left, const long double* right);
+int umocktypes_are_equal_longdouble(const long double* left, const long double* right);
 ```
 
 **SRS_UMOCKTYPES_C_01_150: [** umocktypes_are_equal_longdouble shall compare the 2 long doubles pointed to by left and right. **]**
@@ -654,7 +654,7 @@ extern int umocktypes_are_equal_longdouble(const long double* left, const long d
 ## umocktypes_copy_longdouble
 
 ```c
-extern int umocktypes_copy_longdouble(long double* destination, const long double* source);
+int umocktypes_copy_longdouble(long double* destination, const long double* source);
 ```
 
 **SRS_UMOCKTYPES_C_01_154: [** umocktypes_copy_longdouble shall copy the long double value from source to destination. **]**
@@ -666,7 +666,7 @@ extern int umocktypes_copy_longdouble(long double* destination, const long doubl
 ## umocktypes_free_longdouble
 
 ```c
-extern void umocktypes_free_longdouble(long double* value);
+void umocktypes_free_longdouble(long double* value);
 ```
 
 **SRS_UMOCKTYPES_C_01_157: [** umocktypes_free_longdouble shall do nothing. **]**
@@ -674,7 +674,7 @@ extern void umocktypes_free_longdouble(long double* value);
 ## umocktypes_stringify_size_t
 
 ```c
-extern char* umocktypes_stringify_size_t(const size_t* value);
+char* umocktypes_stringify_size_t(const size_t* value);
 ```
 
 **SRS_UMOCKTYPES_C_01_158: [** umocktypes_stringify_size_t shall return the string representation of value. **]**
@@ -688,7 +688,7 @@ extern char* umocktypes_stringify_size_t(const size_t* value);
 ## umocktypes_are_equal_size_t
 
 ```c
-extern int umocktypes_are_equal_size_t(const size_t* left, const size_t* right);
+int umocktypes_are_equal_size_t(const size_t* left, const size_t* right);
 ```
 
 **SRS_UMOCKTYPES_C_01_162: [** umocktypes_are_equal_size_t shall compare the 2 size_ts pointed to by left and right. **]**
@@ -702,7 +702,7 @@ extern int umocktypes_are_equal_size_t(const size_t* left, const size_t* right);
 ## umocktypes_copy_size_t
 
 ```c
-extern int umocktypes_copy_size_t(size_t* destination, const size_t* source);
+int umocktypes_copy_size_t(size_t* destination, const size_t* source);
 ```
 
 **SRS_UMOCKTYPES_C_01_166: [** umocktypes_copy_size_t shall copy the size_t value from source to destination. **]**
@@ -714,7 +714,7 @@ extern int umocktypes_copy_size_t(size_t* destination, const size_t* source);
 ## umocktypes_free_size_t
 
 ```c
-extern void umocktypes_free_size_t(size_t* value);
+void umocktypes_free_size_t(size_t* value);
 ```
 
 **SRS_UMOCKTYPES_C_01_169: [** umocktypes_free_size_t shall do nothing. **]**
@@ -722,7 +722,7 @@ extern void umocktypes_free_size_t(size_t* value);
 ## umocktypes_stringify_void_ptr
 
 ```c
-extern char* umocktypes_stringify_void_ptr(const void** value);
+char* umocktypes_stringify_void_ptr(const void** value);
 ```
 
 **SRS_UMOCKTYPES_C_01_170: [** umocktypes_stringify_void_ptr shall return the string representation of the value pointer. **]**
@@ -736,7 +736,7 @@ extern char* umocktypes_stringify_void_ptr(const void** value);
 ## umocktypes_are_equal_void_ptr
 
 ```c
-extern int umocktypes_are_equal_void_ptr(const void** left, const void** right);
+int umocktypes_are_equal_void_ptr(const void** left, const void** right);
 ```
 
 **SRS_UMOCKTYPES_C_01_174: [** umocktypes_are_equal_void_ptr shall compare the 2 void_ptrs pointed to by left and right. **]**
@@ -750,7 +750,7 @@ extern int umocktypes_are_equal_void_ptr(const void** left, const void** right);
 ## umocktypes_copy_void_ptr
 
 ```c
-extern int umocktypes_copy_void_ptr(void** destination, const void** source);
+int umocktypes_copy_void_ptr(void** destination, const void** source);
 ```
 
 **SRS_UMOCKTYPES_C_01_178: [** umocktypes_copy_void_ptr shall copy the void_ptr value from source to destination. **]**
@@ -762,7 +762,7 @@ extern int umocktypes_copy_void_ptr(void** destination, const void** source);
 ## umocktypes_free_void_ptr
 
 ```c
-extern void umocktypes_free_void_ptr(void** value);
+void umocktypes_free_void_ptr(void** value);
 ```
 
 **SRS_UMOCKTYPES_C_01_181: [** umocktypes_free_void_ptr shall do nothing. **]**

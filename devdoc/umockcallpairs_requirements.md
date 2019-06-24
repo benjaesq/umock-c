@@ -20,14 +20,14 @@ umockcallpairs is a module that handles tracking of call pairs.
         size_t paired_handle_count;
     } PAIRED_HANDLES;
 
-    extern int umockcallpairs_track_create_paired_call(PAIRED_HANDLES* paired_handles, const void* handle, const char* handle_type, size_t handle_type_size);
-    extern int umockcallpairs_track_destroy_paired_call(PAIRED_HANDLES* paired_handles, const void* handle);
+    int umockcallpairs_track_create_paired_call(PAIRED_HANDLES* paired_handles, const void* handle, const char* handle_type, size_t handle_type_size);
+    int umockcallpairs_track_destroy_paired_call(PAIRED_HANDLES* paired_handles, const void* handle);
 ```
 
 ## umockcallpairs_track_create_paired_call
 
 ```c
-extern int umockcallpairs_track_create_paired_call(PAIRED_HANDLES* paired_handles, const void* handle, const char* handle_type, size_t handle_type_size);
+int umockcallpairs_track_create_paired_call(PAIRED_HANDLES* paired_handles, const void* handle, const char* handle_type, size_t handle_type_size);
 ```
 
 **SRS_UMOCKCALLPAIRS_01_001: [** umockcallpairs_track_create_paired_call shall add a new entry to the PAIRED_HANDLES array and on success it shall return 0. **]**
@@ -47,7 +47,7 @@ extern int umockcallpairs_track_create_paired_call(PAIRED_HANDLES* paired_handle
 ## umockcallpairs_track_destroy_paired_call
 
 ```c
-extern int umockcallpairs_track_destroy_paired_call(PAIRED_HANDLES* paired_handles, const void* handle);
+int umockcallpairs_track_destroy_paired_call(PAIRED_HANDLES* paired_handles, const void* handle);
 ```
 
 **SRS_UMOCKCALLPAIRS_01_008: [** umockcallpairs_track_destroy_paired_call shall remove from the paired handles array pointed by the paired_handles field the entry that is associated with the handle passed in the handle argument. **]**

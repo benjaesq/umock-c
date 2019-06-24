@@ -54,22 +54,22 @@ It exposes a set of macros and APIs that allow:
 #define REGISTER_UMOCK_VALUE_TYPE(value_type, stringify_func, are_equal_func, copy_func, free_func) \
     ...
 
-extern int umock_c_init(ON_UMOCK_C_ERROR on_umock_c_error);
-extern void umock_c_deinit(void);
-extern void umock_c_reset_all_calls(void);
-extern const char* umock_c_get_actual_calls(void);
-extern const char* umock_c_get_expected_calls(void);
-extern UMOCKCALL_HANDLE umock_c_get_last_expected_call(void);
-extern int umock_c_add_expected_call(UMOCKCALL_HANDLE mock_call);
-extern int umock_c_add_actual_call(UMOCKCALL_HANDLE mock_call, UMOCKCALL_HANDLE* matched_call);
-extern UMOCKCALLRECORDER_HANDLE umock_c_get_call_recorder(void);
-extern int umock_c_set_call_recorder(UMOCKCALLRECORDER_HANDLE call_recorder);
+int umock_c_init(ON_UMOCK_C_ERROR on_umock_c_error);
+void umock_c_deinit(void);
+void umock_c_reset_all_calls(void);
+const char* umock_c_get_actual_calls(void);
+const char* umock_c_get_expected_calls(void);
+UMOCKCALL_HANDLE umock_c_get_last_expected_call(void);
+int umock_c_add_expected_call(UMOCKCALL_HANDLE mock_call);
+int umock_c_add_actual_call(UMOCKCALL_HANDLE mock_call, UMOCKCALL_HANDLE* matched_call);
+UMOCKCALLRECORDER_HANDLE umock_c_get_call_recorder(void);
+int umock_c_set_call_recorder(UMOCKCALLRECORDER_HANDLE call_recorder);
 ```
 
 ## umock_c_init
 
 ```c
-extern int umock_c_init(ON_UMOCK_C_ERROR on_umock_c_error);
+int umock_c_init(ON_UMOCK_C_ERROR on_umock_c_error);
 ```
 
 **SRS_UMOCK_C_01_001: [** umock_c_init shall initialize the umock library. **]**
@@ -93,7 +93,7 @@ extern int umock_c_init(ON_UMOCK_C_ERROR on_umock_c_error);
 ## umock_c_deinit
 
 ```c
-extern void umock_c_deinit(void);
+void umock_c_deinit(void);
 ```
 
 **SRS_UMOCK_C_01_008: [** umock_c_deinit shall deinitialize the umock types by calling umocktypes_deinit. **]**
@@ -105,7 +105,7 @@ extern void umock_c_deinit(void);
 ## umock_c_reset_all_calls
 
 ```c
-extern void umock_c_reset_all_calls(void);
+void umock_c_reset_all_calls(void);
 ```
 
 **SRS_UMOCK_C_01_011: [** umock_c_reset_all_calls shall reset all calls by calling umockcallrecorder_reset_all_calls on the call recorder created in umock_c_init. **]**
@@ -117,7 +117,7 @@ extern void umock_c_reset_all_calls(void);
 ## umock_c_get_actual_calls
 
 ```c
-extern const char* umock_c_get_actual_calls(void);
+const char* umock_c_get_actual_calls(void);
 ```
 
 **SRS_UMOCK_C_01_013: [** umock_c_get_actual_calls shall return the string for the recorded actual calls by calling umockcallrecorder_get_actual_calls on the call recorder created in umock_c_init. **]**
@@ -127,7 +127,7 @@ extern const char* umock_c_get_actual_calls(void);
 ## umock_c_get_expected_calls
 
 ```c
-extern const char* umock_c_get_expected_calls(void);
+const char* umock_c_get_expected_calls(void);
 ```
 
 **SRS_UMOCK_C_01_015: [** umock_c_get_expected_calls shall return the string for the recorded expected calls by calling umockcallrecorder_get_expected_calls on the call recorder created in umock_c_init. **]**
@@ -137,7 +137,7 @@ extern const char* umock_c_get_expected_calls(void);
 ## umock_c_get_last_expected_call
 
 ```c
-extern UMOCKCALL_HANDLE umock_c_get_last_expected_call(void);
+UMOCKCALL_HANDLE umock_c_get_last_expected_call(void);
 ```
 
 **SRS_UMOCK_C_01_017: [** umock_c_get_last_expected_call shall return the last expected call by calling umockcallrecorder_get_last_expected_call on the call recorder created in umock_c_init. **]**
@@ -147,7 +147,7 @@ extern UMOCKCALL_HANDLE umock_c_get_last_expected_call(void);
 ## umock_c_add_expected_call
 
 ```c
-extern int umock_c_add_expected_call(UMOCKCALL_HANDLE mock_call);
+int umock_c_add_expected_call(UMOCKCALL_HANDLE mock_call);
 ```
 
 **SRS_UMOCK_C_01_019: [** umock_c_add_expected_call shall add an expected call by calling umockcallrecorder_add_expected_call on the call recorder created in umock_c_init. **]**
@@ -157,7 +157,7 @@ extern int umock_c_add_expected_call(UMOCKCALL_HANDLE mock_call);
 ## umock_c_add_actual_call
 
 ```c
-extern int umock_c_add_actual_call(UMOCKCALL_HANDLE mock_call, UMOCKCALL_HANDLE* matched_call);
+int umock_c_add_actual_call(UMOCKCALL_HANDLE mock_call, UMOCKCALL_HANDLE* matched_call);
 ```
 
 **SRS_UMOCK_C_01_021: [** umock_c_add_actual_call shall add an actual call by calling umockcallrecorder_add_actual_call on the call recorder created in umock_c_init. **]**
@@ -167,7 +167,7 @@ extern int umock_c_add_actual_call(UMOCKCALL_HANDLE mock_call, UMOCKCALL_HANDLE*
 ## umock_c_get_call_recorder
 
 ```c
-extern UMOCKCALLRECORDER_HANDLE umock_c_get_call_recorder(void);
+UMOCKCALLRECORDER_HANDLE umock_c_get_call_recorder(void);
 ```
 
 **SRS_UMOCK_C_01_026: [** umock_c_get_call_recorder shall return the handle to the currently used call recorder. **]**
@@ -177,7 +177,7 @@ extern UMOCKCALLRECORDER_HANDLE umock_c_get_call_recorder(void);
 ## umock_c_set_call_recorder
 
 ```c
-extern int umock_c_set_call_recorder(UMOCKCALLRECORDER_HANDLE call_recorder);
+int umock_c_set_call_recorder(UMOCKCALLRECORDER_HANDLE call_recorder);
 ```
 
 **SRS_UMOCK_C_01_028: [** umock_c_set_call_recorder shall replace the currently used call recorder with the one identified by the call_recorder argument. **]**

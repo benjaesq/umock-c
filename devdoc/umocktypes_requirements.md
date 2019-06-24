@@ -13,21 +13,21 @@ typedef int(*UMOCKTYPE_COPY_FUNC)(void* destination, const void* source);
 typedef void(*UMOCKTYPE_FREE_FUNC)(void* value);
 typedef int(*UMOCKTYPE_ARE_EQUAL_FUNC)(const void* left, const void* right);
 
-extern int umocktypes_init(void);
-extern void umocktypes_deinit(void);
-extern int umocktypes_register_type(const char* type, UMOCKTYPE_STRINGIFY_FUNC stringify_func, UMOCKTYPE_ARE_EQUAL_FUNC are_equal_func, UMOCKTYPE_COPY_FUNC copy_func, UMOCKTYPE_FREE_FUNC free_func);
-extern int umocktypes_register_alias_type(const char* type, const char* is_type);
+int umocktypes_init(void);
+void umocktypes_deinit(void);
+int umocktypes_register_type(const char* type, UMOCKTYPE_STRINGIFY_FUNC stringify_func, UMOCKTYPE_ARE_EQUAL_FUNC are_equal_func, UMOCKTYPE_COPY_FUNC copy_func, UMOCKTYPE_FREE_FUNC free_func);
+int umocktypes_register_alias_type(const char* type, const char* is_type);
 
-extern char* umocktypes_stringify(const char* type, const void* value);
-extern int umocktypes_are_equal(const char* type, const void* left, const void* right);
-extern int umocktypes_copy(const char* type, void* destination, const void* source);
-extern void umocktypes_free(const char* type, void* value);
+char* umocktypes_stringify(const char* type, const void* value);
+int umocktypes_are_equal(const char* type, const void* left, const void* right);
+int umocktypes_copy(const char* type, void* destination, const void* source);
+void umocktypes_free(const char* type, void* value);
 ```
 
 ## umocktypes_init
 
 ```c
-extern int umocktypes_init(void);
+int umocktypes_init(void);
 ```
 
 **SRS_UMOCKTYPES_01_001: [** umocktypes_init shall initialize the umocktypes module. **]**
@@ -41,7 +41,7 @@ extern int umocktypes_init(void);
 ## umocktypes_deinit
 
 ```c
-extern void umocktypes_deinit(void);
+void umocktypes_deinit(void);
 ```
 
 **SRS_UMOCKTYPES_01_005: [** umocktypes_deinit shall free all resources associated with the registered types and shall leave the module in a state where another init is possible. **]**
@@ -53,7 +53,7 @@ extern void umocktypes_deinit(void);
 ## umocktypes_register_type
 
 ```c
-extern int umocktypes_register_type(const char* type, UMOCKTYPE_STRINGIFY_FUNC stringify_func, UMOCKTYPE_ARE_EQUAL_FUNC are_equal_func, UMOCKTYPE_COPY_FUNC copy_func, UMOCKTYPE_FREE_FUNC free_func);
+int umocktypes_register_type(const char* type, UMOCKTYPE_STRINGIFY_FUNC stringify_func, UMOCKTYPE_ARE_EQUAL_FUNC are_equal_func, UMOCKTYPE_COPY_FUNC copy_func, UMOCKTYPE_FREE_FUNC free_func);
 ```
 
 **SRS_UMOCKTYPES_01_007: [** umocktypes_register_type shall register an interface made out of the stringify, are equal, copy and free functions for the type identified by the argument type. **]**
@@ -101,7 +101,7 @@ int umocktypes_register_alias_type(const char* type, const char* is_type)
 ## umocktypes_stringify
 
 ```c
-extern char* umocktypes_stringify(const char* type, const void* value);
+char* umocktypes_stringify(const char* type, const void* value);
 ```
 
 **SRS_UMOCKTYPES_01_013: [** umocktypes_stringify shall return a char\* with the string representation of the value argument. **]**
@@ -125,7 +125,7 @@ extern char* umocktypes_stringify(const char* type, const void* value);
 ## umocktypes_are_equal
 
 ```c
-extern int umocktypes_are_equal(const char* type, const void* left, const void* right);
+int umocktypes_are_equal(const char* type, const void* left, const void* right);
 ```
 
 **SRS_UMOCKTYPES_01_018: [** umocktypes_are_equal shall evaluate whether 2 values are equal. **]**
@@ -155,7 +155,7 @@ extern int umocktypes_are_equal(const char* type, const void* left, const void* 
 ## umocktypes_copy
 
 ```c
-extern int umocktypes_copy(const char* type, void* destination, const void* source);
+int umocktypes_copy(const char* type, void* destination, const void* source);
 ```
 
 **SRS_UMOCKTYPES_01_025: [** umocktypes_copy shall copy the value of the source into the destination argument. **]**
@@ -181,7 +181,7 @@ extern int umocktypes_copy(const char* type, void* destination, const void* sour
 ## umocktypes_free
 
 ```c
-extern void umocktypes_free(const char* type, void* value);
+void umocktypes_free(const char* type, void* value);
 ```
 
 **SRS_UMOCKTYPES_01_030: [** umocktypes_free shall free a value previously allocated with umocktypes_copy. **]**

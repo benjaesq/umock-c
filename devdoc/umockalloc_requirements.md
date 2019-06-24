@@ -8,15 +8,15 @@ This is so that umock_c can control what code is executed for allocation and the
 # Exposed API
 
 ```c
-extern void* umockalloc_malloc(size_t size);
-extern void* umockalloc_realloc(void* ptr, size_t size);
-extern void umockalloc_free(void* ptr);
+void* umockalloc_malloc(size_t size);
+void* umockalloc_realloc(void* ptr, size_t size);
+void umockalloc_free(void* ptr);
 ```
 
 ## umockalloc_malloc
 
 ```c
-extern void* umockalloc_malloc(size_t size);
+void* umockalloc_malloc(size_t size);
 ```
 
 **SRS_UMOCKALLOC_01_001: [** umockalloc_malloc shall call malloc, while passing the size argument to malloc. **]**
@@ -26,7 +26,7 @@ extern void* umockalloc_malloc(size_t size);
 ## umockalloc_realloc
 
 ```c
-extern void* umockalloc_realloc(void* ptr, size_t size);
+void* umockalloc_realloc(void* ptr, size_t size);
 ```
 
 **SRS_UMOCKALLOC_01_003: [** umockalloc_realloc shall call realloc, while passing the ptr and size arguments to realloc. **]**
@@ -36,7 +36,7 @@ extern void* umockalloc_realloc(void* ptr, size_t size);
 ## umockalloc_free
 
 ```c
-extern void umockalloc_free(void* ptr);
+void umockalloc_free(void* ptr);
 ```
 
 **SRS_UMOCKALLOC_01_005: [** umockalloc_free shall call free, while passing the ptr argument to free. **]**
