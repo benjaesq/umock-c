@@ -7,13 +7,13 @@
 # Exposed API
 
 ```c
-extern int umockautoignoreargs_is_call_argument_ignored(const char* call, size_t argument_index, int* is_argument_ignored);
+int umockautoignoreargs_is_call_argument_ignored(const char* call, size_t argument_index, int* is_argument_ignored);
 ```
 
 ## umockautoignoreargs_is_call_argument_ignored
 
 ```c
-extern int umockautoignoreargs_is_call_argument_ignored(const char* call, size_t argument_index, int* is_argument_ignored);
+int umockautoignoreargs_is_call_argument_ignored(const char* call, size_t argument_index, int* is_argument_ignored);
 ```
 
 XX**SRS_UMOCKAUTOIGNOREARGS_01_001: [** `umockautoignoreargs_is_call_argument_ignored` shall determine whether argument `argument_index` shall be ignored or not. **]**

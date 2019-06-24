@@ -4,13 +4,16 @@
 #ifndef TEST_DEPENDENCY_H
 #define TEST_DEPENDENCY_H
 
+#ifdef __cplusplus
+#include <cstddef>
+#else
+#include <stddef.h>
+#endif
+
 #include "umock_c/umock_c_prod.h"
 
 #ifdef __cplusplus
-#include <cstddef>
 extern "C" {
-#else
-#include <stddef.h>
 #endif
 
     typedef struct TEST_STRUCT_TAG

@@ -8,23 +8,23 @@ umocktypes_charptr is a module that exposes out of the box functionality for cha
 # Exposed API
 
 ```c
-extern int umocktypes_charptr_register_types(void);
+int umocktypes_charptr_register_types(void);
 
-extern char* umocktypes_stringify_charptr(const char** value);
-extern int umocktypes_are_equal_charptr(const char** left, const char** right);
-extern int umocktypes_copy_charptr(char** destination, const char** source);
-extern void umocktypes_free_charptr(char** value);
+char* umocktypes_stringify_charptr(const char** value);
+int umocktypes_are_equal_charptr(const char** left, const char** right);
+int umocktypes_copy_charptr(char** destination, const char** source);
+void umocktypes_free_charptr(char** value);
 
-extern char* umocktypes_stringify_const_charptr(const char** value);
-extern int umocktypes_are_equal_const_charptr(const char** left, const char** right);
-extern int umocktypes_copy_const_charptr(const char** destination, const char** source);
-extern void umocktypes_free_const_charptr(const char** value);
+char* umocktypes_stringify_const_charptr(const char** value);
+int umocktypes_are_equal_const_charptr(const char** left, const char** right);
+int umocktypes_copy_const_charptr(const char** destination, const char** source);
+void umocktypes_free_const_charptr(const char** value);
 ```
 
 ## umocktypes_charptr_register_types
 
 ```c
-extern int umocktypes_charptr_register_types(void);
+int umocktypes_charptr_register_types(void);
 ```
 
 **SRS_UMOCKTYPES_CHARPTR_01_001: [** umocktypes_charptr_register_types shall register support for the types char\* and const char\* by using the REGISTER_UMOCK_VALUE_TYPE macro provided by umockc. **]**
@@ -36,7 +36,7 @@ extern int umocktypes_charptr_register_types(void);
 ## umocktypes_stringify_charptr
 
 ```c
-extern char* umocktypes_stringify_charptr(const char** value);
+char* umocktypes_stringify_charptr(const char** value);
 ```
 
 **SRS_UMOCKTYPES_CHARPTR_01_002: [** umocktypes_stringify_charptr shall return a string containing the string representation of value, enclosed by quotes ("value"). **]**
@@ -48,7 +48,7 @@ extern char* umocktypes_stringify_charptr(const char** value);
 ## umocktypes_are_equal_charptr
 
 ```c
-extern int umocktypes_are_equal_charptr(const char** left, const char** right);
+int umocktypes_are_equal_charptr(const char** left, const char** right);
 ```
 
 **SRS_UMOCKTYPES_CHARPTR_01_005: [** umocktypes_are_equal_charptr shall compare the 2 strings pointed to by left and right. **]**
@@ -66,7 +66,7 @@ extern int umocktypes_are_equal_charptr(const char** left, const char** right);
 ## umocktypes_copy_charptr
 
 ```c
-extern int umocktypes_copy_charptr(char** destination, const char** source);
+int umocktypes_copy_charptr(char** destination, const char** source);
 ```
 
 **SRS_UMOCKTYPES_CHARPTR_01_011: [** umocktypes_copy_charptr shall allocate a new sequence of chars by using umockalloc_malloc. **]**
@@ -86,7 +86,7 @@ extern int umocktypes_copy_charptr(char** destination, const char** source);
 ## umocktypes_free_charptr
 
 ```c
-extern void umocktypes_free_charptr(char** value);
+void umocktypes_free_charptr(char** value);
 ```
 
 **SRS_UMOCKTYPES_CHARPTR_01_017: [** umocktypes_free_charptr shall free the string pointed to by value. **]**
@@ -96,7 +96,7 @@ extern void umocktypes_free_charptr(char** value);
 ## umocktypes_stringify_const_charptr
 
 ```c
-extern char* umocktypes_stringify_const_charptr(const char** value);
+char* umocktypes_stringify_const_charptr(const char** value);
 ```
 
 **SRS_UMOCKTYPES_CHARPTR_01_019: [** umocktypes_stringify_const_charptr shall return a string containing the string representation of value, enclosed by quotes ("value"). **]**
@@ -108,7 +108,7 @@ extern char* umocktypes_stringify_const_charptr(const char** value);
 ## umocktypes_are_equal_const_charptr
 
 ```c
-extern int umocktypes_are_equal_const_charptr(const char** left, const char** right);
+int umocktypes_are_equal_const_charptr(const char** left, const char** right);
 ```
 
 **SRS_UMOCKTYPES_CHARPTR_01_022: [** umocktypes_are_equal_const_charptr shall compare the 2 strings pointed to by left and right. **]**
@@ -126,7 +126,7 @@ extern int umocktypes_are_equal_const_charptr(const char** left, const char** ri
 ## umocktypes_copy_const_charptr
 
 ```c
-extern int umocktypes_copy_const_charptr(const char** destination, const char** source);
+int umocktypes_copy_const_charptr(const char** destination, const char** source);
 ```
 
 **SRS_UMOCKTYPES_CHARPTR_01_028: [** umocktypes_copy_const_charptr shall allocate a new sequence of chars by using umockalloc_malloc. **]**
@@ -146,7 +146,7 @@ extern int umocktypes_copy_const_charptr(const char** destination, const char** 
 ## umocktypes_free_const_charptr
 
 ```c
-extern void umocktypes_free_const_charptr(const char** value);
+void umocktypes_free_const_charptr(const char** value);
 ```
 
 **SRS_UMOCKTYPES_CHARPTR_01_034: [** umocktypes_free_const_charptr shall free the string pointed to by value. **]**

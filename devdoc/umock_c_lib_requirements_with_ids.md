@@ -99,11 +99,11 @@ typedef void(*ON_UMOCK_C_ERROR)(UMOCK_C_ERROR_CODE error_code);
 #define EXPECTED_CALL(call) \
 	...
 
-    extern int umock_c_init(ON_UMOCK_C_ERROR on_umock_c_error);
-    extern void umock_c_deinit(void);
-    extern int umock_c_reset_all_calls(void);
-    extern const char* umock_c_get_actual_calls(void);
-    extern const char* umock_c_get_expected_calls(void);
+    int umock_c_init(ON_UMOCK_C_ERROR on_umock_c_error);
+    void umock_c_deinit(void);
+    int umock_c_reset_all_calls(void);
+    const char* umock_c_get_actual_calls(void);
+    const char* umock_c_get_expected_calls(void);
 ```
 
 ## Mock definitions API

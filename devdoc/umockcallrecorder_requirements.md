@@ -10,24 +10,24 @@ umockcallrecorder is a module that implements recording the expected and actual 
 ```c
     typedef struct UMOCKCALLRECORDER_TAG* UMOCKCALLRECORDER_HANDLE;
 
-    extern UMOCKCALLRECORDER_HANDLE umockcallrecorder_create(void);
-    extern void umockcallrecorder_destroy(UMOCKCALLRECORDER_HANDLE umock_call_recorder);
-    extern int umockcallrecorder_reset_all_calls(UMOCKCALLRECORDER_HANDLE umock_call_recorder);
-    extern int umockcallrecorder_add_expected_call(UMOCKCALLRECORDER_HANDLE umock_call_recorder, UMOCKCALL_HANDLE mock_call);
-    extern int umockcallrecorder_add_actual_call(UMOCKCALLRECORDER_HANDLE umock_call_recorder, UMOCKCALL_HANDLE mock_call, UMOCKCALL_HANDLE* matched_call);
-    extern const char* umockcallrecorder_get_actual_calls(UMOCKCALLRECORDER_HANDLE umock_call_recorder);
-    extern const char* umockcallrecorder_get_expected_calls(UMOCKCALLRECORDER_HANDLE umock_call_recorder);
-    extern UMOCKCALL_HANDLE umockcallrecorder_get_last_expected_call(UMOCKCALLRECORDER_HANDLE umock_call_recorder);
-    extern UMOCKCALLRECORDER_HANDLE umockcallrecorder_clone(UMOCKCALLRECORDER_HANDLE umock_call_recorder);
-    extern int umockcallrecorder_get_expected_call_count(UMOCKCALLRECORDER_HANDLE umock_call_recorder, size_t* expected_call_count);
-    extern int umockcallrecorder_fail_call(UMOCKCALLRECORDER_HANDLE umock_call_recorder, size_t index);
-    extern int umockcallrecorder_can_call_fail(UMOCKCALLRECORDER_HANDLE umock_call_recorder, size_t index, int* can_call_fail);
+    UMOCKCALLRECORDER_HANDLE umockcallrecorder_create(void);
+    void umockcallrecorder_destroy(UMOCKCALLRECORDER_HANDLE umock_call_recorder);
+    int umockcallrecorder_reset_all_calls(UMOCKCALLRECORDER_HANDLE umock_call_recorder);
+    int umockcallrecorder_add_expected_call(UMOCKCALLRECORDER_HANDLE umock_call_recorder, UMOCKCALL_HANDLE mock_call);
+    int umockcallrecorder_add_actual_call(UMOCKCALLRECORDER_HANDLE umock_call_recorder, UMOCKCALL_HANDLE mock_call, UMOCKCALL_HANDLE* matched_call);
+    const char* umockcallrecorder_get_actual_calls(UMOCKCALLRECORDER_HANDLE umock_call_recorder);
+    const char* umockcallrecorder_get_expected_calls(UMOCKCALLRECORDER_HANDLE umock_call_recorder);
+    UMOCKCALL_HANDLE umockcallrecorder_get_last_expected_call(UMOCKCALLRECORDER_HANDLE umock_call_recorder);
+    UMOCKCALLRECORDER_HANDLE umockcallrecorder_clone(UMOCKCALLRECORDER_HANDLE umock_call_recorder);
+    int umockcallrecorder_get_expected_call_count(UMOCKCALLRECORDER_HANDLE umock_call_recorder, size_t* expected_call_count);
+    int umockcallrecorder_fail_call(UMOCKCALLRECORDER_HANDLE umock_call_recorder, size_t index);
+    int umockcallrecorder_can_call_fail(UMOCKCALLRECORDER_HANDLE umock_call_recorder, size_t index, int* can_call_fail);
 ```
 
 ## umockcallrecorder_create
 
 ```c
-extern UMOCKCALLRECORDER_HANDLE umockcallrecorder_create(void);
+UMOCKCALLRECORDER_HANDLE umockcallrecorder_create(void);
 ```
 
 **SRS_UMOCKCALLRECORDER_01_001: [** umockcallrecorder_create shall create a new instance of a call recorder and return a non-NULL handle to it on success. **]**
@@ -37,7 +37,7 @@ extern UMOCKCALLRECORDER_HANDLE umockcallrecorder_create(void);
 ## umockcallrecorder_destroy
 
 ```c
-extern void umockcallrecorder_destroy(UMOCKCALLRECORDER_HANDLE umock_call_recorder);
+void umockcallrecorder_destroy(UMOCKCALLRECORDER_HANDLE umock_call_recorder);
 ```
 
 **SRS_UMOCKCALLRECORDER_01_003: [** umockcallrecorder_destroy shall free the resources associated with a the call recorder identified by the umock_call_recorder argument. **]**
@@ -47,7 +47,7 @@ extern void umockcallrecorder_destroy(UMOCKCALLRECORDER_HANDLE umock_call_record
 ## umockcallrecorder_reset_all_calls
 
 ```c
-extern int umockcallrecorder_reset_all_calls(UMOCKCALLRECORDER_HANDLE umock_call_recorder);
+int umockcallrecorder_reset_all_calls(UMOCKCALLRECORDER_HANDLE umock_call_recorder);
 ```
 
 **SRS_UMOCKCALLRECORDER_01_005: [** umockcallrecorder_reset_all_calls shall free all the expected and actual calls for the call recorder identified by umock_call_recorder. **]**
@@ -59,7 +59,7 @@ extern int umockcallrecorder_reset_all_calls(UMOCKCALLRECORDER_HANDLE umock_call
 ## umockcallrecorder_add_expected_call
 
 ```c
-extern int umockcallrecorder_add_expected_call(UMOCKCALLRECORDER_HANDLE umock_call_recorder, UMOCKCALL_HANDLE mock_call);
+int umockcallrecorder_add_expected_call(UMOCKCALLRECORDER_HANDLE umock_call_recorder, UMOCKCALL_HANDLE mock_call);
 ```
 
 **SRS_UMOCKCALLRECORDER_01_008: [** umockcallrecorder_add_expected_call shall add the mock_call call to the expected call list maintained by the call recorder identified by umock_call_recorder. **]**
@@ -73,7 +73,7 @@ extern int umockcallrecorder_add_expected_call(UMOCKCALLRECORDER_HANDLE umock_ca
 ## umockcallrecorder_add_actual_call
 
 ```c
-extern int umockcallrecorder_add_actual_call(UMOCKCALLRECORDER_HANDLE umock_call_recorder, UMOCKCALL_HANDLE mock_call, UMOCKCALL_HANDLE* matched_call);
+int umockcallrecorder_add_actual_call(UMOCKCALLRECORDER_HANDLE umock_call_recorder, UMOCKCALL_HANDLE mock_call, UMOCKCALL_HANDLE* matched_call);
 ```
 
 **SRS_UMOCKCALLRECORDER_01_014: [** umockcallrecorder_add_actual_call shall check whether the call mock_call matches any of the expected calls maintained by umock_call_recorder. **]**
@@ -99,7 +99,7 @@ extern int umockcallrecorder_add_actual_call(UMOCKCALLRECORDER_HANDLE umock_call
 ## umockcallrecorder_get_actual_calls
 
 ```c
-extern const char* umockcallrecorder_get_actual_calls(UMOCKCALLRECORDER_HANDLE umock_call_recorder);
+const char* umockcallrecorder_get_actual_calls(UMOCKCALLRECORDER_HANDLE umock_call_recorder);
 ```
 
 **SRS_UMOCKCALLRECORDER_01_022: [** umockcallrecorder_get_actual_calls shall return a pointer to the string representation of all the actual calls. **]**
@@ -115,7 +115,7 @@ extern const char* umockcallrecorder_get_actual_calls(UMOCKCALLRECORDER_HANDLE u
 ## umockcallrecorder_get_expected_calls
 
 ```c
-extern const char* umockcallrecorder_get_expected_calls(UMOCKCALLRECORDER_HANDLE umock_call_recorder);
+const char* umockcallrecorder_get_expected_calls(UMOCKCALLRECORDER_HANDLE umock_call_recorder);
 ```
 
 **SRS_UMOCKCALLRECORDER_01_027: [** umockcallrecorder_get_expected_calls shall return a pointer to the string representation of all the expected calls. **]**
@@ -137,7 +137,7 @@ extern const char* umockcallrecorder_get_expected_calls(UMOCKCALLRECORDER_HANDLE
 ## umockcallrecorder_get_last_expected_call
 
 ```c
-extern UMOCKCALL_HANDLE umockcallrecorder_get_last_expected_call(UMOCKCALLRECORDER_HANDLE umock_call_recorder);
+UMOCKCALL_HANDLE umockcallrecorder_get_last_expected_call(UMOCKCALLRECORDER_HANDLE umock_call_recorder);
 ```
 
 **SRS_UMOCKCALLRECORDER_01_032: [** umockcallrecorder_get_last_expected_call shall return the last expected call for the umock_call_recorder call recorder. **]**
@@ -149,7 +149,7 @@ extern UMOCKCALL_HANDLE umockcallrecorder_get_last_expected_call(UMOCKCALLRECORD
 ## umockcallrecorder_clone
 
 ```c
-extern UMOCKCALLRECORDER_HANDLE umockcallrecorder_clone(UMOCKCALLRECORDER_HANDLE umock_call_recorder);
+UMOCKCALLRECORDER_HANDLE umockcallrecorder_clone(UMOCKCALLRECORDER_HANDLE umock_call_recorder);
 ```
 
 **SRS_UMOCKCALLRECORDER_01_035: [** umockcallrecorder_clone shall clone a call recorder and return a handle to the newly cloned call recorder. **]**
@@ -177,7 +177,7 @@ extern UMOCKCALLRECORDER_HANDLE umockcallrecorder_clone(UMOCKCALLRECORDER_HANDLE
 ## umockcallrecorder_get_expected_call_count
 
 ```c
-extern int umockcallrecorder_get_expected_call_count(UMOCKCALLRECORDER_HANDLE umock_call_recorder, size_t* expected_call_count);
+int umockcallrecorder_get_expected_call_count(UMOCKCALLRECORDER_HANDLE umock_call_recorder, size_t* expected_call_count);
 ```
 
 **SRS_UMOCKCALLRECORDER_01_044: [** umockcallrecorder_get_expected_call_count shall return in the expected_call_count argument the number of expected calls associated with the call recorder. **]**
@@ -189,7 +189,7 @@ extern int umockcallrecorder_get_expected_call_count(UMOCKCALLRECORDER_HANDLE um
 ## umockcallrecorder_fail_call
 
 ```c
-extern int umockcallrecorder_fail_call(UMOCKCALLRECORDER_HANDLE umock_call_recorder, size_t index);
+int umockcallrecorder_fail_call(UMOCKCALLRECORDER_HANDLE umock_call_recorder, size_t index);
 ```
 
 **SRS_UMOCKCALLRECORDER_01_047: [** umockcallrecorder_fail_call shall mark an expected call as to be failed by calling umockcall_set_fail_call with a 1 value for fail_call. **]**
@@ -206,7 +206,7 @@ extern int umockcallrecorder_fail_call(UMOCKCALLRECORDER_HANDLE umock_call_recor
 ## umockcallrecorder_can_call_fail
 
 ```c
-extern int umockcallrecorder_can_call_fail(UMOCKCALLRECORDER_HANDLE umock_call_recorder, size_t index, int* can_call_fail);
+int umockcallrecorder_can_call_fail(UMOCKCALLRECORDER_HANDLE umock_call_recorder, size_t index, int* can_call_fail);
 ```
 
 

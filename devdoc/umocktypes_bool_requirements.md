@@ -8,18 +8,18 @@ umocktypes_c is a module that exposes out of the box functionality for bool and 
 # Exposed API
 
 ```c
-    extern int umocktypes_bool_register_types(void);
+    int umocktypes_bool_register_types(void);
 
-    extern char* umocktypes_stringify_bool(const bool* value); \
-    extern int umocktypes_are_equal_bool(const bool* left, const bool* right); \
-    extern int umocktypes_copy_bool(bool* destination, const bool* source); \
-    extern void umocktypes_free_bool(bool* value);
+    char* umocktypes_stringify_bool(const bool* value); \
+    int umocktypes_are_equal_bool(const bool* left, const bool* right); \
+    int umocktypes_copy_bool(bool* destination, const bool* source); \
+    void umocktypes_free_bool(bool* value);
 ```
 
 ## umocktypes_bool_register_types
 
 ```c
-extern int umocktypes_bool_register_types(void);
+int umocktypes_bool_register_types(void);
 ```
 
 **SRS_UMOCKTYPES_BOOL_01_001: [** umocktypes_bool_register_types shall register support for the C99 bool type. **]**
@@ -31,7 +31,7 @@ extern int umocktypes_bool_register_types(void);
 ## umocktypes_stringify_char
 
 ```c
-extern char* umocktypes_stringify_bool(const bool* value);
+char* umocktypes_stringify_bool(const bool* value);
 ```
 
 **SRS_UMOCKTYPES_BOOL_01_002: [** umocktypes_stringify_bool shall return the string representation of value. **]**
@@ -45,7 +45,7 @@ extern char* umocktypes_stringify_bool(const bool* value);
 ##umocktypes_are_equal_bool
 
 ```c
-extern int umocktypes_are_equal_char(bool* left, bool* right);
+int umocktypes_are_equal_char(bool* left, bool* right);
 ```
 
 **SRS_UMOCKTYPES_BOOL_01_006: [** umocktypes_are_equal_bool shall compare the 2 bools pointed to by left and right. **]**
@@ -59,7 +59,7 @@ extern int umocktypes_are_equal_char(bool* left, bool* right);
 ## umocktypes_copy_bool
 
 ```c
-extern int umocktypes_copy_bool(bool* destination, const bool* source);
+int umocktypes_copy_bool(bool* destination, const bool* source);
 ```
 
 **SRS_UMOCKTYPES_BOOL_01_010: [** umocktypes_copy_bool shall copy the bool value from source to destination. **]**
@@ -71,7 +71,7 @@ extern int umocktypes_copy_bool(bool* destination, const bool* source);
 ## umocktypes_free_bool
 
 ```c
-extern void umocktypes_free_bool(bool* value);
+void umocktypes_free_bool(bool* value);
 ```
 
 **SRS_UMOCKTYPES_BOOL_01_013: [** umocktypes_free_bool shall do nothing. **]**

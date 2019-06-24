@@ -9,13 +9,13 @@ For example "const                   char \*" would be brought to "const char\*"
 # Exposed API
 
 ```c
-extern char* umocktypename_normalize(const char* typename);
+char* umocktypename_normalize(const char* typename);
 ```
 
 ## umocktypename_normalize
 
 ```c
-extern char* umocktypename_normalize(const char* typename);
+char* umocktypename_normalize(const char* typename);
 ```
 
 **SRS_UMOCKTYPENAME_01_001: [** umocktypename_normalize shall return a char\* with a newly allocated string that contains the normalized typename. **]**

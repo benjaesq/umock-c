@@ -2,13 +2,10 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 #ifdef __cplusplus
-#include <cstdint>
 #include <cstdlib>
-#include <ctime>
 #else
-#include <stdint.h>
 #include <stdlib.h>
-#include <time.h>
+#include <stdbool.h>
 #endif
 
 #include "testrunnerswitcher.h"

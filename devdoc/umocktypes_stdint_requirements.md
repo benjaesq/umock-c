@@ -10,13 +10,13 @@ Currently the supported types are:
 # Exposed API
 
 ```c
-extern int umocktypes_c_register_types(void);
+int umocktypes_c_register_types(void);
 
 #define UMOCKTYPES_STDINT_HANDLERS(type, function_postfix) \
-    extern char* MU_C2(umocktypes_stringify_,function_postfix)(const type* value); \
-    extern int MU_C2(umocktypes_are_equal_, function_postfix)(const type* left, const type* right); \
-    extern int MU_C2(umocktypes_copy_, function_postfix)(type* destination, const type* source); \
-    extern void MU_C2(umocktypes_free_, function_postfix)(type* value);
+    char* MU_C2(umocktypes_stringify_,function_postfix)(const type* value); \
+    int MU_C2(umocktypes_are_equal_, function_postfix)(const type* left, const type* right); \
+    int MU_C2(umocktypes_copy_, function_postfix)(type* destination, const type* source); \
+    void MU_C2(umocktypes_free_, function_postfix)(type* value);
 
 UMOCKTYPES_STDINT_HANDLERS(uint8_t, uint8_t)
 UMOCKTYPES_STDINT_HANDLERS(int8_t, int8_t)
@@ -40,7 +40,7 @@ UMOCKTYPES_STDINT_HANDLERS(int_fast64_t, int_fast64_t)
 ## umocktypes_stdint_register_types
 
 ```c
-extern int umocktypes_stdint_register_types(void);
+int umocktypes_stdint_register_types(void);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_001: [** umocktypes_stdint_register_types shall register support for all the types in the module. **]**
@@ -52,7 +52,7 @@ extern int umocktypes_stdint_register_types(void);
 ## umocktypes_stringify_uint8_t
 
 ```c
-extern char* umocktypes_stringify_uint8_t(const uint8_t* value);
+char* umocktypes_stringify_uint8_t(const uint8_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_004: [** umocktypes_stringify_uint8_t shall return the string representation of value. **]**
@@ -66,7 +66,7 @@ extern char* umocktypes_stringify_uint8_t(const uint8_t* value);
 ## umocktypes_are_equal_uint8_t
 
 ```c
-extern int umocktypes_are_equal_uint8_t(const uint8_t* left, const uint8_t* right);
+int umocktypes_are_equal_uint8_t(const uint8_t* left, const uint8_t* right);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_008: [** umocktypes_are_equal_uint8_t shall compare the 2 uint8_t values pointed to by left and right. **]**
@@ -80,7 +80,7 @@ extern int umocktypes_are_equal_uint8_t(const uint8_t* left, const uint8_t* righ
 ## umocktypes_copy_uint8_t
 
 ```c
-extern int umocktypes_copy_uint8_t(uint8_t* destination, const uint8_t* source);
+int umocktypes_copy_uint8_t(uint8_t* destination, const uint8_t* source);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_012: [** umocktypes_copy_uint8_t shall copy the uint8_t value from source to destination. **]**
@@ -92,7 +92,7 @@ extern int umocktypes_copy_uint8_t(uint8_t* destination, const uint8_t* source);
 ## umocktypes_free_uint8_t
 
 ```c
-extern void umocktypes_free_uint8_t(uint8_t* value);
+void umocktypes_free_uint8_t(uint8_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_015: [** umocktypes_free_uint8_t shall do nothing. **]**
@@ -100,7 +100,7 @@ extern void umocktypes_free_uint8_t(uint8_t* value);
 ## umocktypes_stringify_int8_t
 
 ```c
-extern char* umocktypes_stringify_int8_t(const int8_t* value);
+char* umocktypes_stringify_int8_t(const int8_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_016: [** umocktypes_stringify_int8_t shall return the string representation of value. **]**
@@ -114,7 +114,7 @@ extern char* umocktypes_stringify_int8_t(const int8_t* value);
 ## umocktypes_are_equal_int8_t
 
 ```c
-extern int umocktypes_are_equal_int8_t(const int8_t* left, const int8_t* right);
+int umocktypes_are_equal_int8_t(const int8_t* left, const int8_t* right);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_020: [** umocktypes_are_equal_int8_t shall compare the 2 int8_t values pointed to by left and right. **]**
@@ -128,7 +128,7 @@ extern int umocktypes_are_equal_int8_t(const int8_t* left, const int8_t* right);
 ## umocktypes_copy_int8_t
 
 ```c
-extern int umocktypes_copy_int8_t(int8_t* destination, const int8_t* source);
+int umocktypes_copy_int8_t(int8_t* destination, const int8_t* source);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_024: [** umocktypes_copy_int8_t shall copy the int8_t value from source to destination. **]**
@@ -140,7 +140,7 @@ extern int umocktypes_copy_int8_t(int8_t* destination, const int8_t* source);
 ## umocktypes_free_int8_t
 
 ```c
-extern void umocktypes_free_int8_t(int8_t* value);
+void umocktypes_free_int8_t(int8_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_027: [** umocktypes_free_int8_t shall do nothing. **]**
@@ -148,7 +148,7 @@ extern void umocktypes_free_int8_t(int8_t* value);
 ## umocktypes_stringify_uint16_t
 
 ```c
-extern char* umocktypes_stringify_uint16_t(const uint16_t* value);
+char* umocktypes_stringify_uint16_t(const uint16_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_028: [** umocktypes_stringify_uint16_t shall return the string representation of value. **]**
@@ -162,7 +162,7 @@ extern char* umocktypes_stringify_uint16_t(const uint16_t* value);
 ## umocktypes_are_equal_uint16_t
 
 ```c
-extern int umocktypes_are_equal_uint16_t(const uint16_t* left, const uint16_t* right);
+int umocktypes_are_equal_uint16_t(const uint16_t* left, const uint16_t* right);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_032: [** umocktypes_are_equal_uint16_t shall compare the 2 uint16_t values pointed to by left and right. **]**
@@ -176,7 +176,7 @@ extern int umocktypes_are_equal_uint16_t(const uint16_t* left, const uint16_t* r
 ## umocktypes_copy_uint16_t
 
 ```c
-extern int umocktypes_copy_uint16_t(uint16_t* destination, const uint16_t* source);
+int umocktypes_copy_uint16_t(uint16_t* destination, const uint16_t* source);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_036: [** umocktypes_copy_uint16_t shall copy the uint16_t value from source to destination. **]**
@@ -188,7 +188,7 @@ extern int umocktypes_copy_uint16_t(uint16_t* destination, const uint16_t* sourc
 ## umocktypes_free_uint16_t
 
 ```c
-extern void umocktypes_free_uint16_t(uint16_t* value);
+void umocktypes_free_uint16_t(uint16_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_039: [** umocktypes_free_uint16_t shall do nothing. **]**
@@ -196,7 +196,7 @@ extern void umocktypes_free_uint16_t(uint16_t* value);
 ## umocktypes_stringify_int16_t
 
 ```c
-extern char* umocktypes_stringify_int16_t(const int16_t* value);
+char* umocktypes_stringify_int16_t(const int16_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_040: [** umocktypes_stringify_int16_t shall return the string representation of value. **]**
@@ -210,7 +210,7 @@ extern char* umocktypes_stringify_int16_t(const int16_t* value);
 ## umocktypes_are_equal_int16_t
 
 ```c
-extern int umocktypes_are_equal_int16_t(const int16_t* left, const int16_t* right);
+int umocktypes_are_equal_int16_t(const int16_t* left, const int16_t* right);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_044: [** umocktypes_are_equal_int16_t shall compare the 2 int16_t values pointed to by left and right. **]**
@@ -224,7 +224,7 @@ extern int umocktypes_are_equal_int16_t(const int16_t* left, const int16_t* righ
 ## umocktypes_copy_int16_t
 
 ```c
-extern int umocktypes_copy_int16_t(int16_t* destination, const int16_t* source);
+int umocktypes_copy_int16_t(int16_t* destination, const int16_t* source);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_048: [** umocktypes_copy_int16_t shall copy the int16_t value from source to destination. **]**
@@ -236,7 +236,7 @@ extern int umocktypes_copy_int16_t(int16_t* destination, const int16_t* source);
 ## umocktypes_free_int16_t
 
 ```c
-extern void umocktypes_free_int16_t(int16_t* value);
+void umocktypes_free_int16_t(int16_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_051: [** umocktypes_free_int16_t shall do nothing. **]**
@@ -244,7 +244,7 @@ extern void umocktypes_free_int16_t(int16_t* value);
 ## umocktypes_stringify_uint32_t
 
 ```c
-extern char* umocktypes_stringify_uint32_t(const uint32_t* value);
+char* umocktypes_stringify_uint32_t(const uint32_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_052: [** umocktypes_stringify_uint32_t shall return the string representation of value. **]**
@@ -258,7 +258,7 @@ extern char* umocktypes_stringify_uint32_t(const uint32_t* value);
 ## umocktypes_are_equal_uint32_t
 
 ```c
-extern int umocktypes_are_equal_uint32_t(const uint32_t* left, const uint32_t* right);
+int umocktypes_are_equal_uint32_t(const uint32_t* left, const uint32_t* right);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_056: [** umocktypes_are_equal_uint32_t shall compare the 2 uint32_t values pointed to by left and right. **]**
@@ -272,7 +272,7 @@ extern int umocktypes_are_equal_uint32_t(const uint32_t* left, const uint32_t* r
 ## umocktypes_copy_uint32_t
 
 ```c
-extern int umocktypes_copy_uint32_t(uint32_t* destination, const uint32_t* source);
+int umocktypes_copy_uint32_t(uint32_t* destination, const uint32_t* source);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_060: [** umocktypes_copy_uint32_t shall copy the uint32_t value from source to destination. **]**
@@ -284,7 +284,7 @@ extern int umocktypes_copy_uint32_t(uint32_t* destination, const uint32_t* sourc
 ## umocktypes_free_uint32_t
 
 ```c
-extern void umocktypes_free_uint32_t(uint32_t* value);
+void umocktypes_free_uint32_t(uint32_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_063: [** umocktypes_free_uint32_t shall do nothing. **]**
@@ -292,7 +292,7 @@ extern void umocktypes_free_uint32_t(uint32_t* value);
 ## umocktypes_stringify_int32_t
 
 ```c
-extern char* umocktypes_stringify_int32_t(const int32_t* value);
+char* umocktypes_stringify_int32_t(const int32_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_064: [** umocktypes_stringify_int32_t shall return the string representation of value. **]**
@@ -306,7 +306,7 @@ extern char* umocktypes_stringify_int32_t(const int32_t* value);
 ## umocktypes_are_equal_int32_t
 
 ```c
-extern int umocktypes_are_equal_int32_t(const int32_t* left, const int32_t* right);
+int umocktypes_are_equal_int32_t(const int32_t* left, const int32_t* right);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_068: [** umocktypes_are_equal_int32_t shall compare the 2 int32_t values pointed to by left and right. **]**
@@ -320,7 +320,7 @@ extern int umocktypes_are_equal_int32_t(const int32_t* left, const int32_t* righ
 ## umocktypes_copy_int32_t
 
 ```c
-extern int umocktypes_copy_int32_t(int32_t* destination, const int32_t* source);
+int umocktypes_copy_int32_t(int32_t* destination, const int32_t* source);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_072: [** umocktypes_copy_int32_t shall copy the int32_t value from source to destination. **]**
@@ -332,7 +332,7 @@ extern int umocktypes_copy_int32_t(int32_t* destination, const int32_t* source);
 ## umocktypes_free_int32_t
 
 ```c
-extern void umocktypes_free_int32_t(int32_t* value);
+void umocktypes_free_int32_t(int32_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_075: [** umocktypes_free_int32_t shall do nothing. **]**
@@ -340,7 +340,7 @@ extern void umocktypes_free_int32_t(int32_t* value);
 ## umocktypes_stringify_uint64_t
 
 ```c
-extern char* umocktypes_stringify_uint64_t(const uint64_t* value);
+char* umocktypes_stringify_uint64_t(const uint64_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_076: [** umocktypes_stringify_uint64_t shall return the string representation of value. **]**
@@ -354,7 +354,7 @@ extern char* umocktypes_stringify_uint64_t(const uint64_t* value);
 ## umocktypes_are_equal_uint64_t
 
 ```c
-extern int umocktypes_are_equal_uint64_t(const uint64_t* left, const uint64_t* right);
+int umocktypes_are_equal_uint64_t(const uint64_t* left, const uint64_t* right);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_080: [** umocktypes_are_equal_uint64_t shall compare the 2 uint64_t values pointed to by left and right. **]**
@@ -368,7 +368,7 @@ extern int umocktypes_are_equal_uint64_t(const uint64_t* left, const uint64_t* r
 ## umocktypes_copy_uint64_t
 
 ```c
-extern int umocktypes_copy_uint64_t(uint64_t* destination, const uint64_t* source);
+int umocktypes_copy_uint64_t(uint64_t* destination, const uint64_t* source);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_084: [** umocktypes_copy_uint64_t shall copy the uint64_t value from source to destination. **]**
@@ -380,7 +380,7 @@ extern int umocktypes_copy_uint64_t(uint64_t* destination, const uint64_t* sourc
 ## umocktypes_free_uint64_t
 
 ```c
-extern void umocktypes_free_uint64_t(uint64_t* value);
+void umocktypes_free_uint64_t(uint64_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_087: [** umocktypes_free_uint64_t shall do nothing. **]**
@@ -388,7 +388,7 @@ extern void umocktypes_free_uint64_t(uint64_t* value);
 ## umocktypes_stringify_int64_t
 
 ```c
-extern char* umocktypes_stringify_int64_t(const int64_t* value);
+char* umocktypes_stringify_int64_t(const int64_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_088: [** umocktypes_stringify_int64_t shall return the string representation of value. **]**
@@ -402,7 +402,7 @@ extern char* umocktypes_stringify_int64_t(const int64_t* value);
 ## umocktypes_are_equal_int64_t
 
 ```c
-extern int umocktypes_are_equal_int64_t(const int64_t* left, const int64_t* right);
+int umocktypes_are_equal_int64_t(const int64_t* left, const int64_t* right);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_092: [** umocktypes_are_equal_int64_t shall compare the 2 int64_t values pointed to by left and right. **]**
@@ -416,7 +416,7 @@ extern int umocktypes_are_equal_int64_t(const int64_t* left, const int64_t* righ
 ## umocktypes_copy_int64_t
 
 ```c
-extern int umocktypes_copy_int64_t(int64_t* destination, const int64_t* source);
+int umocktypes_copy_int64_t(int64_t* destination, const int64_t* source);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_096: [** umocktypes_copy_int64_t shall copy the int64_t value from source to destination. **]**
@@ -428,7 +428,7 @@ extern int umocktypes_copy_int64_t(int64_t* destination, const int64_t* source);
 ## umocktypes_free_int64_t
 
 ```c
-extern void umocktypes_free_int64_t(int64_t* value);
+void umocktypes_free_int64_t(int64_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_099: [** umocktypes_free_int64_t shall do nothing. **]**
@@ -436,7 +436,7 @@ extern void umocktypes_free_int64_t(int64_t* value);
 ## umocktypes_stringify_uint_fast8_t
 
 ```c
-extern char* umocktypes_stringify_uint_fast8_t(const uint_fast8_t* value);
+char* umocktypes_stringify_uint_fast8_t(const uint_fast8_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_100: [** umocktypes_stringify_uint_fast8_t shall return the string representation of value. **]**
@@ -450,7 +450,7 @@ extern char* umocktypes_stringify_uint_fast8_t(const uint_fast8_t* value);
 ## umocktypes_are_equal_uint_fast8_t
 
 ```c
-extern int umocktypes_are_equal_uint_fast8_t(const uint_fast8_t* left, const uint_fast8_t* right);
+int umocktypes_are_equal_uint_fast8_t(const uint_fast8_t* left, const uint_fast8_t* right);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_104: [** umocktypes_are_equal_uint_fast8_t shall compare the 2 uint_fast8_t values pointed to by left and right. **]**
@@ -464,7 +464,7 @@ extern int umocktypes_are_equal_uint_fast8_t(const uint_fast8_t* left, const uin
 ## umocktypes_copy_uint_fast8_t
 
 ```c
-extern int umocktypes_copy_uint_fast8_t(uint_fast8_t* destination, const uint_fast8_t* source);
+int umocktypes_copy_uint_fast8_t(uint_fast8_t* destination, const uint_fast8_t* source);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_108: [** umocktypes_copy_uint_fast8_t shall copy the uint_fast8_t value from source to destination. **]**
@@ -476,7 +476,7 @@ extern int umocktypes_copy_uint_fast8_t(uint_fast8_t* destination, const uint_fa
 ## umocktypes_free_uint_fast8_t
 
 ```c
-extern void umocktypes_free_uint_fast8_t(uint_fast8_t* value);
+void umocktypes_free_uint_fast8_t(uint_fast8_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_111: [** umocktypes_free_uint_fast8_t shall do nothing. **]**
@@ -484,7 +484,7 @@ extern void umocktypes_free_uint_fast8_t(uint_fast8_t* value);
 ## umocktypes_stringify_uint_fast8_t
 
 ```c
-extern char* umocktypes_stringify_int_fast8_t(const int_fast8_t* value);
+char* umocktypes_stringify_int_fast8_t(const int_fast8_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_112: [** umocktypes_stringify_int_fast8_t shall return the string representation of value. **]**
@@ -498,7 +498,7 @@ extern char* umocktypes_stringify_int_fast8_t(const int_fast8_t* value);
 ## umocktypes_are_equal_int_fast8_t
 
 ```c
-extern int umocktypes_are_equal_int_fast8_t(const int_fast8_t* left, const int_fast8_t* right);
+int umocktypes_are_equal_int_fast8_t(const int_fast8_t* left, const int_fast8_t* right);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_116: [** umocktypes_are_equal_int_fast8_t shall compare the 2 int_fast8_t values pointed to by left and right. **]**
@@ -512,7 +512,7 @@ extern int umocktypes_are_equal_int_fast8_t(const int_fast8_t* left, const int_f
 ## umocktypes_copy_int_fast8_t
 
 ```c
-extern int umocktypes_copy_int_fast8_t(int_fast8_t* destination, const int_fast8_t* source);
+int umocktypes_copy_int_fast8_t(int_fast8_t* destination, const int_fast8_t* source);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_120: [** umocktypes_copy_int_fast8_t shall copy the int_fast8_t value from source to destination. **]**
@@ -524,7 +524,7 @@ extern int umocktypes_copy_int_fast8_t(int_fast8_t* destination, const int_fast8
 ## umocktypes_free_int_fast8_t
 
 ```c
-extern void umocktypes_free_int_fast8_t(int_fast8_t* value);
+void umocktypes_free_int_fast8_t(int_fast8_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_123: [** umocktypes_free_int_fast8_t shall do nothing. **]**
@@ -532,7 +532,7 @@ extern void umocktypes_free_int_fast8_t(int_fast8_t* value);
 ## umocktypes_stringify_uint_fast16_t
 
 ```c
-extern char* umocktypes_stringify_uint_fast16_t(const uint_fast16_t* value);
+char* umocktypes_stringify_uint_fast16_t(const uint_fast16_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_124: [** umocktypes_stringify_uint_fast16_t shall return the string representation of value. **]**
@@ -546,7 +546,7 @@ extern char* umocktypes_stringify_uint_fast16_t(const uint_fast16_t* value);
 ## umocktypes_are_equal_uint_fast16_t
 
 ```c
-extern int umocktypes_are_equal_uint_fast16_t(const uint_fast16_t* left, const uint_fast16_t* right);
+int umocktypes_are_equal_uint_fast16_t(const uint_fast16_t* left, const uint_fast16_t* right);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_128: [** umocktypes_are_equal_uint_fast16_t shall compare the 2 uint_fast16_t values pointed to by left and right. **]**
@@ -560,7 +560,7 @@ extern int umocktypes_are_equal_uint_fast16_t(const uint_fast16_t* left, const u
 ## umocktypes_copy_uint_fast16_t
 
 ```c
-extern int umocktypes_copy_uint_fast16_t(uint_fast16_t* destination, const uint_fast16_t* source);
+int umocktypes_copy_uint_fast16_t(uint_fast16_t* destination, const uint_fast16_t* source);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_132: [** umocktypes_copy_uint_fast16_t shall copy the uint_fast16_t value from source to destination. **]**
@@ -572,7 +572,7 @@ extern int umocktypes_copy_uint_fast16_t(uint_fast16_t* destination, const uint_
 ## umocktypes_free_uint_fast16_t
 
 ```c
-extern void umocktypes_free_uint_fast16_t(uint_fast16_t* value);
+void umocktypes_free_uint_fast16_t(uint_fast16_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_135: [** umocktypes_free_uint_fast16_t shall do nothing. **]**
@@ -580,7 +580,7 @@ extern void umocktypes_free_uint_fast16_t(uint_fast16_t* value);
 ## umocktypes_stringify_int_fast16_t
 
 ```c
-extern char* umocktypes_stringify_int_fast16_t(const int_fast16_t* value);
+char* umocktypes_stringify_int_fast16_t(const int_fast16_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_136: [** umocktypes_stringify_int_fast16_t shall return the string representation of value. **]**
@@ -594,7 +594,7 @@ extern char* umocktypes_stringify_int_fast16_t(const int_fast16_t* value);
 ## umocktypes_are_equal_int_fast16_t
 
 ```c
-extern int umocktypes_are_equal_int_fast16_t(const int_fast16_t* left, const int_fast16_t* right);
+int umocktypes_are_equal_int_fast16_t(const int_fast16_t* left, const int_fast16_t* right);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_140: [** umocktypes_are_equal_int_fast16_t shall compare the 2 int_fast16_t values pointed to by left and right. **]**
@@ -608,7 +608,7 @@ extern int umocktypes_are_equal_int_fast16_t(const int_fast16_t* left, const int
 ## umocktypes_copy_int_fast16_t
 
 ```c
-extern int umocktypes_copy_int_fast16_t(int_fast16_t* destination, const int_fast16_t* source);
+int umocktypes_copy_int_fast16_t(int_fast16_t* destination, const int_fast16_t* source);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_144: [** umocktypes_copy_int_fast16_t shall copy the int_fast16_t value from source to destination. **]**
@@ -620,7 +620,7 @@ extern int umocktypes_copy_int_fast16_t(int_fast16_t* destination, const int_fas
 ## umocktypes_free_int_fast16_t
 
 ```c
-extern void umocktypes_free_int_fast16_t(int_fast16_t* value);
+void umocktypes_free_int_fast16_t(int_fast16_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_147: [** umocktypes_free_int_fast16_t shall do nothing. **]**
@@ -628,7 +628,7 @@ extern void umocktypes_free_int_fast16_t(int_fast16_t* value);
 ## umocktypes_stringify_uint_fast32_t
 
 ```c
-extern char* umocktypes_stringify_uint_fast32_t(const uint_fast32_t* value);
+char* umocktypes_stringify_uint_fast32_t(const uint_fast32_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_148: [** umocktypes_stringify_uint_fast32_t shall return the string representation of value. **]**
@@ -642,7 +642,7 @@ extern char* umocktypes_stringify_uint_fast32_t(const uint_fast32_t* value);
 ## umocktypes_are_equal_uint_fast32_t
 
 ```c
-extern int umocktypes_are_equal_uint_fast32_t(const uint_fast32_t* left, const uint_fast32_t* right);
+int umocktypes_are_equal_uint_fast32_t(const uint_fast32_t* left, const uint_fast32_t* right);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_152: [** umocktypes_are_equal_uint_fast32_t shall compare the 2 uint_fast32_t values pointed to by left and right. **]**
@@ -656,7 +656,7 @@ extern int umocktypes_are_equal_uint_fast32_t(const uint_fast32_t* left, const u
 ## umocktypes_copy_uint_fast32_t
 
 ```c
-extern int umocktypes_copy_uint_fast32_t(uint_fast32_t* destination, const uint_fast32_t* source);
+int umocktypes_copy_uint_fast32_t(uint_fast32_t* destination, const uint_fast32_t* source);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_156: [** umocktypes_copy_uint_fast32_t shall copy the uint_fast32_t value from source to destination. **]**
@@ -668,7 +668,7 @@ extern int umocktypes_copy_uint_fast32_t(uint_fast32_t* destination, const uint_
 ## umocktypes_free_uint_fast32_t
 
 ```c
-extern void umocktypes_free_uint_fast32_t(uint_fast32_t* value);
+void umocktypes_free_uint_fast32_t(uint_fast32_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_159: [** umocktypes_free_uint_fast32_t shall do nothing. **]**
@@ -676,7 +676,7 @@ extern void umocktypes_free_uint_fast32_t(uint_fast32_t* value);
 ## umocktypes_stringify_int_fast32_t
 
 ```c
-extern char* umocktypes_stringify_int_fast32_t(const int_fast32_t* value);
+char* umocktypes_stringify_int_fast32_t(const int_fast32_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_160: [** umocktypes_stringify_int_fast32_t shall return the string representation of value. **]**
@@ -690,7 +690,7 @@ extern char* umocktypes_stringify_int_fast32_t(const int_fast32_t* value);
 ## umocktypes_are_equal_int_fast32_t
 
 ```c
-extern int umocktypes_are_equal_int_fast32_t(const int_fast32_t* left, const int_fast32_t* right);
+int umocktypes_are_equal_int_fast32_t(const int_fast32_t* left, const int_fast32_t* right);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_164: [** umocktypes_are_equal_int_fast32_t shall compare the 2 int_fast32_t values pointed to by left and right. **]**
@@ -704,7 +704,7 @@ extern int umocktypes_are_equal_int_fast32_t(const int_fast32_t* left, const int
 ## umocktypes_copy_int_fast32_t
 
 ```c
-extern int umocktypes_copy_int_fast32_t(int_fast32_t* destination, const int_fast32_t* source);
+int umocktypes_copy_int_fast32_t(int_fast32_t* destination, const int_fast32_t* source);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_168: [** umocktypes_copy_int_fast32_t shall copy the int_fast32_t value from source to destination. **]**
@@ -716,7 +716,7 @@ extern int umocktypes_copy_int_fast32_t(int_fast32_t* destination, const int_fas
 ## umocktypes_free_int_fast32_t
 
 ```c
-extern void umocktypes_free_int_fast32_t(int_fast32_t* value);
+void umocktypes_free_int_fast32_t(int_fast32_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_171: [** umocktypes_free_int_fast32_t shall do nothing. **]**
@@ -724,7 +724,7 @@ extern void umocktypes_free_int_fast32_t(int_fast32_t* value);
 ## umocktypes_stringify_uint_fast64_t
 
 ```c
-extern char* umocktypes_stringify_uint_fast64_t(const uint_fast64_t* value);
+char* umocktypes_stringify_uint_fast64_t(const uint_fast64_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_172: [** umocktypes_stringify_uint_fast64_t shall return the string representation of value. **]**
@@ -738,7 +738,7 @@ extern char* umocktypes_stringify_uint_fast64_t(const uint_fast64_t* value);
 ## umocktypes_are_equal_uint_fast64_t
 
 ```c
-extern int umocktypes_are_equal_uint_fast64_t(const uint_fast64_t* left, const uint_fast64_t* right);
+int umocktypes_are_equal_uint_fast64_t(const uint_fast64_t* left, const uint_fast64_t* right);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_176: [** umocktypes_are_equal_uint_fast64_t shall compare the 2 uint_fast64_t values pointed to by left and right. **]**
@@ -752,7 +752,7 @@ extern int umocktypes_are_equal_uint_fast64_t(const uint_fast64_t* left, const u
 ## umocktypes_copy_uint_fast64_t
 
 ```c
-extern int umocktypes_copy_uint_fast64_t(uint_fast64_t* destination, const uint_fast64_t* source);
+int umocktypes_copy_uint_fast64_t(uint_fast64_t* destination, const uint_fast64_t* source);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_180: [** umocktypes_copy_uint_fast64_t shall copy the uint_fast64_t value from source to destination. **]**
@@ -764,7 +764,7 @@ extern int umocktypes_copy_uint_fast64_t(uint_fast64_t* destination, const uint_
 ## umocktypes_free_uint_fast64_t
 
 ```c
-extern void umocktypes_free_uint_fast64_t(uint_fast64_t* value);
+void umocktypes_free_uint_fast64_t(uint_fast64_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_183: [** umocktypes_free_uint_fast64_t shall do nothing. **]**
@@ -772,7 +772,7 @@ extern void umocktypes_free_uint_fast64_t(uint_fast64_t* value);
 ## umocktypes_stringify_int_fast64_t
 
 ```c
-extern char* umocktypes_stringify_int_fast64_t(const int_fast64_t* value);
+char* umocktypes_stringify_int_fast64_t(const int_fast64_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_184: [** umocktypes_stringify_int_fast64_t shall return the string representation of value. **]**
@@ -786,7 +786,7 @@ extern char* umocktypes_stringify_int_fast64_t(const int_fast64_t* value);
 ## umocktypes_are_equal_int_fast64_t
 
 ```c
-extern int umocktypes_are_equal_int_fast64_t(const int_fast64_t* left, const int_fast64_t* right);
+int umocktypes_are_equal_int_fast64_t(const int_fast64_t* left, const int_fast64_t* right);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_188: [** umocktypes_are_equal_int_fast64_t shall compare the 2 int_fast64_t values pointed to by left and right. **]**
@@ -800,7 +800,7 @@ extern int umocktypes_are_equal_int_fast64_t(const int_fast64_t* left, const int
 ## umocktypes_copy_int_fast64_t
 
 ```c
-extern int umocktypes_copy_int_fast64_t(int_fast64_t* destination, const int_fast64_t* source);
+int umocktypes_copy_int_fast64_t(int_fast64_t* destination, const int_fast64_t* source);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_192: [** umocktypes_copy_int_fast64_t shall copy the int_fast64_t value from source to destination. **]**
@@ -812,7 +812,7 @@ extern int umocktypes_copy_int_fast64_t(int_fast64_t* destination, const int_fas
 ## umocktypes_free_int_fast64_t
 
 ```c
-extern void umocktypes_free_int_fast64_t(int_fast64_t* value);
+void umocktypes_free_int_fast64_t(int_fast64_t* value);
 ```
 
 **SRS_UMOCKTYPES_STDINT_01_195: [** umocktypes_free_int_fast64_t shall do nothing. **]**

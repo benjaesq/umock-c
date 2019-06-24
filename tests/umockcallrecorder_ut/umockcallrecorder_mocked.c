@@ -3,9 +3,9 @@
 
 #include <stddef.h>
 
-extern void* mock_malloc(size_t size);
-extern void* mock_realloc(void* ptr, size_t size);
-extern void mock_free(void* ptr);
+void* mock_malloc(size_t size);
+void* mock_realloc(void* ptr, size_t size);
+void mock_free(void* ptr);
 
 #define umockalloc_malloc(size) mock_malloc(size)
 #define umockalloc_realloc(ptr, size) mock_realloc(ptr, size)

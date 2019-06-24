@@ -2,12 +2,11 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 #include <stdlib.h>
-#include <stddef.h>
 
-extern void* mock_malloc(size_t size);
-extern void* mock_calloc(size_t nmemb, size_t size);
-extern void* mock_realloc(void* ptr, size_t size);
-extern void mock_free(void* ptr);
+void* mock_malloc(size_t size);
+void* mock_calloc(size_t nmemb, size_t size);
+void* mock_realloc(void* ptr, size_t size);
+void mock_free(void* ptr);
 
 #define malloc(size) mock_malloc(size)
 #define calloc(nmemb, size) mock_calloc(nmemb, size)

@@ -8,13 +8,13 @@ umockstring is a module that provides the functionality of cloning a string (all
 # Exposed API
 
 ```c
-extern char* umockstring_clone(const char* source);
+char* umockstring_clone(const char* source);
 ```
 
 ## umockstring_clone
 
 ```c
-extern char* umockstring_clone(const char* source);
+char* umockstring_clone(const char* source);
 ```
 
 **UMOCK_STRING_01_001: [** `umockstring_clone` shall allocate memory for the cloned string (including the NULL terminator). **]**

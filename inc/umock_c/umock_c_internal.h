@@ -37,10 +37,10 @@
 extern "C" {
 #endif
 
-extern void umock_c_indicate_error(UMOCK_C_ERROR_CODE error_code);
-extern UMOCKCALL_HANDLE umock_c_get_last_expected_call(void);
-extern int umock_c_add_expected_call(UMOCKCALL_HANDLE mock_call);
-extern int umock_c_add_actual_call(UMOCKCALL_HANDLE mock_call, UMOCKCALL_HANDLE* matched_call);
+void umock_c_indicate_error(UMOCK_C_ERROR_CODE error_code);
+UMOCKCALL_HANDLE umock_c_get_last_expected_call(void);
+int umock_c_add_expected_call(UMOCKCALL_HANDLE mock_call);
+int umock_c_add_actual_call(UMOCKCALL_HANDLE mock_call, UMOCKCALL_HANDLE* matched_call);
 
 typedef struct ARG_BUFFER_TAG
 {
