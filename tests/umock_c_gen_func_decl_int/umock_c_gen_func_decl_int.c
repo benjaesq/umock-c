@@ -120,7 +120,7 @@ TEST_FUNCTION(when_ENABLE_MOCKS_is_not_on_MOCKABLE_FUNCTION_generates_a_standard
     // no explicit assert
 }
 
-/* Tests_SRS_UMOCK_C_LIB_01_213: [ The macro shall generate a function signature in case `ENABLE_MOCKS` is not defined. ]*/
+/* Tests_SRS_UMOCK_C_LIB_01_213: [ The macro shall generate a function signature in case ENABLE_MOCKS is not defined. ]*/
 TEST_FUNCTION(when_ENABLE_MOCKS_is_not_on_MOCKABLE_FUNCTION_generates_a_standard_function_declaration_for_MOCKABLE_FUNCTION_WITH_RETURNS_with_args)
 {
     // arrange
@@ -132,7 +132,7 @@ TEST_FUNCTION(when_ENABLE_MOCKS_is_not_on_MOCKABLE_FUNCTION_generates_a_standard
     ASSERT_ARE_EQUAL(int, 42, result);
 }
 
-/* Tests_SRS_UMOCK_C_LIB_01_213: [ The macro shall generate a function signature in case `ENABLE_MOCKS` is not defined. ]*/
+/* Tests_SRS_UMOCK_C_LIB_01_213: [ The macro shall generate a function signature in case ENABLE_MOCKS is not defined. ]*/
 TEST_FUNCTION(when_ENABLE_MOCKS_is_not_on_MOCKABLE_FUNCTION_generates_a_standard_function_declaration_for_MOCKABLE_FUNCTION_WITH_RETURNS_no_args)
 {
     // arrange
@@ -144,7 +144,7 @@ TEST_FUNCTION(when_ENABLE_MOCKS_is_not_on_MOCKABLE_FUNCTION_generates_a_standard
     ASSERT_ARE_EQUAL(int, 42, result);
 }
 
-/* Tests_SRS_UMOCK_C_LIB_01_213: [ The macro shall generate a function signature in case `ENABLE_MOCKS` is not defined. ]*/
+/* Tests_SRS_UMOCK_C_LIB_01_213: [ The macro shall generate a function signature in case ENABLE_MOCKS is not defined. ]*/
 TEST_FUNCTION(when_ENABLE_MOCKS_is_not_on_MOCKABLE_FUNCTION_generates_a_standard_function_declaration_for_MOCKABLE_FUNCTION_WITH_RETURNS_with_ptr_return)
 {
     // arrange

@@ -3022,7 +3022,7 @@ TEST_FUNCTION(CaptureArgumentValue_captures_for_a_function_that_returns_somethin
 
 /* MOCKABLE_FUNCTION_WITH_RETURNS */
 
-/* Tests_SRS_UMOCK_C_LIB_01_212: [ `MOCKABLE_FUNCTION_WITH_RETURNS` shall be used to wrap function definitions, allowing the user to declare a function that can be mocked and aditionally declares the values that are to be returned in case of success and failure. ]*/
+/* Tests_SRS_UMOCK_C_LIB_01_212: [ MOCKABLE_FUNCTION_WITH_RETURNS shall be used to wrap function definitions, allowing the user to declare a function that can be mocked and aditionally declares the values that are to be returned in case of success and failure. ]*/
 TEST_FUNCTION(MOCKABLE_FUNCTION_WITH_RETURNS_with_one_arg_and_int_return_registers_the_success_return_value)
 {
     // arrange
@@ -3037,7 +3037,7 @@ TEST_FUNCTION(MOCKABLE_FUNCTION_WITH_RETURNS_with_one_arg_and_int_return_registe
     ASSERT_ARE_EQUAL(int, 42, result);
 }
 
-/* Tests_SRS_UMOCK_C_LIB_01_212: [ `MOCKABLE_FUNCTION_WITH_RETURNS` shall be used to wrap function definitions, allowing the user to declare a function that can be mocked and aditionally declares the values that are to be returned in case of success and failure. ]*/
+/* Tests_SRS_UMOCK_C_LIB_01_212: [ MOCKABLE_FUNCTION_WITH_RETURNS shall be used to wrap function definitions, allowing the user to declare a function that can be mocked and aditionally declares the values that are to be returned in case of success and failure. ]*/
 TEST_FUNCTION(MOCKABLE_FUNCTION_WITH_RETURNS_with_one_arg_and_void_ptr_return_registers_the_success_return_value)
 {
     // arrange
@@ -3052,7 +3052,7 @@ TEST_FUNCTION(MOCKABLE_FUNCTION_WITH_RETURNS_with_one_arg_and_void_ptr_return_re
     ASSERT_ARE_EQUAL(void_ptr, (void*)0x4242, result);
 }
 
-/* Tests_SRS_UMOCK_C_LIB_01_212: [ `MOCKABLE_FUNCTION_WITH_RETURNS` shall be used to wrap function definitions, allowing the user to declare a function that can be mocked and aditionally declares the values that are to be returned in case of success and failure. ]*/
+/* Tests_SRS_UMOCK_C_LIB_01_212: [ MOCKABLE_FUNCTION_WITH_RETURNS shall be used to wrap function definitions, allowing the user to declare a function that can be mocked and aditionally declares the values that are to be returned in case of success and failure. ]*/
 TEST_FUNCTION(MOCKABLE_FUNCTION_WITH_RETURNS_with_one_arg_and_struct_return_registers_the_success_return_value)
 {
     // arrange
@@ -3067,7 +3067,7 @@ TEST_FUNCTION(MOCKABLE_FUNCTION_WITH_RETURNS_with_one_arg_and_struct_return_regi
     ASSERT_ARE_EQUAL(int, 0x42, result.x);
 }
 
-/* Tests_SRS_UMOCK_C_LIB_01_212: [ `MOCKABLE_FUNCTION_WITH_RETURNS` shall be used to wrap function definitions, allowing the user to declare a function that can be mocked and aditionally declares the values that are to be returned in case of success and failure. ]*/
+/* Tests_SRS_UMOCK_C_LIB_01_212: [ MOCKABLE_FUNCTION_WITH_RETURNS shall be used to wrap function definitions, allowing the user to declare a function that can be mocked and aditionally declares the values that are to be returned in case of success and failure. ]*/
 TEST_FUNCTION(SetReturn_overrides_MOCKABLE_FUNCTION_WITH_RETURNS)
 {
     // arrange

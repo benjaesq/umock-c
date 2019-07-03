@@ -445,7 +445,7 @@ TEST_FUNCTION(umock_c_negative_tests_can_call_fail_test)
     ASSERT_ARE_EQUAL(int, 0, umock_c_negative_tests_can_call_fail(5), "function_mark_cannot_fail_with_args indicated it can fail");
 }
 
-/* Tests_SRS_UMOCK_C_LIB_01_214: [ Specifying the return values for success and failure shall be equivalent to calling `REGISTER_GLOBAL_MOCK_RETURNS`. ]*/
+/* Tests_SRS_UMOCK_C_LIB_01_214: [ Specifying the return values for success and failure shall be equivalent to calling REGISTER_GLOBAL_MOCK_RETURNS. ]*/
 TEST_FUNCTION(fail_return_value_specified_in_MOCKABLE_FUNCTION_WITH_RETURNS_is_returned)
 {
     int result;
@@ -462,7 +462,7 @@ TEST_FUNCTION(fail_return_value_specified_in_MOCKABLE_FUNCTION_WITH_RETURNS_is_r
     ASSERT_ARE_EQUAL(int, 43, result);
 }
 
-/* Tests_SRS_UMOCK_C_LIB_01_214: [ Specifying the return values for success and failure shall be equivalent to calling `REGISTER_GLOBAL_MOCK_RETURNS`. ]*/
+/* Tests_SRS_UMOCK_C_LIB_01_214: [ Specifying the return values for success and failure shall be equivalent to calling REGISTER_GLOBAL_MOCK_RETURNS. ]*/
 TEST_FUNCTION(SetFailReturns_overrides_MOCKABLE_FUNCTION_WITH_RETURNS)
 {
     int result;
