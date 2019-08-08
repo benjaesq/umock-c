@@ -54,8 +54,8 @@
 #define MOCKABLE_FUNCTION_WITH_CODE(modifiers, result, function, ...) \
     MOCKABLE_FUNCTION_INTERNAL_WITH_CODE(modifiers, result, function, __VA_ARGS__)
 
-#define MOCKABLE_FUNCTION_WITH_CODE_END() \
-    MOCK_FUNCTION_END()
+#define MOCKABLE_FUNCTION_WITH_CODE_END(...) \
+    MOCKABLE_FUNCTION_END(__VA_ARGS__)
 
 /* Codes_SRS_UMOCK_C_LIB_01_217: [ In the presence of the ENABLE_MOCKS define, IMPLEMENT_MOCKABLE_FUNCTION shall expand to the signature of the function, but the name shall be changed to be prefix with real_. ]*/
 #define IMPLEMENT_MOCKABLE_FUNCTION(modifiers, result, function, ...) \
@@ -118,6 +118,6 @@
 #define MOCKABLE_INTERFACE(interface_name, ...) \
     MU_FOR_EACH_1(EXPAND_PROD_ENTRY, __VA_ARGS__)
 
-#define MOCKABLE_FUNCTION_WITH_CODE_END() \
+#define MOCKABLE_FUNCTION_WITH_CODE_END(...) \
 
 #endif

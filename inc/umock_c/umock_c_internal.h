@@ -1363,7 +1363,7 @@ typedef struct MOCK_CALL_METADATA_TAG
                 umock_c_indicate_error(UMOCK_C_ERROR); \
             } \
         },) \
-        {
+        { \
 
 #define UMOCK_GENERATE_DEFAULT_RETURNS(success_return_value, failure_return_value) \
             = { success_return_value, failure_return_value }; \
@@ -1419,6 +1419,8 @@ typedef struct MOCK_CALL_METADATA_TAG
 #define MOCKABLE_FUNCTION_INTERNAL_WITH_CODE(modifiers, return_type, name, ...) \
     MOCKABLE_FUNCTION_UMOCK_INTERNAL_WITH_MOCK_NO_CODE(0, return_type, name, __VA_ARGS__) \
     MOCKABLE_FUNCTION_BODY_WITHOUT_RETURN(modifiers, return_type, name, __VA_ARGS__) \
+    MU_IF(IS_NOT_VOID(return_type), if (result_value_set_C8417226_7442_49B4_BBB9_9CA816A21EB7 == 0),) \
+    { \
 
 /* Codes_SRS_UMOCK_C_LIB_01_188: [ The create call shall have a non-void return type. ]*/
 /* Codes_SRS_UMOCK_C_LIB_01_191: [ At each create_call a memory block shall be allocated so that it can be reported as a leak by any memory checker. ]*/
@@ -1444,6 +1446,10 @@ typedef struct MOCK_CALL_METADATA_TAG
             return result_C8417226_7442_49B4_BBB9_9CA816A21EB7;,) \
         } \
     }
+
+#define MOCKABLE_FUNCTION_END(...) \
+            } \
+            MOCK_FUNCTION_END(__VA_ARGS__)
 
 /* Codes_SRS_UMOCK_C_LIB_01_187: [ REGISTER_UMOCKC_PAIRED_CREATE_DESTROY_CALLS shall register with umock two calls that are expected to be paired. ]*/
 /* Codes_SRS_UMOCK_C_LIB_01_190: [ If create_call or destroy_call do not obey these rules, at the time of calling REGISTER_UMOCKC_PAIRED_CREATE_DESTROY_CALLS umock_c shall raise an error with the code UMOCK_C_INVALID_PAIRED_CALLS. ]*/
