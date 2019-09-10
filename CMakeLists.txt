@@ -127,7 +127,7 @@ add_library(umock_c ${umock_c_c_files} ${umock_c_h_files} ${umock_c_md_files})
 target_include_directories(umock_c
     PUBLIC
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/inc>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/umock_c>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
 set_target_properties(umock_c
