@@ -97,7 +97,7 @@ TEST_FUNCTION(real_is_called_for_test_dependency_no_args)
     // arrange
     int result;
 
-    REGISTER_GLOBAL_MOCK_HOOK(test_dependency_no_args, real_test_dependency_no_args);
+    REGISTER_GLOBAL_MOCK_HOOK(test_dependency_no_args, UMOCK_REAL(test_dependency_no_args));
 
     STRICT_EXPECTED_CALL(test_dependency_no_args());
 
