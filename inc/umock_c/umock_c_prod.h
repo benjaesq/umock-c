@@ -59,13 +59,13 @@
 
 /* Codes_SRS_UMOCK_C_LIB_01_217: [ In the presence of the ENABLE_MOCKS define, IMPLEMENT_MOCKABLE_FUNCTION shall expand to the signature of the function, but the name shall be changed to be prefix with real_. ]*/
 #define IMPLEMENT_MOCKABLE_FUNCTION(modifiers, result, function, ...) \
-    MOCKABLE_FUNCTION_SIGNATURE(modifiers, result, MU_C2(real_, function), __VA_ARGS__)
+    MOCKABLE_FUNCTION_SIGNATURE(modifiers, result, UMOCK_REAL(function), __VA_ARGS__)
 
 #define EXPAND_ENTRY(A) \
     MOCKABLE_##A
 
 #define REGISTER_GLOBAL_MOCK_REAL_FUNCTION(modifiers, result, function, ...) \
-    REGISTER_GLOBAL_MOCK_HOOK(function, MU_C2(real_, function));
+    REGISTER_GLOBAL_MOCK_HOOK(function, UMOCK_REAL(function));
 
 #define REGISTER_GLOBAL_MOCK_REAL(A) \
     REGISTER_GLOBAL_MOCK_REAL_##A
