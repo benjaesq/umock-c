@@ -4,9 +4,11 @@
 #ifdef __cplusplus
 #include <cstdlib>
 #include <climits>
+#include <cstdint>
 #else
 #include <stdlib.h>
 #include <limits.h>
+#include <stdint.h>
 #endif
 #include "testrunnerswitcher.h"
 #include "umock_c/umocktypes.h"

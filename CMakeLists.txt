@@ -37,10 +37,16 @@ include (CheckIncludeFiles)
 set(original_run_e2e_tests ${run_e2e_tests})
 set(original_run_int_tests ${run_int_tests})
 set(original_run_unittests ${run_unittests})
+set(original_run_perf_tests ${run_perf_tests})
 
 set(run_e2e_tests OFF)
 set(run_int_tests OFF)
 set(run_unittests OFF)
+set(run_perf_tests OFF)
+
+if ((NOT TARGET azure_c_build_tools) AND (EXISTS ${CMAKE_CURRENT_LIST_DIR}/deps/ctest/deps/azure-c-build-tools/CMakeLists.txt))
+        add_subdirectory(deps/ctest/deps/azure-c-build-tools)
+endif()
 
 if(${use_installed_dependencies})
     find_package(azure_macro_utils_c REQUIRED CONFIG)
@@ -52,6 +58,11 @@ else()
             message(FATAL_ERROR "Could not find azure_macro_utils_c")
         endif()
     endif()
+endif()
+
+if ((NOT TARGET azure_c_logging) AND (EXISTS ${CMAKE_CURRENT_LIST_DIR}/deps/azure-c-logging/CMakeLists.txt))
+        add_subdirectory(deps/azure-c-logging)
+        include_directories(deps/azure-c-logging/inc)
 endif()
 
 if(${original_run_int_tests} OR ${original_run_unittests})
@@ -71,6 +82,7 @@ endif()
 set(run_e2e_tests ${original_run_e2e_tests})
 set(run_int_tests ${original_run_int_tests})
 set(run_unittests ${original_run_unittests})
+set(run_perf_tests ${original_run_perf_tests})
 
 include_directories(${MACRO_UTILS_INC_FOLDER})
 
