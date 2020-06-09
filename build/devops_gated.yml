@@ -260,7 +260,7 @@ jobs:
     - Cmd
     - msbuild
     - visualstudio
-    condition: false
+  condition: false
 
   steps:
   - task: BatchScript@1
@@ -296,7 +296,7 @@ jobs:
   - task: VSBuild@1
     displayName: 'Build traceabilitytool only'
     inputs:
-      solution: 'build\azure_c_pal.sln'
+      solution: 'build\umock_c.sln'
       vsVersion: 16.0
       platform: x64
       configuration: RelWithDebInfo
