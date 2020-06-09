@@ -58,6 +58,9 @@ jobs:
       filename: '"c:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\Tools\VsDevCmd.bat"'
       modifyEnvironment: true
 
+  - task: NuGetToolInstaller@0
+    displayName: 'Use NuGet 4.3.0 (required for .NET core assemblies)'
+
   - task: CMake@1
     displayName: 'CMake .. -Drun_unittests:bool=ON -Drun_int_tests:bool=ON -Duse_cppunittest:bool=OFF -G "Visual Studio 15 2017 Win64"'
     inputs:
@@ -68,7 +71,7 @@ jobs:
     displayName: 'Build solution build_x64\*.sln'
     inputs:
       solution: 'build_x64\*.sln'
-      msbuildArgs: '/p:ForceImportBeforeCppTargets=$(Build.SourcesDirectory)/vld.props'
+      msbuildArgs: '/t:restore /t:build /p:ForceImportBeforeCppTargets=$(Build.SourcesDirectory)/vld.props'
       platform: x64
       configuration: Debug
       maximumCpuCount: true
@@ -115,6 +118,9 @@ jobs:
       filename: '"c:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\Tools\VsDevCmd.bat"'
       modifyEnvironment: true
 
+  - task: NuGetToolInstaller@0
+    displayName: 'Use NuGet 4.3.0 (required for .NET core assemblies)'
+
   - task: CMake@1
     displayName: 'CMake .. -Drun_unittests:bool=ON -Drun_int_tests:bool=ON -Duse_cppunittest:bool=ON'
     inputs:
@@ -125,6 +131,7 @@ jobs:
     displayName: 'Build solution build_x64\*.sln'
     inputs:
       solution: 'build_x64\*.sln'
+      msbuildArgs: '/t:restore /t:build /p:ForceImportBeforeCppTargets=$(Build.SourcesDirectory)/vld.props'
       platform: Win32
       configuration: RelWithDebInfo
       maximumCpuCount: true
@@ -142,7 +149,7 @@ jobs:
   displayName: 'Build Windows x86 Debug'
   pool:
     name: Hosted VS2017
-    demands:
+    demands: 
     - Cmd
     - msbuild
     - visualstudio
@@ -175,7 +182,7 @@ jobs:
     displayName: 'Download VLD'
 
   - task: BatchScript@1
-    displayName: 'Install VLD copy'
+    displayName: 'Install VLD'
     inputs:
       filename: '$(System.ArtifactsDirectory)/vld-2.5.1-setup.exe'
       arguments: '/suppressmsgboxes /verysilent /norestart'
@@ -193,6 +200,9 @@ jobs:
       filename: '"c:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\Tools\VsDevCmd.bat"'
       modifyEnvironment: true
 
+  - task: NuGetToolInstaller@0
+    displayName: 'Use NuGet 4.3.0 (required for .NET core assemblies)'
+
   - task: CMake@1
     displayName: CMake
     inputs:
@@ -203,6 +213,7 @@ jobs:
     displayName: 'Build solution build_x86\*.sln'
     inputs:
       solution: 'build_x86\*.sln'
+      msbuildArgs: '/t:restore /t:build /p:ForceImportBeforeCppTargets=$(Build.SourcesDirectory)/vld.props'
       platform: Win32
       configuration: Debug
       maximumCpuCount: true
@@ -256,7 +267,7 @@ jobs:
     displayName: 'Git submodule update'
     inputs:
       filename: 'C:\Program Files\Git\bin\git.exe'
-      arguments: 'submodule update --init --force deps/azure-c-build-tools'
+      arguments: 'submodule update --init --force'
 
   - task: BatchScript@1
     displayName: 'Git submodule clean'
@@ -276,23 +287,27 @@ jobs:
       filename: '"c:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\Tools\VsDevCmd.bat"'
       modifyEnvironment: true
 
-  - task: NuGetCommand@2
-    displayName: 'NuGet restore'
+  - task: CMake@1
+    displayName: CMake
     inputs:
-      restoreSolution: deps/azure-c-build-tools/traceabilitytool/traceabilitytool.sln
+      workingDirectory: 'build'
+      cmakeArgs: '.. -G "Visual Studio 15 2017 Win64"'
 
   - task: VSBuild@1
-    displayName: 'Build solution deps/azure-c-build-tools/traceabilitytool/traceabilitytool.sln'
+    displayName: 'Build traceabilitytool only'
     inputs:
-      solution: deps/azure-c-build-tools/traceabilitytool/traceabilitytool.sln
-      platform: 'Any CPU'
-      configuration: Release
+      solution: 'build\umock_c.sln'
+      vsVersion: 16.0
+      platform: x64
+      configuration: RelWithDebInfo
+      msbuildArgs: '/t:restore /t:traceabilitytool'
+      clean: true
       maximumCpuCount: true
-      
+
   - task: BatchScript@1
     displayName: 'Run traceability tool'
     inputs:
-      filename: 'deps/azure-c-build-tools/traceabilitytool/traceability_tool/bin/Release/traceabilitytool.exe'
+      filename: 'build/deps/azure-c-build-tools/traceabilitytool/RelWithDebInfo/traceabilitytool.exe'
       arguments: '-i $(Build.SourcesDirectory) -buildcheck -e deps'
       modifyEnvironment: false
       workingFolder: '$(Build.SourcesDirectory)'

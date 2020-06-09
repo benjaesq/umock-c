@@ -42,6 +42,7 @@
 /* Codes_SRS_UMOCKTYPES_WINDOWS_01_031: [ ULONG as an alias of unsigned long. ]*/
 /* Codes_SRS_UMOCKTYPES_WINDOWS_01_032: [ LPCWSTR as an alias of const wchar_t*. ]*/
 /* Codes_SRS_UMOCKTYPES_WINDOWS_01_034: [ LONG64 as an alias of int64_t. ]*/
+/* Codes_SRS_UMOCKTYPES_WINDOWS_43_036: [ SHORT as an alias of int16_t. ]*/
 #define WINDOWS_TYPES_ALIAS_PAIRS \
     LONG, long, \
     LONGLONG, long long, \
@@ -71,7 +72,8 @@
     BOOLEAN, BYTE, \
     ULONG, unsigned long, \
     LPCWSTR, const wchar_t*, \
-    LONG64, int64_t \
+    LONG64, int64_t ,\
+    SHORT, int16_t \
 
 #define REGISTER_ALIAS_PAIR(alias_pair_type, alias_pair_is_type) \
     if ( \

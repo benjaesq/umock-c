@@ -85,6 +85,8 @@ int umocktypes_windows_register_types(void);
 
 - **SRS_UMOCKTYPES_WINDOWS_01_034: [** `LONG64` as an alias of `int64_t`. **]**
 
+-  **SRS_UMOCKTYPES_WINDOWS_43_036: [** `SHORT` as an alias of `int16_t`. **]**
+
 **SRS_UMOCKTYPES_WINDOWS_01_005: [** On success, `umocktypes_windows_register_types` shall return 0. **]**
 
 **SRS_UMOCKTYPES_WINDOWS_01_006: [** If registering any of the types fails, `umocktypes_windows_register_types` shall fail and return a non-zero value. **]**
