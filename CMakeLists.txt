@@ -48,12 +48,15 @@ if ((NOT TARGET azure_c_build_tools) AND (EXISTS ${CMAKE_CURRENT_LIST_DIR}/deps/
         add_subdirectory(deps/azure-c-build-tools)
 endif()
 
+set_default_build_options()
+
 if(${use_installed_dependencies})
     find_package(azure_macro_utils_c REQUIRED CONFIG)
 else()
     if (NOT TARGET azure_macro_utils_c)
     if (EXISTS ${CMAKE_CURRENT_LIST_DIR}/deps/azure-macro-utils-c/CMakeLists.txt)
             add_subdirectory(deps/azure-macro-utils-c)
+            include_directories(deps/azure-macro-utils-c/inc)
         else()
             message(FATAL_ERROR "Could not find azure_macro_utils_c")
         endif()
