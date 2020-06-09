@@ -44,8 +44,8 @@ set(run_int_tests OFF)
 set(run_unittests OFF)
 set(run_perf_tests OFF)
 
-if ((NOT TARGET azure_c_build_tools) AND (EXISTS ${CMAKE_CURRENT_LIST_DIR}/deps/ctest/deps/azure-c-build-tools/CMakeLists.txt))
-        add_subdirectory(deps/ctest/deps/azure-c-build-tools)
+if ((NOT TARGET azure_c_build_tools) AND (EXISTS ${CMAKE_CURRENT_LIST_DIR}/deps/azure-c-build-tools/CMakeLists.txt))
+        add_subdirectory(deps/azure-c-build-tools)
 endif()
 
 if(${use_installed_dependencies})
