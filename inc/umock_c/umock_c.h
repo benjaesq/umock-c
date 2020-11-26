@@ -11,7 +11,9 @@
 #endif
 
 #include "macro_utils/macro_utils.h"
+
 #include "umock_c/umockcallrecorder.h"
+#include "umock_c/umock_lock_factory.h"
 
 /* Define UMOCK_STATIC to static to make mocks private to compilation unit */
 #ifndef UMOCK_STATIC
@@ -97,6 +99,7 @@ extern "C" {
 
 void umock_c_indicate_error(UMOCK_C_ERROR_CODE error_code);
 int umock_c_init(ON_UMOCK_C_ERROR on_umock_c_error);
+int umock_c_init_with_lock_factory(ON_UMOCK_C_ERROR on_umock_c_error, UMOCK_C_LOCK_FACTORY_CREATE_LOCK_FUNC lock_factory_create_lock, void* lock_factory_create_lock_params);
 void umock_c_deinit(void);
 void umock_c_reset_all_calls(void);
 const char* umock_c_get_actual_calls(void);

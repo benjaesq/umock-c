@@ -83,9 +83,13 @@ include_directories(${MACRO_UTILS_INC_FOLDER})
 set(umock_c_c_files
     ./src/umock_c.c
     ./src/umock_c_negative_tests.c
+    ./src/umock_log.c
     ./src/umockalloc.c
+    ./src/umockautoignoreargs.c
     ./src/umockcall.c
+    ./src/umockcallpairs.c
     ./src/umockcallrecorder.c
+    ./src/umockstring.c
     ./src/umocktypename.c
     ./src/umocktypes.c
     ./src/umocktypes_bool.c
@@ -93,10 +97,6 @@ set(umock_c_c_files
     ./src/umocktypes_stdint.c
     ./src/umocktypes_charptr.c
     ./src/umocktypes_wcharptr.c
-    ./src/umockcallpairs.c
-    ./src/umockstring.c
-    ./src/umockautoignoreargs.c
-    ./src/umock_log.c
 )
 
 set(umock_c_h_files
@@ -104,9 +104,16 @@ set(umock_c_h_files
     ./inc/umock_c/umock_c_internal.h
     ./inc/umock_c/umock_c_negative_tests.h
     ./inc/umock_c/umock_c_prod.h
+    ./inc/umock_c/umock_lock_factory.h
+    ./inc/umock_c/umock_lock_factory_default.h
+    ./inc/umock_c/umock_lock_if.h
+    ./inc/umock_c/umock_log.h
     ./inc/umock_c/umockalloc.h
+    ./inc/umock_c/umockautoignoreargs.h
     ./inc/umock_c/umockcall.h
+    ./inc/umock_c/umockcallpairs.h
     ./inc/umock_c/umockcallrecorder.h
+    ./inc/umock_c/umockstring.h
     ./inc/umock_c/umocktypename.h
     ./inc/umock_c/umocktypes.h
     ./inc/umock_c/umocktypes_bool.h
@@ -115,22 +122,24 @@ set(umock_c_h_files
     ./inc/umock_c/umocktypes_charptr.h
     ./inc/umock_c/umocktypes_struct.h
     ./inc/umock_c/umocktypes_wcharptr.h
-    ./inc/umock_c/umockcallpairs.h
-    ./inc/umock_c/umockstring.h
-    ./inc/umock_c/umockautoignoreargs.h
-    ./inc/umock_c/umock_log.h
 )
 
-IF(WIN32)
-
+if(WIN32)
 set(umock_c_c_files ${umock_c_c_files}
     ./src/umocktypes_windows.c
+    ./src/umock_lock_factory_windows.c
 )
 
 set(umock_c_h_files ${umock_c_h_files}
     ./inc/umock_c/umocktypes_windows.h
 )
-ENDIF()
+endif()
+
+if(UNIX)
+set(umock_c_c_files ${umock_c_c_files}
+    ./src/umock_lock_factory_pthread.c
+)
+endif()
 
 FILE(GLOB umock_c_md_files "devdoc/*.md")
 SOURCE_GROUP(devdoc FILES ${umock_c_md_files})

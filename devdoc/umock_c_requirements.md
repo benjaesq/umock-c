@@ -2,7 +2,8 @@
 
 # Overview
 
-umock_c is a module that exposes the user facing API for umock_c.
+`umock_c` is a module that exposes the user facing API for umock_c.
+
 It exposes a set of macros and APIs that allow:
 - initializing/deinitializing the library
 - resetting the calls
@@ -54,6 +55,7 @@ It exposes a set of macros and APIs that allow:
     ...
 
 int umock_c_init(ON_UMOCK_C_ERROR on_umock_c_error);
+int umock_c_init_with_lock_factory(ON_UMOCK_C_ERROR on_umock_c_error, UMOCK_C_LOCK_FACTORY_CREATE_LOCK_FUNC lock_factory_create_lock, void* lock_factory_create_lock_params);
 void umock_c_deinit(void);
 void umock_c_reset_all_calls(void);
 const char* umock_c_get_actual_calls(void);
@@ -71,23 +73,37 @@ int umock_c_set_call_recorder(UMOCKCALLRECORDER_HANDLE call_recorder);
 int umock_c_init(ON_UMOCK_C_ERROR on_umock_c_error);
 ```
 
-**SRS_UMOCK_C_01_001: [** umock_c_init shall initialize the umock library. **]**
+`umock_c_init` initializes `umock_c`.
 
-**SRS_UMOCK_C_01_023: [** umock_c_init shall initialize the umock types by calling umocktypes_init. **]**
+**SRS_UMOCK_C_01_001: [** `umock_c_init` shall initialize the `umock` library. **]**
 
-**SRS_UMOCK_C_01_002: [** umock_c_init shall register the C naive types by calling umocktypes_c_register_types. **]**
+**SRS_UMOCK_C_01_023: [** `umock_c_init` shall initialize the `umock` types by calling `umocktypes_init`. **]**
 
-**SRS_UMOCK_C_01_003: [** umock_c_init shall create a call recorder by calling umockcallrecorder_create. **]**
+**SRS_UMOCK_C_01_002: [** `umock_c_init` shall register the C native types by calling `umocktypes_c_register_types`. **]**
 
-**SRS_UMOCK_C_01_004: [** On success, umock_c_init shall return 0. **]**
+**SRS_UMOCK_C_01_003: [** `umock_c_init` shall create a call recorder by calling `umockcallrecorder_create`. **]**
 
-**SRS_UMOCK_C_01_005: [** If any of the calls fails, umock_c_init shall fail and return a non-zero value. **]**
+**SRS_UMOCK_C_01_004: [** On success, `umock_c_init` shall return 0. **]**
 
-**SRS_UMOCK_C_01_006: [** The on_umock_c_error callback shall be stored to be used for later error callbacks. **]**
+**SRS_UMOCK_C_01_005: [** If any of the calls fails, `umock_c_init` shall fail and return a non-zero value. **]**
 
-**SRS_UMOCK_C_01_007: [** umock_c_init when umock is already initialized shall fail and return a non-zero value. **]**
+**SRS_UMOCK_C_01_006: [** The `on_umock_c_error` callback shall be stored to be used for later error callbacks. **]**
 
-**SRS_UMOCK_C_01_024: [** on_umock_c_error shall be optional. **]**
+**SRS_UMOCK_C_01_007: [** `umock_c_init` when `umock` is already initialized shall fail and return a non-zero value. **]**
+
+**SRS_UMOCK_C_01_024: [** `on_umock_c_error` shall be optional. **]**
+
+```c
+int umock_c_init_with_lock_factory(ON_UMOCK_C_ERROR on_umock_c_error, UMOCK_C_LOCK_FACTORY_CREATE_LOCK_FUNC lock_factory_create_lock, void* lock_factory_create_lock_params);
+```
+
+`umock_c_init_with_lock_factory` initializes `umock_c` and uses a lock factory to allow multithreaded actual call recording.
+
+**SRS_UMOCK_C_01_042: [** `umock_c_init_with_lock_factory` shall perform the same initialization like `umock_c_init` while passing `lock_factory_create_lock` and `lock_factory_create_lock_params` as arguments to `umockcallrecorder_create`. **]**
+
+**SRS_UMOCK_C_01_043: [** On success, `umock_c_init_with_lock_factory` shall return 0. **]**
+
+**SRS_UMOCK_C_01_044: [** If any of the calls fails, `umock_c_init_with_lock_factory` shall fail and return a non-zero value. **]**
 
 ## umock_c_deinit
 
@@ -95,11 +111,13 @@ int umock_c_init(ON_UMOCK_C_ERROR on_umock_c_error);
 void umock_c_deinit(void);
 ```
 
-**SRS_UMOCK_C_01_008: [** umock_c_deinit shall deinitialize the umock types by calling umocktypes_deinit. **]**
+`umock_c_deinit` de-initializes `umock_c`, bringing it to a state where a new `umock_c_init` can succeed.
 
-**SRS_UMOCK_C_01_009: [** umock_c_deinit shall free the call recorder created in umock_c_init. **]**
+**SRS_UMOCK_C_01_008: [** `umock_c_deinit` shall deinitialize the umock types by calling `umocktypes_deinit`. **]**
 
-**SRS_UMOCK_C_01_010: [** If the module is not initialized, umock_c_deinit shall do nothing. **]**
+**SRS_UMOCK_C_01_009: [** `umock_c_deinit` shall free the call recorder created in `umock_c_init`. **]**
+
+**SRS_UMOCK_C_01_010: [** If the module is not initialized, `umock_c_deinit` shall do nothing. **]**
 
 ## umock_c_reset_all_calls
 
@@ -107,11 +125,13 @@ void umock_c_deinit(void);
 void umock_c_reset_all_calls(void);
 ```
 
-**SRS_UMOCK_C_01_011: [** umock_c_reset_all_calls shall reset all calls by calling umockcallrecorder_reset_all_calls on the call recorder created in umock_c_init. **]**
+`umock_c_reset_all_calls` resets all the calls (expected and actual) tracked by `umock_c`.
 
-**SRS_UMOCK_C_01_025: [** If the underlying umockcallrecorder_reset_all_calls fails, the on_umock_c_error callback shall be triggered with UMOCK_C_RESET_CALLS_ERROR. **]**
+**SRS_UMOCK_C_01_012: [** If the module is not initialized, `umock_c_reset_all_calls` shall do nothing. **]**
 
-**SRS_UMOCK_C_01_012: [** If the module is not initialized, umock_c_reset_all_calls shall do nothing. **]**
+**SRS_UMOCK_C_01_011: [** `umock_c_reset_all_calls` shall reset all calls by calling `umockcallrecorder_reset_all_calls` on the call recorder created in `umock_c_init`. **]**
+
+**SRS_UMOCK_C_01_025: [** If the underlying `umockcallrecorder_reset_all_calls` fails, the `on_umock_c_error` callback shall be triggered with `UMOCK_C_RESET_CALLS_ERROR`. **]**
 
 ## umock_c_get_actual_calls
 
@@ -119,9 +139,11 @@ void umock_c_reset_all_calls(void);
 const char* umock_c_get_actual_calls(void);
 ```
 
-**SRS_UMOCK_C_01_013: [** umock_c_get_actual_calls shall return the string for the recorded actual calls by calling umockcallrecorder_get_actual_calls on the call recorder created in umock_c_init. **]**
+`umock_c_get_actual_calls` gets a stringified form of the actual calls as tracked by `umock_c`.
 
-**SRS_UMOCK_C_01_014: [** If the module is not initialized, umock_c_get_actual_calls shall return NULL. **]**
+**SRS_UMOCK_C_01_013: [** `umock_c_get_actual_calls` shall return the string for the recorded actual calls by calling `umockcallrecorder_get_actual_calls` on the call recorder created in `umock_c_init`. **]**
+
+**SRS_UMOCK_C_01_014: [** If the module is not initialized, `umock_c_get_actual_calls` shall return `NULL`. **]**
 
 ## umock_c_get_expected_calls
 
@@ -129,9 +151,11 @@ const char* umock_c_get_actual_calls(void);
 const char* umock_c_get_expected_calls(void);
 ```
 
-**SRS_UMOCK_C_01_015: [** umock_c_get_expected_calls shall return the string for the recorded expected calls by calling umockcallrecorder_get_expected_calls on the call recorder created in umock_c_init. **]**
+`umock_c_get_expected_calls` gets a stringified form of the expected calls as tracked by `umock_c`.
 
-**SRS_UMOCK_C_01_016: [** If the module is not initialized, umock_c_get_expected_calls shall return NULL. **]**
+**SRS_UMOCK_C_01_015: [** `umock_c_get_expected_calls` shall return the string for the recorded expected calls by calling `umockcallrecorder_get_expected_calls` on the call recorder created in `umock_c_init`. **]**
+
+**SRS_UMOCK_C_01_016: [** If the module is not initialized, `umock_c_get_expected_calls` shall return `NULL`. **]**
 
 ## umock_c_get_last_expected_call
 
@@ -139,9 +163,11 @@ const char* umock_c_get_expected_calls(void);
 UMOCKCALL_HANDLE umock_c_get_last_expected_call(void);
 ```
 
-**SRS_UMOCK_C_01_017: [** umock_c_get_last_expected_call shall return the last expected call by calling umockcallrecorder_get_last_expected_call on the call recorder created in umock_c_init. **]**
+`umock_c_get_last_expected_call` gets a handle to the last expected call tracked by `umock_c`.
 
-**SRS_UMOCK_C_01_018: [** If the module is not initialized, umock_c_get_last_expected_call shall return NULL. **]**
+**SRS_UMOCK_C_01_017: [** `umock_c_get_last_expected_call` shall return the last expected call by calling `umockcallrecorder_get_last_expected_call` on the call recorder created in `umock_c_init`. **]**
+
+**SRS_UMOCK_C_01_018: [** If the module is not initialized, `umock_c_get_last_expected_call` shall return `NULL`. **]**
 
 ## umock_c_add_expected_call
 
@@ -149,15 +175,19 @@ UMOCKCALL_HANDLE umock_c_get_last_expected_call(void);
 int umock_c_add_expected_call(UMOCKCALL_HANDLE mock_call);
 ```
 
-**SRS_UMOCK_C_01_019: [** umock_c_add_expected_call shall add an expected call by calling umockcallrecorder_add_expected_call on the call recorder created in umock_c_init. **]**
+`umock_c_add_expected_call` adds an expected call to the list of expected calls tracked by `umock_c`.
 
-**SRS_UMOCK_C_01_020: [** If the module is not initialized, umock_c_add_expected_call shall return a non-zero value. **]**
+**SRS_UMOCK_C_01_019: [** `umock_c_add_expected_call` shall add an expected call by calling `umockcallrecorder_add_expected_call` on the call recorder created in `umock_c_init`. **]**
+
+**SRS_UMOCK_C_01_020: [** If the module is not initialized, `umock_c_add_expected_call` shall return a non-zero value. **]**
 
 ## umock_c_add_actual_call
 
 ```c
 int umock_c_add_actual_call(UMOCKCALL_HANDLE mock_call, UMOCKCALL_HANDLE* matched_call);
 ```
+
+`umock_c_add_actual_call` adds an expected call to the list of actual calls tracked by `umock_c`.
 
 **SRS_UMOCK_C_01_021: [** umock_c_add_actual_call shall add an actual call by calling umockcallrecorder_add_actual_call on the call recorder created in umock_c_init. **]**
 
@@ -169,9 +199,11 @@ int umock_c_add_actual_call(UMOCKCALL_HANDLE mock_call, UMOCKCALL_HANDLE* matche
 UMOCKCALLRECORDER_HANDLE umock_c_get_call_recorder(void);
 ```
 
-**SRS_UMOCK_C_01_026: [** umock_c_get_call_recorder shall return the handle to the currently used call recorder. **]**
+`umock_c_get_call_recorder` gets a handle to the currently used call recorder.
 
-**SRS_UMOCK_C_01_027: [** If the module is not initialized, umock_c_get_call_recorder shall return NULL. **]**
+**SRS_UMOCK_C_01_026: [** `umock_c_get_call_recorder` shall return the handle to the currently used call recorder. **]**
+
+**SRS_UMOCK_C_01_027: [** If the module is not initialized, `umock_c_get_call_recorder` shall return `NULL`. **]**
 
 ## umock_c_set_call_recorder
 
@@ -179,16 +211,18 @@ UMOCKCALLRECORDER_HANDLE umock_c_get_call_recorder(void);
 int umock_c_set_call_recorder(UMOCKCALLRECORDER_HANDLE call_recorder);
 ```
 
-**SRS_UMOCK_C_01_028: [** umock_c_set_call_recorder shall replace the currently used call recorder with the one identified by the call_recorder argument. **]**
+`umock_c_get_call_recorder` sets the call recorder to be used by `umock_c`.
 
-**SRS_UMOCK_C_01_029: [** On success, umock_c_set_call_recorder shall return 0. **]**
+**SRS_UMOCK_C_01_028: [** `umock_c_set_call_recorder` shall replace the currently used call recorder with the one identified by the `call_recorder` argument. **]**
 
-**SRS_UMOCK_C_01_030: [** If call_recorder is NULL, umock_c_set_call_recorder shall return a non-zero value. **]**
+**SRS_UMOCK_C_01_029: [** On success, `umock_c_set_call_recorder` shall return 0. **]**
 
-**SRS_UMOCK_C_01_031: [** umock_c_set_call_recorder shall make a copy of call_recorder by calling umockcallrecorder_clone and use the copy for future actions. **]**
+**SRS_UMOCK_C_01_030: [** If `call_recorder` is `NULL`, `umock_c_set_call_recorder` shall return a non-zero value. **]**
 
-**SRS_UMOCK_C_01_032: [** If umockcallrecorder_clone fails, umock_c_set_call_recorder shall return a non-zero value. **]**
+**SRS_UMOCK_C_01_031: [** `umock_c_set_call_recorder` shall make a copy of `call_recorder` by calling `umockcallrecorder_clone` and use the copy for future actions. **]**
 
-**SRS_UMOCK_C_01_033: [** If the module is not initialized, umock_c_set_call_recorder shall return a non-zero value. **]**
+**SRS_UMOCK_C_01_032: [** If `umockcallrecorder_clone` fails, `umock_c_set_call_recorder` shall return a non-zero value. **]**
 
-**SRS_UMOCK_C_01_034: [** The previously used call recorder shall be destroyed by calling umockcallrecorder_destroy. **]**
+**SRS_UMOCK_C_01_033: [** If the module is not initialized, `umock_c_set_call_recorder` shall return a non-zero value. **]**
+
+**SRS_UMOCK_C_01_034: [** The previously used call recorder shall be destroyed by calling `umockcallrecorder_destroy`. **]**

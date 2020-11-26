@@ -9,12 +9,16 @@
 #include <stdlib.h>
 #endif
 
+#include "macro_utils/macro_utils.h"
+
 #include "testrunnerswitcher.h"
+
 #include "umock_c/umockcallrecorder.h"
 #include "umock_c/umocktypes.h"
 #include "umock_c/umocktypes_c.h"
 #include "umock_c/umock_c.h"
 #include "umock_c/umock_log.h"
+#include "umock_c/umock_lock_factory.h"
 
 void UMOCK_LOG(const char* format, ...)
 {
@@ -26,60 +30,49 @@ static UMOCKCALL_HANDLE test_actual_call = (UMOCKCALL_HANDLE)0x4243;
 static UMOCKCALLRECORDER_HANDLE test_call_recorder = (UMOCKCALLRECORDER_HANDLE)0x4244;
 static UMOCKCALLRECORDER_HANDLE test_cloned_call_recorder = (UMOCKCALLRECORDER_HANDLE)0x4245;
 
-static size_t umocktypes_init_call_count;
-static int umocktypes_init_call_result;
+static int umocktypes_init_result;
+static int umocktypes_c_register_types_result;
 
-static size_t umocktypes_c_register_types_call_count;
-static int umocktypes_c_register_types_call_result;
+typedef struct umockcallrecorder_create_CALL_TAG
+{
+    UMOCK_C_LOCK_FACTORY_CREATE_LOCK_FUNC lock_factory_create_lock;
+    void* lock_factory_create_lock_params;
+} umockcallrecorder_create_CALL;
 
-static size_t umockcallrecorder_create_call_count;
-static UMOCKCALLRECORDER_HANDLE umockcallrecorder_create_call_result;
-
-static size_t umocktypes_deinit_call_count;
+static UMOCKCALLRECORDER_HANDLE umockcallrecorder_create_result;
 
 typedef struct umockcallrecorder_destroy_CALL_TAG
 {
     UMOCKCALLRECORDER_HANDLE umock_call_recorder;
 } umockcallrecorder_destroy_CALL;
 
-static umockcallrecorder_destroy_CALL* umockcallrecorder_destroy_calls;
-static size_t umockcallrecorder_destroy_call_count;
-
 typedef struct umockcallrecorder_reset_all_calls_CALL_TAG
 {
     UMOCKCALLRECORDER_HANDLE umock_call_recorder;
 } umockcallrecorder_reset_all_calls_CALL;
 
-static umockcallrecorder_reset_all_calls_CALL* umockcallrecorder_reset_all_calls_calls;
-static size_t umockcallrecorder_reset_all_calls_call_count;
-static int umockcallrecorder_reset_all_calls_call_result;
+static int umockcallrecorder_reset_all_calls_result;
 
 typedef struct umockcallrecorder_get_actual_calls_CALL_TAG
 {
     UMOCKCALLRECORDER_HANDLE umock_call_recorder;
 } umockcallrecorder_get_actual_calls_CALL;
 
-static umockcallrecorder_get_actual_calls_CALL* umockcallrecorder_get_actual_calls_calls;
-static size_t umockcallrecorder_get_actual_calls_call_count;
-static const char* umockcallrecorder_get_actual_calls_call_result;
+static const char* umockcallrecorder_get_actual_calls_result;
 
 typedef struct umockcallrecorder_get_expected_calls_CALL_TAG
 {
     UMOCKCALLRECORDER_HANDLE umock_call_recorder;
 } umockcallrecorder_get_expected_calls_CALL;
 
-static umockcallrecorder_get_expected_calls_CALL* umockcallrecorder_get_expected_calls_calls;
-static size_t umockcallrecorder_get_expected_calls_call_count;
-static const char* umockcallrecorder_get_expected_calls_call_result;
+static const char* umockcallrecorder_get_expected_calls_result;
 
 typedef struct umockcallrecorder_get_last_expected_call_CALL_TAG
 {
     UMOCKCALLRECORDER_HANDLE umock_call_recorder;
 } umockcallrecorder_get_last_expected_call_CALL;
 
-static umockcallrecorder_get_last_expected_call_CALL* umockcallrecorder_get_last_expected_call_calls;
-static size_t umockcallrecorder_get_last_expected_call_call_count;
-static UMOCKCALL_HANDLE umockcallrecorder_get_last_expected_call_call_result;
+static UMOCKCALL_HANDLE umockcallrecorder_get_last_expected_call_result;
 
 typedef struct umockcallrecorder_add_expected_call_CALL_TAG
 {
@@ -87,9 +80,7 @@ typedef struct umockcallrecorder_add_expected_call_CALL_TAG
     UMOCKCALL_HANDLE mock_call;
 } umockcallrecorder_add_expected_call_CALL;
 
-static umockcallrecorder_add_expected_call_CALL* umockcallrecorder_add_expected_call_calls;
-static size_t umockcallrecorder_add_expected_call_call_count;
-static int umockcallrecorder_add_expected_call_call_result;
+static int umockcallrecorder_add_expected_call_result;
 
 typedef struct umockcallrecorder_add_actual_call_CALL_TAG
 {
@@ -98,248 +89,278 @@ typedef struct umockcallrecorder_add_actual_call_CALL_TAG
     UMOCKCALL_HANDLE* matched_call;
 } umockcallrecorder_add_actual_call_CALL;
 
-static umockcallrecorder_add_actual_call_CALL* umockcallrecorder_add_actual_call_calls;
-static size_t umockcallrecorder_add_actual_call_call_count;
-static int umockcallrecorder_add_actual_call_call_result;
+static int umockcallrecorder_add_actual_call_result;
 
 typedef struct umockcallrecorder_clone_CALL_TAG
 {
     UMOCKCALLRECORDER_HANDLE umock_call_recorder;
 } umockcallrecorder_clone_CALL;
 
-static umockcallrecorder_clone_CALL* umockcallrecorder_clone_calls;
-static size_t umockcallrecorder_clone_call_count;
-static UMOCKCALLRECORDER_HANDLE umockcallrecorder_clone_call_result;
+static UMOCKCALLRECORDER_HANDLE umockcallrecorder_clone_result;
 
-UMOCKCALLRECORDER_HANDLE umockcallrecorder_create(void)
+typedef struct umocktypes_init_CALL_TAG
 {
-    umockcallrecorder_create_call_count++;
-    return umockcallrecorder_create_call_result;
-}
+    int dummy;
+} umocktypes_init_CALL;
 
-void umockcallrecorder_destroy(UMOCKCALLRECORDER_HANDLE umock_call_recorder)
+typedef struct umocktypes_deinit_CALL_TAG
 {
-    umockcallrecorder_destroy_CALL* new_calls = (umockcallrecorder_destroy_CALL*)realloc(umockcallrecorder_destroy_calls, sizeof(umockcallrecorder_destroy_CALL) * (umockcallrecorder_destroy_call_count + 1));
-    if (new_calls != NULL)
-    {
-        umockcallrecorder_destroy_calls = new_calls;
-        umockcallrecorder_destroy_calls[umockcallrecorder_destroy_call_count].umock_call_recorder = umock_call_recorder;
-        umockcallrecorder_destroy_call_count++;
-    }
-}
+    int dummy;
+} umocktypes_deinit_CALL;
 
-int umockcallrecorder_reset_all_calls(UMOCKCALLRECORDER_HANDLE umock_call_recorder)
+typedef struct umocktypes_c_register_types_CALL_TAG
 {
-    umockcallrecorder_reset_all_calls_CALL* new_calls = (umockcallrecorder_reset_all_calls_CALL*)realloc(umockcallrecorder_reset_all_calls_calls, sizeof(umockcallrecorder_reset_all_calls_CALL) * (umockcallrecorder_reset_all_calls_call_count + 1));
-    if (new_calls != NULL)
-    {
-        umockcallrecorder_reset_all_calls_calls = new_calls;
-        umockcallrecorder_reset_all_calls_calls[umockcallrecorder_reset_all_calls_call_count].umock_call_recorder = umock_call_recorder;
-        umockcallrecorder_reset_all_calls_call_count++;
-    }
-
-    return umockcallrecorder_reset_all_calls_call_result;
-}
-
-int umockcallrecorder_add_expected_call(UMOCKCALLRECORDER_HANDLE umock_call_recorder, UMOCKCALL_HANDLE mock_call)
-{
-    umockcallrecorder_add_expected_call_CALL* new_calls = (umockcallrecorder_add_expected_call_CALL*)realloc(umockcallrecorder_add_expected_call_calls, sizeof(umockcallrecorder_add_expected_call_CALL) * (umockcallrecorder_add_expected_call_call_count + 1));
-    if (new_calls != NULL)
-    {
-        umockcallrecorder_add_expected_call_calls = new_calls;
-        umockcallrecorder_add_expected_call_calls[umockcallrecorder_add_expected_call_call_count].umock_call_recorder = umock_call_recorder;
-        umockcallrecorder_add_expected_call_calls[umockcallrecorder_add_expected_call_call_count].mock_call = mock_call;
-        umockcallrecorder_add_expected_call_call_count++;
-    }
-
-    return umockcallrecorder_add_expected_call_call_result;
-}
-
-int umockcallrecorder_add_actual_call(UMOCKCALLRECORDER_HANDLE umock_call_recorder, UMOCKCALL_HANDLE mock_call, UMOCKCALL_HANDLE* matched_call)
-{
-    umockcallrecorder_add_actual_call_CALL* new_calls = (umockcallrecorder_add_actual_call_CALL*)realloc(umockcallrecorder_add_actual_call_calls, sizeof(umockcallrecorder_add_actual_call_CALL) * (umockcallrecorder_add_actual_call_call_count + 1));
-    if (new_calls != NULL)
-    {
-        umockcallrecorder_add_actual_call_calls = new_calls;
-        umockcallrecorder_add_actual_call_calls[umockcallrecorder_add_actual_call_call_count].umock_call_recorder = umock_call_recorder;
-        umockcallrecorder_add_actual_call_calls[umockcallrecorder_add_actual_call_call_count].mock_call = mock_call;
-        umockcallrecorder_add_actual_call_calls[umockcallrecorder_add_actual_call_call_count].matched_call = matched_call;
-        umockcallrecorder_add_actual_call_call_count++;
-    }
-
-    return umockcallrecorder_add_actual_call_call_result;
-}
-
-UMOCKCALLRECORDER_HANDLE umockcallrecorder_clone(UMOCKCALLRECORDER_HANDLE umock_call_recorder)
-{
-    umockcallrecorder_clone_CALL* new_calls = (umockcallrecorder_clone_CALL*)realloc(umockcallrecorder_clone_calls, sizeof(umockcallrecorder_clone_CALL) * (umockcallrecorder_clone_call_count + 1));
-    if (new_calls != NULL)
-    {
-        umockcallrecorder_clone_calls = new_calls;
-        umockcallrecorder_clone_calls[umockcallrecorder_clone_call_count].umock_call_recorder = umock_call_recorder;
-        umockcallrecorder_clone_call_count++;
-    }
-
-    return umockcallrecorder_clone_call_result;
-}
-
-const char* umockcallrecorder_get_actual_calls(UMOCKCALLRECORDER_HANDLE umock_call_recorder)
-{
-    umockcallrecorder_get_actual_calls_CALL* new_calls = (umockcallrecorder_get_actual_calls_CALL*)realloc(umockcallrecorder_get_actual_calls_calls, sizeof(umockcallrecorder_get_actual_calls_CALL) * (umockcallrecorder_get_actual_calls_call_count + 1));
-    if (new_calls != NULL)
-    {
-        umockcallrecorder_get_actual_calls_calls = new_calls;
-        umockcallrecorder_get_actual_calls_calls[umockcallrecorder_get_actual_calls_call_count].umock_call_recorder = umock_call_recorder;
-        umockcallrecorder_get_actual_calls_call_count++;
-    }
-
-    return umockcallrecorder_get_actual_calls_call_result;
-}
-
-const char* umockcallrecorder_get_expected_calls(UMOCKCALLRECORDER_HANDLE umock_call_recorder)
-{
-    umockcallrecorder_get_expected_calls_CALL* new_calls = (umockcallrecorder_get_expected_calls_CALL*)realloc(umockcallrecorder_get_expected_calls_calls, sizeof(umockcallrecorder_get_expected_calls_CALL) * (umockcallrecorder_get_expected_calls_call_count + 1));
-    if (new_calls != NULL)
-    {
-        umockcallrecorder_get_expected_calls_calls = new_calls;
-        umockcallrecorder_get_expected_calls_calls[umockcallrecorder_get_expected_calls_call_count].umock_call_recorder = umock_call_recorder;
-        umockcallrecorder_get_expected_calls_call_count++;
-    }
-
-    return umockcallrecorder_get_expected_calls_call_result;
-}
-
-UMOCKCALL_HANDLE umockcallrecorder_get_last_expected_call(UMOCKCALLRECORDER_HANDLE umock_call_recorder)
-{
-    umockcallrecorder_get_last_expected_call_CALL* new_calls = (umockcallrecorder_get_last_expected_call_CALL*)realloc(umockcallrecorder_get_last_expected_call_calls, sizeof(umockcallrecorder_get_last_expected_call_CALL) * (umockcallrecorder_get_last_expected_call_call_count + 1));
-    if (new_calls != NULL)
-    {
-        umockcallrecorder_get_last_expected_call_calls = new_calls;
-        umockcallrecorder_get_last_expected_call_calls[umockcallrecorder_get_last_expected_call_call_count].umock_call_recorder = umock_call_recorder;
-        umockcallrecorder_get_last_expected_call_call_count++;
-    }
-
-    return umockcallrecorder_get_last_expected_call_call_result;
-}
-
-int umocktypes_init(void)
-{
-    umocktypes_init_call_count++;
-    return umocktypes_init_call_result;
-}
-
-void umocktypes_deinit(void)
-{
-    umocktypes_deinit_call_count++;
-}
-
-int umocktypes_c_register_types(void)
-{
-    umocktypes_c_register_types_call_count++;
-    return umocktypes_c_register_types_call_result;
-}
+    int dummy;
+} umocktypes_c_register_types_CALL;
 
 typedef struct test_on_umock_c_error_CALL_TAG
 {
     UMOCK_C_ERROR_CODE error_code;
 } test_on_umock_c_error_CALL;
 
-static test_on_umock_c_error_CALL* test_on_umock_c_error_calls;
-static size_t test_on_umock_c_error_call_count;
+typedef union TEST_MOCK_CALL_UNION_TAG
+{
+    test_on_umock_c_error_CALL test_on_umock_c_error;
+    umockcallrecorder_create_CALL umockcallrecorder_create;
+    umockcallrecorder_get_last_expected_call_CALL umockcallrecorder_get_last_expected_call;
+    umockcallrecorder_get_expected_calls_CALL umockcallrecorder_get_expected_calls;
+    umockcallrecorder_destroy_CALL umockcallrecorder_destroy;
+    umockcallrecorder_reset_all_calls_CALL umockcallrecorder_reset_all_calls;
+    umockcallrecorder_get_actual_calls_CALL umockcallrecorder_get_actual_calls;
+    umockcallrecorder_add_expected_call_CALL umockcallrecorder_add_expected_call;
+    umockcallrecorder_add_actual_call_CALL umockcallrecorder_add_actual_call;
+    umockcallrecorder_clone_CALL umockcallrecorder_clone;
+    umocktypes_init_CALL umocktypes_init;
+    umocktypes_deinit_CALL umocktypes_deinit;
+    umocktypes_c_register_types_CALL umocktypes_c_register_types;
+} TEST_MOCK_CALL_UNION;
+
+#define TEST_MOCK_CALL_TYPE_VALUES \
+    TEST_MOCK_CALL_TYPE_test_on_umock_c_error, \
+    TEST_MOCK_CALL_TYPE_umockcallrecorder_create, \
+    TEST_MOCK_CALL_TYPE_umockcallrecorder_get_last_expected_call, \
+    TEST_MOCK_CALL_TYPE_umockcallrecorder_get_expected_calls, \
+    TEST_MOCK_CALL_TYPE_umockcallrecorder_destroy, \
+    TEST_MOCK_CALL_TYPE_umockcallrecorder_reset_all_calls, \
+    TEST_MOCK_CALL_TYPE_umockcallrecorder_get_actual_calls, \
+    TEST_MOCK_CALL_TYPE_umockcallrecorder_add_expected_call, \
+    TEST_MOCK_CALL_TYPE_umockcallrecorder_add_actual_call, \
+    TEST_MOCK_CALL_TYPE_umockcallrecorder_clone, \
+    TEST_MOCK_CALL_TYPE_umocktypes_init, \
+    TEST_MOCK_CALL_TYPE_umocktypes_deinit, \
+    TEST_MOCK_CALL_TYPE_umocktypes_c_register_types \
+
+MU_DEFINE_ENUM(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_VALUES)
+MU_DEFINE_ENUM_STRINGS(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_VALUES)
+TEST_DEFINE_ENUM_TYPE(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_VALUES)
+
+TEST_DEFINE_ENUM_TYPE(UMOCK_C_ERROR_CODE, UMOCK_C_ERROR_CODE_VALUES)
+
+typedef struct TEST_MOCK_CALL_TAG
+{
+    TEST_MOCK_CALL_TYPE call_type;
+    TEST_MOCK_CALL_UNION u;
+} TEST_MOCK_CALL;
+
+static size_t mocked_call_count;
+static TEST_MOCK_CALL* mocked_calls;
+
+UMOCKCALLRECORDER_HANDLE umockcallrecorder_create(UMOCK_C_LOCK_FACTORY_CREATE_LOCK_FUNC lock_factory_create_lock, void* lock_factory_create_lock_params)
+{
+    TEST_MOCK_CALL* new_calls = (TEST_MOCK_CALL*)realloc(mocked_calls, sizeof(TEST_MOCK_CALL) * (mocked_call_count + 1));
+    if (new_calls != NULL)
+    {
+        mocked_calls = new_calls;
+        mocked_calls[mocked_call_count].call_type = TEST_MOCK_CALL_TYPE_umockcallrecorder_create;
+        mocked_calls[mocked_call_count].u.umockcallrecorder_create.lock_factory_create_lock = lock_factory_create_lock;
+        mocked_calls[mocked_call_count].u.umockcallrecorder_create.lock_factory_create_lock_params = lock_factory_create_lock_params;
+        mocked_call_count++;
+    }
+
+    return umockcallrecorder_create_result;
+}
+
+void umockcallrecorder_destroy(UMOCKCALLRECORDER_HANDLE umock_call_recorder)
+{
+    TEST_MOCK_CALL* new_calls = (TEST_MOCK_CALL*)realloc(mocked_calls, sizeof(TEST_MOCK_CALL) * (mocked_call_count + 1));
+    if (new_calls != NULL)
+    {
+        mocked_calls = new_calls;
+        mocked_calls[mocked_call_count].call_type = TEST_MOCK_CALL_TYPE_umockcallrecorder_destroy;
+        mocked_calls[mocked_call_count].u.umockcallrecorder_destroy.umock_call_recorder = umock_call_recorder;
+        mocked_call_count++;
+    }
+}
+
+int umockcallrecorder_reset_all_calls(UMOCKCALLRECORDER_HANDLE umock_call_recorder)
+{
+    TEST_MOCK_CALL* new_calls = (TEST_MOCK_CALL*)realloc(mocked_calls, sizeof(TEST_MOCK_CALL) * (mocked_call_count + 1));
+    if (new_calls != NULL)
+    {
+        mocked_calls = new_calls;
+        mocked_calls[mocked_call_count].call_type = TEST_MOCK_CALL_TYPE_umockcallrecorder_reset_all_calls;
+        mocked_calls[mocked_call_count].u.umockcallrecorder_reset_all_calls.umock_call_recorder = umock_call_recorder;
+        mocked_call_count++;
+    }
+
+    return umockcallrecorder_reset_all_calls_result;
+}
+
+int umockcallrecorder_add_expected_call(UMOCKCALLRECORDER_HANDLE umock_call_recorder, UMOCKCALL_HANDLE mock_call)
+{
+    TEST_MOCK_CALL* new_calls = (TEST_MOCK_CALL*)realloc(mocked_calls, sizeof(TEST_MOCK_CALL) * (mocked_call_count + 1));
+    if (new_calls != NULL)
+    {
+        mocked_calls = new_calls;
+        mocked_calls[mocked_call_count].call_type = TEST_MOCK_CALL_TYPE_umockcallrecorder_add_expected_call;
+        mocked_calls[mocked_call_count].u.umockcallrecorder_add_expected_call.umock_call_recorder = umock_call_recorder;
+        mocked_calls[mocked_call_count].u.umockcallrecorder_add_expected_call.mock_call = mock_call;
+        mocked_call_count++;
+    }
+
+    return umockcallrecorder_add_expected_call_result;
+}
+
+int umockcallrecorder_add_actual_call(UMOCKCALLRECORDER_HANDLE umock_call_recorder, UMOCKCALL_HANDLE mock_call, UMOCKCALL_HANDLE* matched_call)
+{
+    TEST_MOCK_CALL* new_calls = (TEST_MOCK_CALL*)realloc(mocked_calls, sizeof(TEST_MOCK_CALL) * (mocked_call_count + 1));
+    if (new_calls != NULL)
+    {
+        mocked_calls = new_calls;
+        mocked_calls[mocked_call_count].call_type = TEST_MOCK_CALL_TYPE_umockcallrecorder_add_actual_call;
+        mocked_calls[mocked_call_count].u.umockcallrecorder_add_actual_call.umock_call_recorder = umock_call_recorder;
+        mocked_calls[mocked_call_count].u.umockcallrecorder_add_actual_call.mock_call = mock_call;
+        mocked_calls[mocked_call_count].u.umockcallrecorder_add_actual_call.matched_call = matched_call;
+        mocked_call_count++;
+    }
+
+    return umockcallrecorder_add_actual_call_result;
+}
+
+UMOCKCALLRECORDER_HANDLE umockcallrecorder_clone(UMOCKCALLRECORDER_HANDLE umock_call_recorder)
+{
+    TEST_MOCK_CALL* new_calls = (TEST_MOCK_CALL*)realloc(mocked_calls, sizeof(TEST_MOCK_CALL) * (mocked_call_count + 1));
+    if (new_calls != NULL)
+    {
+        mocked_calls = new_calls;
+        mocked_calls[mocked_call_count].call_type = TEST_MOCK_CALL_TYPE_umockcallrecorder_clone;
+        mocked_calls[mocked_call_count].u.umockcallrecorder_clone.umock_call_recorder = umock_call_recorder;
+        mocked_call_count++;
+    }
+
+    return umockcallrecorder_clone_result;
+}
+
+const char* umockcallrecorder_get_actual_calls(UMOCKCALLRECORDER_HANDLE umock_call_recorder)
+{
+    TEST_MOCK_CALL* new_calls = (TEST_MOCK_CALL*)realloc(mocked_calls, sizeof(TEST_MOCK_CALL) * (mocked_call_count + 1));
+    if (new_calls != NULL)
+    {
+        mocked_calls = new_calls;
+        mocked_calls[mocked_call_count].call_type = TEST_MOCK_CALL_TYPE_umockcallrecorder_get_actual_calls;
+        mocked_calls[mocked_call_count].u.umockcallrecorder_get_actual_calls.umock_call_recorder = umock_call_recorder;
+        mocked_call_count++;
+    }
+
+    return umockcallrecorder_get_actual_calls_result;
+}
+
+const char* umockcallrecorder_get_expected_calls(UMOCKCALLRECORDER_HANDLE umock_call_recorder)
+{
+    TEST_MOCK_CALL* new_calls = (TEST_MOCK_CALL*)realloc(mocked_calls, sizeof(TEST_MOCK_CALL) * (mocked_call_count + 1));
+    if (new_calls != NULL)
+    {
+        mocked_calls = new_calls;
+        mocked_calls[mocked_call_count].call_type = TEST_MOCK_CALL_TYPE_umockcallrecorder_get_expected_calls;
+        mocked_calls[mocked_call_count].u.umockcallrecorder_get_expected_calls.umock_call_recorder = umock_call_recorder;
+        mocked_call_count++;
+    }
+
+    return umockcallrecorder_get_expected_calls_result;
+}
+
+UMOCKCALL_HANDLE umockcallrecorder_get_last_expected_call(UMOCKCALLRECORDER_HANDLE umock_call_recorder)
+{
+    TEST_MOCK_CALL* new_calls = (TEST_MOCK_CALL*)realloc(mocked_calls, sizeof(TEST_MOCK_CALL) * (mocked_call_count + 1));
+    if (new_calls != NULL)
+    {
+        mocked_calls = new_calls;
+        mocked_calls[mocked_call_count].call_type = TEST_MOCK_CALL_TYPE_umockcallrecorder_get_last_expected_call;
+        mocked_calls[mocked_call_count].u.umockcallrecorder_get_last_expected_call.umock_call_recorder = umock_call_recorder;
+        mocked_call_count++;
+    }
+
+    return umockcallrecorder_get_last_expected_call_result;
+}
+
+int umocktypes_init(void)
+{
+    TEST_MOCK_CALL* new_calls = (TEST_MOCK_CALL*)realloc(mocked_calls, sizeof(TEST_MOCK_CALL) * (mocked_call_count + 1));
+    if (new_calls != NULL)
+    {
+        mocked_calls = new_calls;
+        mocked_calls[mocked_call_count].call_type = TEST_MOCK_CALL_TYPE_umocktypes_init;
+        mocked_call_count++;
+    }
+
+    return umocktypes_init_result;
+}
+
+void umocktypes_deinit(void)
+{
+    TEST_MOCK_CALL* new_calls = (TEST_MOCK_CALL*)realloc(mocked_calls, sizeof(TEST_MOCK_CALL) * (mocked_call_count + 1));
+    if (new_calls != NULL)
+    {
+        mocked_calls = new_calls;
+        mocked_calls[mocked_call_count].call_type = TEST_MOCK_CALL_TYPE_umocktypes_deinit;
+        mocked_call_count++;
+    }
+}
+
+int umocktypes_c_register_types(void)
+{
+    TEST_MOCK_CALL* new_calls = (TEST_MOCK_CALL*)realloc(mocked_calls, sizeof(TEST_MOCK_CALL) * (mocked_call_count + 1));
+    if (new_calls != NULL)
+    {
+        mocked_calls = new_calls;
+        mocked_calls[mocked_call_count].call_type = TEST_MOCK_CALL_TYPE_umocktypes_c_register_types;
+        mocked_call_count++;
+    }
+
+    return umocktypes_c_register_types_result;
+}
 
 static void test_on_umock_c_error(UMOCK_C_ERROR_CODE error_code)
 {
-    test_on_umock_c_error_CALL* new_calls = (test_on_umock_c_error_CALL*)realloc(test_on_umock_c_error_calls, sizeof(test_on_umock_c_error_CALL) * (test_on_umock_c_error_call_count + 1));
+    TEST_MOCK_CALL* new_calls = (TEST_MOCK_CALL*)realloc(mocked_calls, sizeof(TEST_MOCK_CALL) * (mocked_call_count + 1));
     if (new_calls != NULL)
     {
-        test_on_umock_c_error_calls = new_calls;
-        test_on_umock_c_error_calls[test_on_umock_c_error_call_count].error_code = error_code;
-        test_on_umock_c_error_call_count++;
+        mocked_calls = new_calls;
+        mocked_calls[mocked_call_count].call_type = TEST_MOCK_CALL_TYPE_test_on_umock_c_error;
+        mocked_calls[mocked_call_count].u.test_on_umock_c_error.error_code = error_code;
+        mocked_call_count++;
     }
 }
 
 void reset_all_calls(void)
 {
-    umocktypes_init_call_count = 0;
-    umocktypes_init_call_result = 0;
-
-    umocktypes_c_register_types_call_count = 0;
-    umocktypes_c_register_types_call_result = 0;
-
-    umockcallrecorder_create_call_count = 0;
-    umockcallrecorder_create_call_result = test_call_recorder;
-
-    umocktypes_deinit_call_count = 0;
-
-    if (umockcallrecorder_destroy_calls != NULL)
+    mocked_call_count = 0;
+    if (mocked_calls != NULL)
     {
-        free(umockcallrecorder_destroy_calls);
+        free(mocked_calls);
+        mocked_calls = NULL;
     }
-    umockcallrecorder_destroy_calls = NULL;
-    umockcallrecorder_destroy_call_count = 0;
 
-    if (umockcallrecorder_reset_all_calls_calls != NULL)
-    {
-        free(umockcallrecorder_reset_all_calls_calls);
-    }
-    umockcallrecorder_reset_all_calls_calls = NULL;
-    umockcallrecorder_reset_all_calls_call_count = 0;
-    umockcallrecorder_reset_all_calls_call_result = 0;
-
-    if (umockcallrecorder_get_actual_calls_calls != NULL)
-    {
-        free(umockcallrecorder_get_actual_calls_calls);
-    }
-    umockcallrecorder_get_actual_calls_calls = NULL;
-    umockcallrecorder_get_actual_calls_call_count = 0;
-    umockcallrecorder_get_actual_calls_call_result = NULL;
-
-    if (umockcallrecorder_get_expected_calls_calls != NULL)
-    {
-        free(umockcallrecorder_get_expected_calls_calls);
-    }
-    umockcallrecorder_get_expected_calls_calls = NULL;
-    umockcallrecorder_get_expected_calls_call_count = 0;
-    umockcallrecorder_get_expected_calls_call_result = NULL;
-
-    if (umockcallrecorder_get_last_expected_call_calls != NULL)
-    {
-        free(umockcallrecorder_get_last_expected_call_calls);
-    }
-    umockcallrecorder_get_last_expected_call_calls = NULL;
-    umockcallrecorder_get_last_expected_call_call_count = 0;
-    umockcallrecorder_get_last_expected_call_call_result = NULL;
-
-    if (umockcallrecorder_add_expected_call_calls != NULL)
-    {
-        free(umockcallrecorder_add_expected_call_calls);
-    }
-    umockcallrecorder_add_expected_call_calls = NULL;
-    umockcallrecorder_add_expected_call_call_count = 0;
-    umockcallrecorder_add_expected_call_call_result = 0;
-
-    if (umockcallrecorder_add_actual_call_calls != NULL)
-    {
-        free(umockcallrecorder_add_actual_call_calls);
-    }
-    umockcallrecorder_add_actual_call_calls = NULL;
-    umockcallrecorder_add_actual_call_call_count = 0;
-    umockcallrecorder_add_actual_call_call_result = 0;
-
-    if (umockcallrecorder_clone_calls != NULL)
-    {
-        free(umockcallrecorder_clone_calls);
-    }
-    umockcallrecorder_clone_calls = NULL;
-    umockcallrecorder_clone_call_count = 0;
-    umockcallrecorder_clone_call_result = test_cloned_call_recorder;
-
-    if (test_on_umock_c_error_calls != NULL)
-    {
-        free(test_on_umock_c_error_calls);
-    }
-    test_on_umock_c_error_calls = NULL;
-    test_on_umock_c_error_call_count = 0;
+    umocktypes_init_result = 0;
+    umocktypes_c_register_types_result = 0;
+    umockcallrecorder_create_result = test_call_recorder;
+    umockcallrecorder_reset_all_calls_result = 0;
+    umockcallrecorder_get_actual_calls_result = NULL;
+    umockcallrecorder_get_expected_calls_result = NULL;
+    umockcallrecorder_get_last_expected_call_result = NULL;
+    umockcallrecorder_add_expected_call_result = 0;
+    umockcallrecorder_add_actual_call_result = 0;
+    umockcallrecorder_clone_result = test_cloned_call_recorder;
 }
 
 void* umockalloc_malloc(size_t size)
@@ -350,6 +371,12 @@ void* umockalloc_malloc(size_t size)
 void umockalloc_free(void* ptr)
 {
     free(ptr);
+}
+
+static UMOCK_C_LOCK_HANDLE test_lock_factory_create_lock(void* params)
+{
+    (void)params;
+    return NULL;
 }
 
 static TEST_MUTEX_HANDLE test_mutex;
@@ -383,12 +410,12 @@ TEST_FUNCTION_CLEANUP(test_function_cleanup)
     TEST_MUTEX_RELEASE(test_mutex);
 }
 
-/* umock_deinit */
+/* umock_c_init */
 
 /* Tests_SRS_UMOCK_C_01_001: [umock_c_init shall initialize the umock library.] */
 /* Tests_SRS_UMOCK_C_01_023: [ umock_c_init shall initialize the umock types by calling umocktypes_init. ]*/
 /* Tests_SRS_UMOCK_C_01_004: [ On success, umock_c_init shall return 0. ]*/
-/* Tests_SRS_UMOCK_C_01_002: [ umock_c_init shall register the C naive types by calling umocktypes_c_register_types. ]*/
+/* Tests_SRS_UMOCK_C_01_002: [ umock_c_init shall register the C native types by calling umocktypes_c_register_types. ]*/
 /* Tests_SRS_UMOCK_C_01_003: [ umock_c_init shall create a call recorder by calling umockcallrecorder_create. ]*/
 /* Tests_SRS_UMOCK_C_01_006: [ The on_umock_c_error callback shall be stored to be used for later error callbacks. ]*/
 TEST_FUNCTION(when_all_calls_succeed_umock_c_init_succeeds)
@@ -400,9 +427,10 @@ TEST_FUNCTION(when_all_calls_succeed_umock_c_init_succeeds)
 
     // assert
     ASSERT_ARE_EQUAL(int, 0, result);
-    ASSERT_ARE_EQUAL(size_t, 1, umocktypes_init_call_count);
-    ASSERT_ARE_EQUAL(size_t, 1, umocktypes_c_register_types_call_count);
-    ASSERT_ARE_EQUAL(size_t, 1, umockcallrecorder_create_call_count);
+    ASSERT_ARE_EQUAL(size_t, 3, mocked_call_count);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umocktypes_init, mocked_calls[0].call_type);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umocktypes_c_register_types, mocked_calls[1].call_type);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umockcallrecorder_create, mocked_calls[2].call_type);
 }
 
 /* Tests_SRS_UMOCK_C_01_005: [ If any of the calls fails, umock_c_init shall fail and return a non-zero value. ]*/
@@ -410,16 +438,15 @@ TEST_FUNCTION(when_umocktypes_init_fails_then_umock_c_init_fails)
 {
     // arrange
 	int result;
-    umocktypes_init_call_result = 1;
+    umocktypes_init_result = 1;
 
     // act
     result = umock_c_init(test_on_umock_c_error);
 
     // assert
     ASSERT_ARE_NOT_EQUAL(int, 0, result);
-    ASSERT_ARE_EQUAL(size_t, 1, umocktypes_init_call_count);
-    ASSERT_ARE_EQUAL(size_t, 0, umocktypes_c_register_types_call_count);
-    ASSERT_ARE_EQUAL(size_t, 0, umockcallrecorder_create_call_count);
+    ASSERT_ARE_EQUAL(size_t, 1, mocked_call_count);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umocktypes_init, mocked_calls[0].call_type);
 }
 
 /* Tests_SRS_UMOCK_C_01_005: [ If any of the calls fails, umock_c_init shall fail and return a non-zero value. ]*/
@@ -427,16 +454,16 @@ TEST_FUNCTION(when_umocktypes_c_register_types_fails_then_umock_c_init_fails)
 {
     // arrange
 	int result;
-    umocktypes_c_register_types_call_result = 1;
+    umocktypes_c_register_types_result = 1;
 
     // act
     result = umock_c_init(test_on_umock_c_error);
 
     // assert
     ASSERT_ARE_NOT_EQUAL(int, 0, result);
-    ASSERT_ARE_EQUAL(size_t, 1, umocktypes_init_call_count);
-    ASSERT_ARE_EQUAL(size_t, 1, umocktypes_c_register_types_call_count);
-    ASSERT_ARE_EQUAL(size_t, 0, umockcallrecorder_create_call_count);
+    ASSERT_ARE_EQUAL(size_t, 2, mocked_call_count);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umocktypes_init, mocked_calls[0].call_type);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umocktypes_c_register_types, mocked_calls[1].call_type);
 }
 
 /* Tests_SRS_UMOCK_C_01_005: [ If any of the calls fails, umock_c_init shall fail and return a non-zero value. ]*/
@@ -444,16 +471,18 @@ TEST_FUNCTION(when_creating_the_call_recorder_fails_then_umock_c_init_fails)
 {
     // arrange
 	int result;
-    umockcallrecorder_create_call_result = NULL;
+    umockcallrecorder_create_result = NULL;
 
     // act
     result = umock_c_init(test_on_umock_c_error);
 
     // assert
     ASSERT_ARE_NOT_EQUAL(int, 0, result);
-    ASSERT_ARE_EQUAL(size_t, 1, umocktypes_init_call_count);
-    ASSERT_ARE_EQUAL(size_t, 1, umocktypes_c_register_types_call_count);
-    ASSERT_ARE_EQUAL(size_t, 1, umockcallrecorder_create_call_count);
+    ASSERT_ARE_EQUAL(size_t, 4, mocked_call_count);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umocktypes_init, mocked_calls[0].call_type);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umocktypes_c_register_types, mocked_calls[1].call_type);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umockcallrecorder_create, mocked_calls[2].call_type);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umocktypes_deinit, mocked_calls[3].call_type);
 }
 
 /* Tests_SRS_UMOCK_C_01_007: [ umock_c_init when umock is already initialized shall fail and return a non-zero value. ]*/
@@ -480,9 +509,117 @@ TEST_FUNCTION(umock_c_init_with_NULL_callback_succeeds)
 
     // assert
     ASSERT_ARE_EQUAL(int, 0, result);
-    ASSERT_ARE_EQUAL(size_t, 1, umocktypes_init_call_count);
-    ASSERT_ARE_EQUAL(size_t, 1, umocktypes_c_register_types_call_count);
-    ASSERT_ARE_EQUAL(size_t, 1, umockcallrecorder_create_call_count);
+    ASSERT_ARE_EQUAL(size_t, 3, mocked_call_count);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umocktypes_init, mocked_calls[0].call_type);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umocktypes_c_register_types, mocked_calls[1].call_type);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umockcallrecorder_create, mocked_calls[2].call_type);
+}
+
+/* umock_c_init_with_lock_factory */
+
+/* Tests_SRS_UMOCK_C_01_042: [ umock_c_init_with_lock_factory shall perform the same initialization like umock_c_init while passing lock_factory_create_lock and lock_factory_create_lock_params as arguments to umockcallrecorder_create. ] */
+/* Tests_SRS_UMOCK_C_01_043: [ On success, umock_c_init_with_lock_factory shall return 0. ]*/
+TEST_FUNCTION(umock_c_init_with_lock_factory_succeeds)
+{
+    // arrange
+
+    // act
+    int result = umock_c_init_with_lock_factory(test_on_umock_c_error, test_lock_factory_create_lock, (void*)0x4242);
+
+    // assert
+    ASSERT_ARE_EQUAL(int, 0, result);
+    ASSERT_ARE_EQUAL(size_t, 3, mocked_call_count);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umocktypes_init, mocked_calls[0].call_type);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umocktypes_c_register_types, mocked_calls[1].call_type);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umockcallrecorder_create, mocked_calls[2].call_type);
+    ASSERT_ARE_EQUAL(void_ptr, test_lock_factory_create_lock, mocked_calls[2].u.umockcallrecorder_create.lock_factory_create_lock);
+    ASSERT_ARE_EQUAL(void_ptr, (void*)0x4242, mocked_calls[2].u.umockcallrecorder_create.lock_factory_create_lock_params);
+}
+
+/* Tests_SRS_UMOCK_C_01_044: [ If any of the calls fails, umock_c_init_with_lock_factory shall fail and return a non-zero value. ]*/
+TEST_FUNCTION(when_umocktypes_init_fails_then_umock_c_init_with_lock_factory_fails)
+{
+    // arrange
+    int result;
+    umocktypes_init_result = 1;
+
+    // act
+    result = umock_c_init_with_lock_factory(test_on_umock_c_error, test_lock_factory_create_lock, (void*)0x4242);
+
+    // assert
+    ASSERT_ARE_NOT_EQUAL(int, 0, result);
+    ASSERT_ARE_EQUAL(size_t, 1, mocked_call_count);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umocktypes_init, mocked_calls[0].call_type);
+}
+
+/* Tests_SRS_UMOCK_C_01_044: [ If any of the calls fails, umock_c_init_with_lock_factory shall fail and return a non-zero value. ]*/
+TEST_FUNCTION(when_umocktypes_c_register_types_fails_then_umock_c_init_with_lock_factory_fails)
+{
+    // arrange
+    int result;
+    umocktypes_c_register_types_result = 1;
+
+    // act
+    result = umock_c_init_with_lock_factory(test_on_umock_c_error, test_lock_factory_create_lock, (void*)0x4242);
+
+    // assert
+    ASSERT_ARE_NOT_EQUAL(int, 0, result);
+    ASSERT_ARE_EQUAL(size_t, 2, mocked_call_count);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umocktypes_init, mocked_calls[0].call_type);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umocktypes_c_register_types, mocked_calls[1].call_type);
+}
+
+/* Tests_SRS_UMOCK_C_01_044: [ If any of the calls fails, umock_c_init_with_lock_factory shall fail and return a non-zero value. ]*/
+TEST_FUNCTION(when_creating_the_call_recorder_fails_then_umock_c_init_with_lock_factory_fails)
+{
+    // arrange
+    int result;
+    umockcallrecorder_create_result = NULL;
+
+    // act
+    result = umock_c_init_with_lock_factory(test_on_umock_c_error, test_lock_factory_create_lock, (void*)0x4242);
+
+    // assert
+    ASSERT_ARE_NOT_EQUAL(int, 0, result);
+    ASSERT_ARE_EQUAL(size_t, 4, mocked_call_count);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umocktypes_init, mocked_calls[0].call_type);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umocktypes_c_register_types, mocked_calls[1].call_type);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umockcallrecorder_create, mocked_calls[2].call_type);
+    ASSERT_ARE_EQUAL(void_ptr, test_lock_factory_create_lock, mocked_calls[2].u.umockcallrecorder_create.lock_factory_create_lock);
+    ASSERT_ARE_EQUAL(void_ptr, (void*)0x4242, mocked_calls[2].u.umockcallrecorder_create.lock_factory_create_lock_params);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umocktypes_deinit, mocked_calls[3].call_type);
+}
+
+/* Tests_SRS_UMOCK_C_01_007: [ umock_c_init when umock is already initialized shall fail and return a non-zero value. ]*/
+TEST_FUNCTION(umock_c_init_with_lock_factory_when_already_initialized_fails)
+{
+    // arrange
+    int result;
+    umock_c_init(test_on_umock_c_error);
+
+    // act
+    result = umock_c_init_with_lock_factory(test_on_umock_c_error, test_lock_factory_create_lock, (void*)0x4242);
+
+    // assert
+    ASSERT_ARE_NOT_EQUAL(int, 0, result);
+}
+
+/* Tests_SRS_UMOCK_C_01_024: [ on_umock_c_error shall be optional. ]*/
+TEST_FUNCTION(umock_c_init_with_lock_factory_with_NULL_callback_succeeds)
+{
+    // arrange
+
+    // act
+    int result = umock_c_init_with_lock_factory(NULL, test_lock_factory_create_lock, (void*)0x4242);
+
+    // assert
+    ASSERT_ARE_EQUAL(int, 0, result);
+    ASSERT_ARE_EQUAL(size_t, 3, mocked_call_count);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umocktypes_init, mocked_calls[0].call_type);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umocktypes_c_register_types, mocked_calls[1].call_type);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umockcallrecorder_create, mocked_calls[2].call_type);
+    ASSERT_ARE_EQUAL(void_ptr, test_lock_factory_create_lock, mocked_calls[2].u.umockcallrecorder_create.lock_factory_create_lock);
+    ASSERT_ARE_EQUAL(void_ptr, (void*)0x4242, mocked_calls[2].u.umockcallrecorder_create.lock_factory_create_lock_params);
 }
 
 /* umock_c_deinit */
@@ -492,15 +629,17 @@ TEST_FUNCTION(umock_c_init_with_NULL_callback_succeeds)
 TEST_FUNCTION(umock_c_deinit_deinitializes_types_and_destroys_call_recorder)
 {
     // arrange
-    (void)umock_c_init(NULL);
+    ASSERT_ARE_EQUAL(int, 0, umock_c_init(NULL));
+    reset_all_calls();
 
     // act
     umock_c_deinit();
 
     // assert
-    ASSERT_ARE_EQUAL(size_t, 1, umocktypes_deinit_call_count);
-    ASSERT_ARE_EQUAL(size_t, 1, umockcallrecorder_destroy_call_count);
-    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, umockcallrecorder_destroy_calls[0].umock_call_recorder);
+    ASSERT_ARE_EQUAL(size_t, 2, mocked_call_count);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umockcallrecorder_destroy, mocked_calls[0].call_type);
+    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, mocked_calls[0].u.umockcallrecorder_destroy.umock_call_recorder);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umocktypes_deinit, mocked_calls[1].call_type);
 }
 
 /* Tests_SRS_UMOCK_C_01_008: [ umock_c_deinit shall deinitialize the umock types by calling umocktypes_deinit. ]*/
@@ -508,7 +647,7 @@ TEST_FUNCTION(umock_c_deinit_deinitializes_types_and_destroys_call_recorder)
 TEST_FUNCTION(umock_c_deinit_when_not_initialized_does_nothing)
 {
     // arrange
-    (void)umock_c_init(NULL);
+    ASSERT_ARE_EQUAL(int, 0, umock_c_init(NULL));
     umock_c_deinit();
     reset_all_calls();
 
@@ -516,42 +655,10 @@ TEST_FUNCTION(umock_c_deinit_when_not_initialized_does_nothing)
     umock_c_deinit();
 
     // assert
-    ASSERT_ARE_EQUAL(size_t, 0, umocktypes_deinit_call_count);
-    ASSERT_ARE_EQUAL(size_t, 0, umockcallrecorder_destroy_call_count);
+    ASSERT_ARE_EQUAL(size_t, 0, mocked_call_count);
 }
 
 /* umock_c_reset_all_calls */
-
-/* Tests_SRS_UMOCK_C_01_011: [ umock_c_reset_all_calls shall reset all calls by calling umockcallrecorder_reset_all_calls on the call recorder created in umock_c_init. ]*/
-TEST_FUNCTION(umock_c_reset_all_calls_calls_the_call_recorder_reset_all_calls)
-{
-    // arrange
-    (void)umock_c_init(NULL);
-
-    // act
-    umock_c_reset_all_calls();
-
-    // assert
-    ASSERT_ARE_EQUAL(size_t, 1, umockcallrecorder_reset_all_calls_call_count);
-    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, umockcallrecorder_reset_all_calls_calls[0].umock_call_recorder);
-}
-
-/* Tests_SRS_UMOCK_C_01_025: [ If the underlying umockcallrecorder_reset_all_calls fails, the on_umock_c_error callback shall be triggered with UMOCK_C_RESET_CALLS_ERROR. ]*/
-TEST_FUNCTION(when_the_underlying_call_recorder_reset_all_calls_fails_then_umock_c_reset_all_calls_triggers_the_on_error_callback)
-{
-    // arrange
-    (void)umock_c_init(test_on_umock_c_error);
-    umockcallrecorder_reset_all_calls_call_result = 1;
-
-    // act
-    umock_c_reset_all_calls();
-
-    // assert
-    ASSERT_ARE_EQUAL(size_t, 1, umockcallrecorder_reset_all_calls_call_count);
-    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, umockcallrecorder_reset_all_calls_calls[0].umock_call_recorder);
-    ASSERT_ARE_EQUAL(size_t, 1, test_on_umock_c_error_call_count);
-    ASSERT_ARE_EQUAL(int, (int)UMOCK_C_RESET_CALLS_ERROR, test_on_umock_c_error_calls[0].error_code);
-}
 
 /* Tests_SRS_UMOCK_C_01_012: [ If the module is not initialized, umock_c_reset_all_calls shall do nothing. ]*/
 TEST_FUNCTION(umock_c_reset_all_calls_when_the_module_is_not_initialized_does_nothing)
@@ -562,8 +669,42 @@ TEST_FUNCTION(umock_c_reset_all_calls_when_the_module_is_not_initialized_does_no
     umock_c_reset_all_calls();
 
     // assert
-    ASSERT_ARE_EQUAL(size_t, 0, umockcallrecorder_reset_all_calls_call_count);
-    ASSERT_ARE_EQUAL(size_t, 0, test_on_umock_c_error_call_count);
+    ASSERT_ARE_EQUAL(size_t, 0, mocked_call_count);
+}
+
+/* Tests_SRS_UMOCK_C_01_011: [ umock_c_reset_all_calls shall reset all calls by calling umockcallrecorder_reset_all_calls on the call recorder created in umock_c_init. ]*/
+TEST_FUNCTION(umock_c_reset_all_calls_calls_the_call_recorder_reset_all_calls)
+{
+    // arrange
+    ASSERT_ARE_EQUAL(int, 0, umock_c_init(NULL));
+    reset_all_calls();
+
+    // act
+    umock_c_reset_all_calls();
+
+    // assert
+    ASSERT_ARE_EQUAL(size_t, 1, mocked_call_count);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umockcallrecorder_reset_all_calls, mocked_calls[0].call_type);
+    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, mocked_calls[0].u.umockcallrecorder_reset_all_calls.umock_call_recorder);
+}
+
+/* Tests_SRS_UMOCK_C_01_025: [ If the underlying umockcallrecorder_reset_all_calls fails, the on_umock_c_error callback shall be triggered with UMOCK_C_RESET_CALLS_ERROR. ]*/
+TEST_FUNCTION(when_the_underlying_call_recorder_reset_all_calls_fails_then_umock_c_reset_all_calls_triggers_the_on_error_callback)
+{
+    // arrange
+    ASSERT_ARE_EQUAL(int, 0, umock_c_init(test_on_umock_c_error));
+    reset_all_calls();
+    umockcallrecorder_reset_all_calls_result = 1;
+
+    // act
+    umock_c_reset_all_calls();
+
+    // assert
+    ASSERT_ARE_EQUAL(size_t, 2, mocked_call_count);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umockcallrecorder_reset_all_calls, mocked_calls[0].call_type);
+    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, mocked_calls[0].u.umockcallrecorder_reset_all_calls.umock_call_recorder);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_test_on_umock_c_error, mocked_calls[1].call_type);
+    ASSERT_ARE_EQUAL(UMOCK_C_ERROR_CODE, UMOCK_C_RESET_CALLS_ERROR, mocked_calls[1].u.test_on_umock_c_error.error_code);
 }
 
 /* umock_c_get_actual_calls */
@@ -573,16 +714,18 @@ TEST_FUNCTION(umock_c_get_actual_calls_calls_the_underlying_call_recorder_get_ac
 {
     // arrange
 	const char* result;
-    (void)umock_c_init(test_on_umock_c_error);
-    umockcallrecorder_get_actual_calls_call_result = "[a()]";
+    ASSERT_ARE_EQUAL(int, 0, umock_c_init(test_on_umock_c_error));
+    reset_all_calls();
+    umockcallrecorder_get_actual_calls_result = "[a()]";
 
     // act
     result = umock_c_get_actual_calls();
 
     // assert
     ASSERT_ARE_EQUAL(char_ptr, "[a()]", result);
-    ASSERT_ARE_EQUAL(size_t, 1, umockcallrecorder_get_actual_calls_call_count);
-    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, umockcallrecorder_get_actual_calls_calls[0].umock_call_recorder);
+    ASSERT_ARE_EQUAL(size_t, 1, mocked_call_count);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umockcallrecorder_get_actual_calls, mocked_calls[0].call_type);
+    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, mocked_calls[0].u.umockcallrecorder_get_actual_calls.umock_call_recorder);
 }
 
 /* Tests_SRS_UMOCK_C_01_013: [ umock_c_get_actual_calls shall return the string for the recorded actual calls by calling umockcallrecorder_get_actual_calls on the call recorder created in umock_c_init. ]*/
@@ -590,16 +733,18 @@ TEST_FUNCTION(when_the_underlying_call_recorder_get_actual_calls_fails_then_umoc
 {
     // arrange
 	const char* result;
-    (void)umock_c_init(test_on_umock_c_error);
-    umockcallrecorder_get_actual_calls_call_result = NULL;
+    ASSERT_ARE_EQUAL(int, 0, umock_c_init(test_on_umock_c_error));
+    reset_all_calls();
+    umockcallrecorder_get_actual_calls_result = NULL;
 
     // act
     result = umock_c_get_actual_calls();
 
     // assert
     ASSERT_IS_NULL(result);
-    ASSERT_ARE_EQUAL(size_t, 1, umockcallrecorder_get_actual_calls_call_count);
-    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, umockcallrecorder_get_actual_calls_calls[0].umock_call_recorder);
+    ASSERT_ARE_EQUAL(size_t, 1, mocked_call_count);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umockcallrecorder_get_actual_calls, mocked_calls[0].call_type);
+    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, mocked_calls[0].u.umockcallrecorder_get_actual_calls.umock_call_recorder);
 }
 
 /* Tests_SRS_UMOCK_C_01_014: [ If the module is not initialized, umock_c_get_actual_calls shall return NULL. ]*/
@@ -612,7 +757,7 @@ TEST_FUNCTION(umock_c_get_actual_calls_when_the_module_is_not_initialized_fails)
 
     // assert
     ASSERT_IS_NULL(result);
-    ASSERT_ARE_EQUAL(size_t, 0, umockcallrecorder_get_actual_calls_call_count);
+    ASSERT_ARE_EQUAL(size_t, 0, mocked_call_count);
 }
 
 /* umock_c_get_expected_calls */
@@ -622,16 +767,18 @@ TEST_FUNCTION(umock_c_get_expected_calls_calls_the_underlying_call_recorder_get_
 {
     // arrange
 	const char* result;
-    (void)umock_c_init(test_on_umock_c_error);
-    umockcallrecorder_get_expected_calls_call_result = "[a()]";
+    ASSERT_ARE_EQUAL(int, 0, umock_c_init(test_on_umock_c_error));
+    reset_all_calls();
+    umockcallrecorder_get_expected_calls_result = "[a()]";
 
     // act
     result = umock_c_get_expected_calls();
 
     // assert
     ASSERT_ARE_EQUAL(char_ptr, "[a()]", result);
-    ASSERT_ARE_EQUAL(size_t, 1, umockcallrecorder_get_expected_calls_call_count);
-    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, umockcallrecorder_get_expected_calls_calls[0].umock_call_recorder);
+    ASSERT_ARE_EQUAL(size_t, 1, mocked_call_count);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umockcallrecorder_get_expected_calls, mocked_calls[0].call_type);
+    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, mocked_calls[0].u.umockcallrecorder_get_expected_calls.umock_call_recorder);
 }
 
 /* Tests_SRS_UMOCK_C_01_015: [ umock_c_get_expected_calls shall return the string for the recorded expected calls by calling umockcallrecorder_get_expected_calls on the call recorder created in umock_c_init. ]*/
@@ -639,16 +786,18 @@ TEST_FUNCTION(when_the_underlying_call_recorder_get_expected_calls_fails_then_um
 {
     // arrange
 	const char* result;
-    (void)umock_c_init(test_on_umock_c_error);
-    umockcallrecorder_get_expected_calls_call_result = NULL;
+    ASSERT_ARE_EQUAL(int, 0, umock_c_init(test_on_umock_c_error));
+    reset_all_calls();
+    umockcallrecorder_get_expected_calls_result = NULL;
 
     // act
     result = umock_c_get_expected_calls();
 
     // assert
     ASSERT_IS_NULL(result);
-    ASSERT_ARE_EQUAL(size_t, 1, umockcallrecorder_get_expected_calls_call_count);
-    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, umockcallrecorder_get_expected_calls_calls[0].umock_call_recorder);
+    ASSERT_ARE_EQUAL(size_t, 1, mocked_call_count);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umockcallrecorder_get_expected_calls, mocked_calls[0].call_type);
+    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, mocked_calls[0].u.umockcallrecorder_get_expected_calls.umock_call_recorder);
 }
 
 /* Tests_SRS_UMOCK_C_01_016: [ If the module is not initialized, umock_c_get_expected_calls shall return NULL. ]*/
@@ -661,7 +810,7 @@ TEST_FUNCTION(umock_c_get_expected_calls_when_the_module_is_not_initialized_fail
 
     // assert
     ASSERT_IS_NULL(result);
-    ASSERT_ARE_EQUAL(size_t, 0, umockcallrecorder_get_expected_calls_call_count);
+    ASSERT_ARE_EQUAL(size_t, 0, mocked_call_count);
 }
 
 /* umock_c_get_last_expected_call */
@@ -671,16 +820,18 @@ TEST_FUNCTION(umock_c_get_last_expected_call_calls_the_underlying_call_recorder_
 {
     // arrange
 	UMOCKCALL_HANDLE result;
-    (void)umock_c_init(test_on_umock_c_error);
-    umockcallrecorder_get_last_expected_call_call_result = test_expected_call;
+    ASSERT_ARE_EQUAL(int, 0, umock_c_init(test_on_umock_c_error));
+    reset_all_calls();
+    umockcallrecorder_get_last_expected_call_result = test_expected_call;
 
     // act
     result = umock_c_get_last_expected_call();
 
     // assert
     ASSERT_ARE_EQUAL(void_ptr, test_expected_call, result);
-    ASSERT_ARE_EQUAL(size_t, 1, umockcallrecorder_get_last_expected_call_call_count);
-    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, umockcallrecorder_get_last_expected_call_calls[0].umock_call_recorder);
+    ASSERT_ARE_EQUAL(size_t, 1, mocked_call_count);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umockcallrecorder_get_last_expected_call, mocked_calls[0].call_type);
+    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, mocked_calls[0].u.umockcallrecorder_get_last_expected_call.umock_call_recorder);
 }
 
 /* Tests_SRS_UMOCK_C_01_017: [ umock_c_get_last_expected_call shall return the last expected call by calling umockcallrecorder_get_last_expected_call on the call recorder created in umock_c_init. ]*/
@@ -688,16 +839,18 @@ TEST_FUNCTION(when_the_underlying_call_recorder_get_last_expected_call_fails_the
 {
     // arrange
 	UMOCKCALL_HANDLE result;
-    (void)umock_c_init(test_on_umock_c_error);
-    umockcallrecorder_get_last_expected_call_call_result = NULL;
+    ASSERT_ARE_EQUAL(int, 0, umock_c_init(test_on_umock_c_error));
+    reset_all_calls();
+    umockcallrecorder_get_last_expected_call_result = NULL;
 
     // act
     result = umock_c_get_last_expected_call();
 
     // assert
     ASSERT_IS_NULL(result);
-    ASSERT_ARE_EQUAL(size_t, 1, umockcallrecorder_get_last_expected_call_call_count);
-    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, umockcallrecorder_get_last_expected_call_calls[0].umock_call_recorder);
+    ASSERT_ARE_EQUAL(size_t, 1, mocked_call_count);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umockcallrecorder_get_last_expected_call, mocked_calls[0].call_type);
+    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, mocked_calls[0].u.umockcallrecorder_get_last_expected_call.umock_call_recorder);
 }
 
 /* Tests_SRS_UMOCK_C_01_018: [ If the module is not initialized, umock_c_get_last_expected_call shall return NULL. ]*/
@@ -710,7 +863,7 @@ TEST_FUNCTION(umock_c_get_last_expected_call_when_the_module_is_not_initialized_
 
     // assert
     ASSERT_IS_NULL(result);
-    ASSERT_ARE_EQUAL(size_t, 0, umockcallrecorder_get_last_expected_call_call_count);
+    ASSERT_ARE_EQUAL(size_t, 0, mocked_call_count);
 }
 
 /* umock_c_add_expected_call */
@@ -720,17 +873,19 @@ TEST_FUNCTION(umock_c_add_expected_call_calls_the_underlying_call_recorder_add_e
 {
     // arrange
 	int result;
-    (void)umock_c_init(test_on_umock_c_error);
-    umockcallrecorder_add_expected_call_call_result = 0;
+    ASSERT_ARE_EQUAL(int, 0, umock_c_init(test_on_umock_c_error));
+    reset_all_calls();
+    umockcallrecorder_add_expected_call_result = 0;
 
     // act
     result = umock_c_add_expected_call(test_expected_call);
 
     // assert
     ASSERT_ARE_EQUAL(int, 0, result);
-    ASSERT_ARE_EQUAL(size_t, 1, umockcallrecorder_add_expected_call_call_count);
-    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, umockcallrecorder_add_expected_call_calls[0].umock_call_recorder);
-    ASSERT_ARE_EQUAL(void_ptr, test_expected_call, umockcallrecorder_add_expected_call_calls[0].mock_call);
+    ASSERT_ARE_EQUAL(size_t, 1, mocked_call_count);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umockcallrecorder_add_expected_call, mocked_calls[0].call_type);
+    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, mocked_calls[0].u.umockcallrecorder_add_expected_call.umock_call_recorder);
+    ASSERT_ARE_EQUAL(void_ptr, test_expected_call, mocked_calls[0].u.umockcallrecorder_add_expected_call.mock_call);
 }
 
 /* Tests_SRS_UMOCK_C_01_019: [ umock_c_add_expected_call shall add an expected call by calling umockcallrecorder_add_expected_call on the call recorder created in umock_c_init. ]*/
@@ -738,16 +893,19 @@ TEST_FUNCTION(when_the_underlying_call_recorder_add_expected_call_fails_then_umo
 {
     // arrange
 	int result;
-    (void)umock_c_init(test_on_umock_c_error);
-    umockcallrecorder_add_expected_call_call_result = 1;
+    ASSERT_ARE_EQUAL(int, 0, umock_c_init(test_on_umock_c_error));
+    reset_all_calls();
+    umockcallrecorder_add_expected_call_result = 1;
 
     // act
     result = umock_c_add_expected_call(test_expected_call);
 
     // assert
     ASSERT_ARE_NOT_EQUAL(int, 0, result);
-    ASSERT_ARE_EQUAL(size_t, 1, umockcallrecorder_add_expected_call_call_count);
-    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, umockcallrecorder_add_expected_call_calls[0].umock_call_recorder);
+    ASSERT_ARE_EQUAL(size_t, 1, mocked_call_count);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umockcallrecorder_add_expected_call, mocked_calls[0].call_type);
+    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, mocked_calls[0].u.umockcallrecorder_add_expected_call.umock_call_recorder);
+    ASSERT_ARE_EQUAL(void_ptr, test_expected_call, mocked_calls[0].u.umockcallrecorder_add_expected_call.mock_call);
 }
 
 /* Tests_SRS_UMOCK_C_01_020: [ If the module is not initialized, umock_c_add_expected_call shall return a non-zero value. ]*/
@@ -760,7 +918,7 @@ TEST_FUNCTION(umock_c_add_expected_call_when_the_module_is_not_initialized_fails
 
     // assert
     ASSERT_ARE_NOT_EQUAL(int, 0, result);
-    ASSERT_ARE_EQUAL(size_t, 0, umockcallrecorder_add_expected_call_call_count);
+    ASSERT_ARE_EQUAL(size_t, 0, mocked_call_count);
 }
 
 /* umock_c_add_actual_call */
@@ -771,18 +929,20 @@ TEST_FUNCTION(umock_c_add_actual_call_calls_the_underlying_call_recorder_add_act
     // arrange
 	int result;
 	UMOCKCALL_HANDLE matched_call;
-    (void)umock_c_init(test_on_umock_c_error);
-    umockcallrecorder_add_actual_call_call_result = 0;
+    ASSERT_ARE_EQUAL(int, 0, umock_c_init(test_on_umock_c_error));
+    reset_all_calls();
+    umockcallrecorder_add_actual_call_result = 0;
 
     // act
     result = umock_c_add_actual_call(test_actual_call, &matched_call);
 
     // assert
     ASSERT_ARE_EQUAL(int, 0, result);
-    ASSERT_ARE_EQUAL(size_t, 1, umockcallrecorder_add_actual_call_call_count);
-    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, umockcallrecorder_add_actual_call_calls[0].umock_call_recorder);
-    ASSERT_ARE_EQUAL(void_ptr, test_actual_call, umockcallrecorder_add_actual_call_calls[0].mock_call);
-    ASSERT_ARE_EQUAL(void_ptr, &matched_call, umockcallrecorder_add_actual_call_calls[0].matched_call);
+    ASSERT_ARE_EQUAL(size_t, 1, mocked_call_count);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umockcallrecorder_add_actual_call, mocked_calls[0].call_type);
+    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, mocked_calls[0].u.umockcallrecorder_add_actual_call.umock_call_recorder);
+    ASSERT_ARE_EQUAL(void_ptr, test_actual_call, mocked_calls[0].u.umockcallrecorder_add_actual_call.mock_call);
+    ASSERT_ARE_EQUAL(void_ptr, &matched_call, mocked_calls[0].u.umockcallrecorder_add_actual_call.matched_call);
 }
 
 /* Tests_SRS_UMOCK_C_01_021: [ umock_c_add_actual_call shall add an actual call by calling umockcallrecorder_add_actual_call on the call recorder created in umock_c_init. ]*/
@@ -791,18 +951,20 @@ TEST_FUNCTION(when_the_underlying_call_recorder_add_actual_call_fails_then_umock
     // arrange
 	int result;
     UMOCKCALL_HANDLE matched_call;
-    (void)umock_c_init(test_on_umock_c_error);
-    umockcallrecorder_add_actual_call_call_result = 1;
+    ASSERT_ARE_EQUAL(int, 0, umock_c_init(test_on_umock_c_error));
+    reset_all_calls();
+    umockcallrecorder_add_actual_call_result = 1;
 
     // act
     result = umock_c_add_actual_call(test_actual_call, &matched_call);
 
     // assert
     ASSERT_ARE_NOT_EQUAL(int, 0, result);
-    ASSERT_ARE_EQUAL(size_t, 1, umockcallrecorder_add_actual_call_call_count);
-    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, umockcallrecorder_add_actual_call_calls[0].umock_call_recorder);
-    ASSERT_ARE_EQUAL(void_ptr, test_actual_call, umockcallrecorder_add_actual_call_calls[0].mock_call);
-    ASSERT_ARE_EQUAL(void_ptr, &matched_call, umockcallrecorder_add_actual_call_calls[0].matched_call);
+    ASSERT_ARE_EQUAL(size_t, 1, mocked_call_count);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umockcallrecorder_add_actual_call, mocked_calls[0].call_type);
+    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, mocked_calls[0].u.umockcallrecorder_add_actual_call.umock_call_recorder);
+    ASSERT_ARE_EQUAL(void_ptr, test_actual_call, mocked_calls[0].u.umockcallrecorder_add_actual_call.mock_call);
+    ASSERT_ARE_EQUAL(void_ptr, &matched_call, mocked_calls[0].u.umockcallrecorder_add_actual_call.matched_call);
 }
 
 /* Tests_SRS_UMOCK_C_01_022: [** If the module is not initialized, umock_c_add_actual_call shall return a non-zero value. ]*/
@@ -816,7 +978,7 @@ TEST_FUNCTION(umock_c_add_actual_call_when_the_module_is_not_initialized_fails)
 
     // assert
     ASSERT_ARE_NOT_EQUAL(int, 0, result);
-    ASSERT_ARE_EQUAL(size_t, 0, umockcallrecorder_add_actual_call_call_count);
+    ASSERT_ARE_EQUAL(size_t, 0, mocked_call_count);
 }
 
 /* umock_c_get_call_recorder */
@@ -826,7 +988,8 @@ TEST_FUNCTION(umock_c_get_call_recorder_returns_a_non_NULL_call_recorder)
 {
     // arrange
 	UMOCKCALLRECORDER_HANDLE result;
-    (void)umock_c_init(test_on_umock_c_error);
+    ASSERT_ARE_EQUAL(int, 0, umock_c_init(test_on_umock_c_error));
+    reset_all_calls();
 
     // act
     result = umock_c_get_call_recorder();
@@ -840,8 +1003,9 @@ TEST_FUNCTION(umock_c_get_call_recorder_when_not_initialized_fails)
 {
     // arrange
 	UMOCKCALLRECORDER_HANDLE result;
-    (void)umock_c_init(test_on_umock_c_error);
+    ASSERT_ARE_EQUAL(int, 0, umock_c_init(test_on_umock_c_error));
     umock_c_deinit();
+    reset_all_calls();
 
     // act
     result = umock_c_get_call_recorder();
@@ -860,16 +1024,19 @@ TEST_FUNCTION(umock_c_set_call_recorder_replaces_the_recorder)
 {
     // arrange
 	int result;
-    (void)umock_c_init(test_on_umock_c_error);
+    ASSERT_ARE_EQUAL(int, 0, umock_c_init(test_on_umock_c_error));
+    reset_all_calls();
 
     // act
     result = umock_c_set_call_recorder(test_call_recorder);
 
     // assert
     ASSERT_ARE_EQUAL(int, 0, result);
-    ASSERT_ARE_EQUAL(size_t, 1, umockcallrecorder_clone_call_count);
-    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, umockcallrecorder_clone_calls[0].umock_call_recorder);
-    ASSERT_ARE_EQUAL(size_t, 1, umockcallrecorder_destroy_call_count);
+    ASSERT_ARE_EQUAL(size_t, 2, mocked_call_count);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umockcallrecorder_clone, mocked_calls[0].call_type);
+    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, mocked_calls[0].u.umockcallrecorder_clone.umock_call_recorder);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umockcallrecorder_destroy, mocked_calls[1].call_type);
+    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, mocked_calls[1].u.umockcallrecorder_destroy.umock_call_recorder);
 }
 
 /* Tests_SRS_UMOCK_C_01_030: [ If call_recorder is NULL, umock_c_set_call_recorder shall return a non-zero value. ]*/
@@ -877,15 +1044,15 @@ TEST_FUNCTION(umock_c_set_call_recorder_with_NULL_call_recorder_fails)
 {
     // arrange
 	int result;
-    (void)umock_c_init(test_on_umock_c_error);
+    ASSERT_ARE_EQUAL(int, 0, umock_c_init(test_on_umock_c_error));
+    reset_all_calls();
 
     // act
     result = umock_c_set_call_recorder(NULL);
 
     // assert
     ASSERT_ARE_NOT_EQUAL(int, 0, result);
-    ASSERT_ARE_EQUAL(size_t, 0, umockcallrecorder_clone_call_count);
-    ASSERT_ARE_EQUAL(size_t, 0, umockcallrecorder_destroy_call_count);
+    ASSERT_ARE_EQUAL(size_t, 0, mocked_call_count);
 }
 
 /* Tests_SRS_UMOCK_C_01_032: [ If umockcallrecorder_clone fails, umock_c_set_call_recorder shall return a non-zero value. ]*/
@@ -893,17 +1060,18 @@ TEST_FUNCTION(when_cloning_the_call_recorder_fails_umock_c_set_call_recorder_fai
 {
     // arrange
 	int result;
-    (void)umock_c_init(test_on_umock_c_error);
-    umockcallrecorder_clone_call_result = NULL;
+    ASSERT_ARE_EQUAL(int, 0, umock_c_init(test_on_umock_c_error));
+    reset_all_calls();
+    umockcallrecorder_clone_result = NULL;
 
     // act
     result = umock_c_set_call_recorder(test_call_recorder);
 
     // assert
     ASSERT_ARE_NOT_EQUAL(int, 0, result);
-    ASSERT_ARE_EQUAL(size_t, 1, umockcallrecorder_clone_call_count);
-    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, umockcallrecorder_clone_calls[0].umock_call_recorder);
-    ASSERT_ARE_EQUAL(size_t, 0, umockcallrecorder_destroy_call_count);
+    ASSERT_ARE_EQUAL(size_t, 1, mocked_call_count);
+    ASSERT_ARE_EQUAL(TEST_MOCK_CALL_TYPE, TEST_MOCK_CALL_TYPE_umockcallrecorder_clone, mocked_calls[0].call_type);
+    ASSERT_ARE_EQUAL(void_ptr, test_call_recorder, mocked_calls[0].u.umockcallrecorder_clone.umock_call_recorder);
 }
 
 /* Tests_SRS_UMOCK_C_01_033: [ If the module is not initialized, umock_c_set_call_recorder shall return a non-zero value. ]*/
@@ -911,7 +1079,7 @@ TEST_FUNCTION(when_the_module_is_not_initialize_umock_c_set_call_recorder_fails)
 {
     // arrange
 	int result;
-    (void)umock_c_init(test_on_umock_c_error);
+    ASSERT_ARE_EQUAL(int, 0, umock_c_init(test_on_umock_c_error));
     umock_c_deinit();
     reset_all_calls();
 
@@ -920,8 +1088,7 @@ TEST_FUNCTION(when_the_module_is_not_initialize_umock_c_set_call_recorder_fails)
 
     // assert
     ASSERT_ARE_NOT_EQUAL(int, 0, result);
-    ASSERT_ARE_EQUAL(size_t, 0, umockcallrecorder_clone_call_count);
-    ASSERT_ARE_EQUAL(size_t, 0, umockcallrecorder_destroy_call_count);
+    ASSERT_ARE_EQUAL(size_t, 0, mocked_call_count);
 }
 
 END_TEST_SUITE(umock_c_unittests)
