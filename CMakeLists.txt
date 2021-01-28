@@ -1,7 +1,9 @@
 #Copyright (c) Microsoft. All rights reserved.
 #Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-cmake_minimum_required(VERSION 2.8.11)
+if(NOT DEFINED CMAKE_MINIMUM_REQUIRED_VERSION)
+    cmake_minimum_required(VERSION 3.18)
+endif()
 
 # canon way of using umock-c from another repo is below. It assumes the using repo has placed umock-c in "deps"
 
@@ -16,6 +18,7 @@ endif()
 
 option(run_unittests "set run_unittests to ON to run unittests (default is OFF)" OFF)
 option(run_int_tests "set run_int_tests to ON to run the integration tests (default is OFF)" OFF)
+option(run_perf_tests "set run_perf_tests to ON to build performance tests (default is OFF)." OFF)
 option(use_installed_dependencies "set use_installed_dependencies to ON to use installed packages instead of building dependencies from submodules" OFF)
 option(use_cppunittest "set use_cppunittest to ON to build CppUnitTest tests on Windows (default is OFF)" OFF)
 
