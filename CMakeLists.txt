@@ -26,6 +26,9 @@ project(umock_c)
 
 set(UMOCK_C_VERSION 1.1.19)
 
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 11)
+
 #Use solution folders.
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -175,8 +178,6 @@ CHECK_INCLUDE_FILES(stdbool.h HAVE_STDBOOL_H)
 if ((NOT HAVE_STDINT_H) OR (NOT HAVE_STDBOOL_H))
     include_directories(${UMOCK_C_INC_FOLDER}/umock_c/aux_inc)
 endif()
-
-include("configs/umock_cFunctions.cmake")
 
 if (${run_unittests} OR ${run_int_tests})
     add_subdirectory(tests)
