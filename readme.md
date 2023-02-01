@@ -36,7 +36,7 @@ cmake --build .
 ### To install umock_c:
 
 ```
-cmake -Duse_installed=ON ../
+cmake -Duse_installed_dependencies=ON ../
 ```
 On Linux:
 ```
